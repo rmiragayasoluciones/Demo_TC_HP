@@ -14,13 +14,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".AppSelectionActivity"></activity>
-        <activity
-            android:name=".ApiResponse"
-            android:label="@string/title_activity_api_response"
-            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".AperturaCuentaMainActivity" />
+        <activity android:name=".AppSelectionActivity" />
         <activity
             android:name=".MainActivity"
+            android:noHistory="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

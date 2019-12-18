@@ -1,0 +1,16 @@
+{
+  "creationTime": "DateCreationTime",
+  "description": "descripcionDemo",
+  "expirationTime": "DateExpirationTime",
+  "workPathConfig": "workPathConfig",
+  "url": "url.com",
+  "updateTime": "DateUpdateTime",
+  "logo": "logoenBase64",
+  "name": "demoTest",
+  "oXPDConfig": "oxpdConfig",
+  "token": "1",
+  "tcId": 1,
+  "isExpired": false,
+  "isActive": true,
+  "id": 1
+}

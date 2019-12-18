@@ -1,10 +1,7 @@
 package com.example.demo1;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -17,13 +14,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.demo1.Utils.Tools;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
+import com.airbnb.lottie.LottieAnimationView;
 
 public class AppSelectionActivity extends AppCompatActivity {
 
     private static final int MAX_STEP = 3;
     private ViewPager viewPager;
     private MyViewPagerAdapter myViewPagerAdapter;
+    private long backPressedTime;
+    private View cargandoProgresBar;
 
     private String about_title_array[] = {
             "Apertura de Cuenta",
@@ -36,10 +40,10 @@ public class AppSelectionActivity extends AppCompatActivity {
             "Se digitaliza un documento para recortar la firma del cliente desde un formulario de firmas"
 
     };
-    private int about_images_array[] = {
-            R.drawable.img_wizard_2,
-            R.drawable.img_wizard_2,
-            R.drawable.img_wizard_2
+    private String about_images_array[] = {
+            "abrir_cuenta.json",
+            "qr.json",
+            "firma.json"
     };
 
 
@@ -48,8 +52,9 @@ public class AppSelectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_selection);
 
-        viewPager = findViewById(R.id.view_pager);
+        cargandoProgresBar = findViewById(R.id.selectAppProgressDialog);
 
+        viewPager = findViewById(R.id.view_pager);
         // adding bottom dots
         bottomProgressDots(0);
 
@@ -57,12 +62,17 @@ public class AppSelectionActivity extends AppCompatActivity {
         viewPager.setAdapter(myViewPagerAdapter);
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
 
-//        Tools.setSystemBarColor(this, R.color.overlay_light_80);
-//        Tools.setSystemBarLight(this);
+    }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        cargandoDialog();
     }
 
     private void bottomProgressDots(int current_index) {
-        LinearLayout dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
+        LinearLayout dotsLayout = findViewById(R.id.layoutDots);
         ImageView[] dots = new ImageView[MAX_STEP];
 
         dotsLayout.removeAllViews();
@@ -93,15 +103,12 @@ public class AppSelectionActivity extends AppCompatActivity {
 
         @Override
         public void onPageScrolled(int arg0, float arg1, int arg2) {
-
         }
 
         @Override
         public void onPageScrollStateChanged(int arg0) {
-
         }
     };
-
 
     /**
      * View pager adapter
@@ -120,12 +127,10 @@ public class AppSelectionActivity extends AppCompatActivity {
             View view = layoutInflater.inflate(R.layout.item_card_wizard_light, container, false);
             ((TextView) view.findViewById(R.id.title)).setText(about_title_array[position]);
             ((TextView) view.findViewById(R.id.description)).setText(about_description_array[position]);
-//            ((ImageView) view.findViewById(R.id.image)).setImageResource(about_images_array[position]);
-
-            ((ImageView) view.findViewById(R.id.image)).setImageResource(about_images_array[position]);
+            ((LottieAnimationView) view.findViewById(R.id.image)).setAnimation(about_images_array[position]);
 
 
-            btnNext = (Button) view.findViewById(R.id.btn_next);
+            btnNext = view.findViewById(R.id.btn_next);
 
             btnNext.setText("Abrir");
 
@@ -134,10 +139,13 @@ public class AppSelectionActivity extends AppCompatActivity {
             btnNext.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    cargandoDialog();
                     int current = viewPager.getCurrentItem();
                     switch (current) {
                         case 0:
-                            Toast.makeText(AppSelectionActivity.this, "Abrir " + current + " App", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(AppSelectionActivity.this, "Abrir " + current + " App", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(v.getContext(), AperturaCuentaMainActivity.class);
+                            startActivity(intent);
                             break;
                         case 1:
                             Toast.makeText(AppSelectionActivity.this, "Abrir " + current + " App", Toast.LENGTH_SHORT).show();
@@ -147,18 +155,14 @@ public class AppSelectionActivity extends AppCompatActivity {
                             break;
 
                     }
-//                    if (current < MAX_STEP) {
-//                        // move to next screen
-//                        viewPager.setCurrentItem(current);
-//                    } else {
-//                        finish();
-//                    }
                 }
             });
 
             container.addView(view);
             return view;
         }
+
+
 
         @Override
         public int getCount() {
@@ -178,4 +182,36 @@ public class AppSelectionActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if(backPressedTime + 2000 > System.currentTimeMillis()){
+            super.onBackPressed();
+            return;
+        } else {
+            showCustomeToast();
+        }
+        backPressedTime = System.currentTimeMillis();
+    }
+
+    private void cargandoDialog(){
+        if (cargandoProgresBar.getVisibility() == View.GONE) {
+            cargandoProgresBar.setVisibility(View.VISIBLE);
+        } else {
+            cargandoProgresBar.setVisibility(View.GONE);
+        }
+    }
+
+    public void showCustomeToast(){
+        View layout = getLayoutInflater().inflate(R.layout.custom_toast, (ViewGroup) findViewById(R.id.custom_toast_layout_id));
+        TextView text = layout.findViewById(R.id.text);
+        text.setTextColor(Color.WHITE);
+        text.setText("Presione nuevamente para salir");
+        CardView lyt_card = layout.findViewById(R.id.lyt_card);
+        lyt_card.setCardBackgroundColor(getResources().getColor(R.color.colorPrimary));
+
+        Toast toast = new Toast(getApplicationContext());
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(layout);
+        toast.show();
+    }
 }

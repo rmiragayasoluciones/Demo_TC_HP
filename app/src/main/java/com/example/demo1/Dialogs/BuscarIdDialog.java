@@ -39,7 +39,6 @@ public class BuscarIdDialog extends AppCompatDialogFragment {
                     mListener.buscarId(idABuscar.getText().toString());
                     dismiss();
                 }
-
             }
         });
 

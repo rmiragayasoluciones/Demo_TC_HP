@@ -28,7 +28,7 @@ public class GetDemoFromApi extends AsyncTask<Void, Void, Void> {
     private static final String TAG = "GetDemoFromApi";
 
     private final WeakReference<MainActivity> mContextRef;
-    private final String tokenCliente;
+    private String tokenCliente;
 
     public GetDemoFromApi(final WeakReference<MainActivity> context, final String token) {
         this.mContextRef = context;
@@ -40,7 +40,11 @@ public class GetDemoFromApi extends AsyncTask<Void, Void, Void> {
         Log.d(TAG, "doInBackground: call");
         RequestQueue queue = VolleySingleton.getInstance(mContextRef.get()).getmRequestQueue();
         Log.d(TAG, "tokenCliente= " + this.tokenCliente);
-        String url = "https://api.myjson.com/bins/" + this.tokenCliente;
+        /* FOR DEMO HARCODEO 06b39eb6-fba6-477c-a5e1-57d95f8a8b1b */
+//        this.tokenCliente = "tokenexp";
+        /* FOR DEMO HARCODEO 06b39eb6-fba6-477c-a5e1-57d95f8a8b1b */
+//        String url = "http://10.13.0.34:5656/api/Demos/GetDemo/" + this.tokenCliente;
+        String url = "http://10.13.0.34:5656/api/Demos/GetDemo/" + this.tokenCliente;
 
         JsonObjectRequest jsonObjectRequestrequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {

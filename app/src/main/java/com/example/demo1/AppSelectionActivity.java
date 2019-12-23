@@ -65,12 +65,6 @@ public class AppSelectionActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        cargandoDialog();
-    }
-
     private void bottomProgressDots(int current_index) {
         LinearLayout dotsLayout = findViewById(R.id.layoutDots);
         ImageView[] dots = new ImageView[MAX_STEP];
@@ -155,14 +149,14 @@ public class AppSelectionActivity extends AppCompatActivity {
                             break;
 
                     }
+                    finish();
                 }
+
             });
 
             container.addView(view);
             return view;
         }
-
-
 
         @Override
         public int getCount() {
@@ -182,16 +176,16 @@ public class AppSelectionActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        if(backPressedTime + 2000 > System.currentTimeMillis()){
-            super.onBackPressed();
-            return;
-        } else {
-            showCustomeToast();
-        }
-        backPressedTime = System.currentTimeMillis();
-    }
+//    @Override
+//    public void onBackPressed() {
+//        if(backPressedTime + 2000 > System.currentTimeMillis()){
+//            super.onBackPressed();
+//            return;
+//        } else {
+//            showCustomeToast();
+//        }
+//        backPressedTime = System.currentTimeMillis();
+//    }
 
     private void cargandoDialog(){
         if (cargandoProgresBar.getVisibility() == View.GONE) {

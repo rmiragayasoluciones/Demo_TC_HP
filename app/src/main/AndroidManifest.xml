@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".DocuFiliatoriosActivity"></activity>
+        <activity android:name=".ProductoActivity" />
+        <activity android:name=".SeleccionSerieDocumentalActivity" />
         <activity android:name=".AperturaCuentaMainActivity" />
         <activity android:name=".AppSelectionActivity" />
         <activity

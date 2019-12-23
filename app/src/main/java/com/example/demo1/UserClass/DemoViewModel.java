@@ -1,5 +1,9 @@
 package com.example.demo1.UserClass;
 
+import android.util.Base64;
+
+import java.util.Date;
+
 public class DemoViewModel {
 
     private int id;
@@ -17,18 +21,18 @@ public class DemoViewModel {
     private String workPathConfig;
     private String oXPDConfig;
 
-    public DemoViewModel(int id, int tcId, String name, String description, String logo, String token, String expirationTime, boolean isExpired, boolean isActive, String creationTime, String updateTime, String url, String workPathConfig, String oXPDConfig) {
+    public DemoViewModel(int id, int tcId, String name, String description, Base64 logo, String token, Date expirationTime, boolean isExpired, boolean isActive, Date creationTime, Date updateTime, String url, String workPathConfig, String oXPDConfig) {
         this.id = id;
         this.tcId = tcId;
         this.name = name;
         this.description = description;
-        this.logo = logo;
+        this.logo = logo.toString();
         this.token = token;
-        this.expirationTime = expirationTime;
+        this.expirationTime = expirationTime.toString();
         this.isExpired = isExpired;
         this.isActive = isActive;
-        this.creationTime = creationTime;
-        this.updateTime = updateTime;
+        this.creationTime = creationTime.toString();
+        this.updateTime = updateTime.toString();
         this.url = url;
         this.workPathConfig = workPathConfig;
         this.oXPDConfig = oXPDConfig;

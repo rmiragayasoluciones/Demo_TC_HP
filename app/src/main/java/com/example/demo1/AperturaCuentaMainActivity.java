@@ -2,6 +2,7 @@ package com.example.demo1;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -105,6 +106,14 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
 
         ViewAnimation.initShowOut(lyt_mic);
         ViewAnimation.initShowOut(lyt_call);
+
+        fab_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleFabMode(v);
+            }
+        });
+
         buscarString.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,15 +128,10 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
         sigString.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                guardarInputs();
                 toggleFabMode(fab_add);
-            }
-        });
+                guardarInputs();
+                startSerieDocuActivity();
 
-        fab_add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggleFabMode(v);
             }
         });
 
@@ -149,9 +153,7 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
         fab_continuar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Call clicked", Toast.LENGTH_SHORT).show();
-                guardarInputs();
-                toggleFabMode(fab_add);
+                sigString.callOnClick();
 
             }
         });
@@ -216,6 +218,9 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
+            Intent intent = new Intent(this, AppSelectionActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             finish();
         }
         return super.onOptionsItemSelected(item);
@@ -289,8 +294,6 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
         MetadataCliente metadataCliente = new MetadataCliente(razonSocialIngresad,mailIngresado,sexoIngresado, paisSeleccionado,fecha);
         DemoViewModelSingleton.getInstance().setMetadataCliente(metadataCliente);
 
-
-
         Log.d(TAG, " RazonSocial " + razonSocialIngresad +
                 " Mail " + mailIngresado +
                 " Sexo " + sexoIngresado +
@@ -363,4 +366,26 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
         spinner.setSelection(0);
     }
 
+    private void startSerieDocuActivity(){
+        Intent intent = new Intent(this, SeleccionSerieDocumentalActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, AppSelectionActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        finish();
+
+    }
+    //    @Override
+//    public void finish() {
+//        super.finish();
+//        Intent intent = new Intent(this, AppSelectionActivity.class);
+//        startActivity(intent);
+//        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+//        finish();
+//    }
 }

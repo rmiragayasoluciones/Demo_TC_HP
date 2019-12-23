@@ -6,6 +6,7 @@
     <color name="soluWhite">#EFEFEF</color>
     <color name="azulHp">#0096d6</color>
     <color name="light_green_600">#7CB342</color>
+    <color name="greentranslucent">#AE9DFF3A</color>
     <color name="grey_90">#263238</color>
     <color name="overlay_light_80">#CCFFFFFF</color>
 </resources>

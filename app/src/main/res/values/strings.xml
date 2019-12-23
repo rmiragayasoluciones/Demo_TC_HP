@@ -22,4 +22,10 @@
         <item>Peru</item>
         <item>Venezuela</item>
     </string-array>
+
+    <string name="defaultString">Default</string>
+
+    <string-array name="default_entries">
+    <item>DEFAULT</item>
+    </string-array>
 </resources>

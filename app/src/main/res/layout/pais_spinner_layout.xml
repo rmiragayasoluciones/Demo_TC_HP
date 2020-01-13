@@ -14,7 +14,7 @@
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/argentina"
+        app:srcCompat="@drawable/bandera_argentina"
         tools:layout_conversion_wrapHeight="300"
         tools:layout_conversion_wrapWidth="300" />
 

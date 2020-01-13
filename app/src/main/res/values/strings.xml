@@ -26,6 +26,6 @@
     <string name="defaultString">Default</string>
 
     <string-array name="default_entries">
-    <item>DEFAULT</item>
+        <item>DEFAULT</item>
     </string-array>
 </resources>

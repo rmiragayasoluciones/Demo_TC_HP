@@ -15,13 +15,15 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.demo1.AperturaCuentaMainActivity;
-import com.example.demo1.UserClass.DemoClientMetadataViewModel;
 import com.example.demo1.UserClass.DemoViewModelSingleton;
+import com.example.demo1.UserClass.MetadataCliente;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.Map;
 
 /** ejemplo Enzo https://api.myjson.com/bins/hld9o */
 /** ejemplo Andy https://api.myjson.com/bins/fv7m4*/
@@ -47,7 +49,7 @@ public class GetDemoClientMetadata extends AsyncTask<Void, Void, Void> {
          * forzar la busqueda al myJson armado
          * */
         Log.d(TAG, "idCliente= " + this.clientId);
-        String token = DemoViewModelSingleton.getInstance().getDemoViewModelGuardado().getToken();
+        final String token = DemoViewModelSingleton.getInstance().getDemoViewModelGuardado().getToken();
         String url = "http://10.13.0.34:5656/api/Demos/GetDemoClientMetadata/" + token + "&" + this.clientId;
         /** FOR DEMO*/
 
@@ -81,7 +83,14 @@ public class GetDemoClientMetadata extends AsyncTask<Void, Void, Void> {
                     mContextRef.get().onClientError("Error status code: " + error.networkResponse.statusCode);
                 }
             }
-        });
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("Token", token);
+                return params;
+            }
+        };
         queue.add(jsonObjectRequestrequest);
         return null;
     }
@@ -89,9 +98,10 @@ public class GetDemoClientMetadata extends AsyncTask<Void, Void, Void> {
     /** Crea el DemoViewModel*/
     private void createObjectFromResponse(JSONObject jsonObject){
         Gson gson = new Gson();
-        DemoClientMetadataViewModel demoClientMetadataViewModel = gson.fromJson(jsonObject.toString(), DemoClientMetadataViewModel.class);
-        Log.d(TAG, demoClientMetadataViewModel.toString());
-        mContextRef.get().onClientCorrect(demoClientMetadataViewModel);
+//        DemoClientMetadataViewModel demoClientMetadataViewModel = gson.fromJson(jsonObject.toString(), DemoClientMetadataViewModel.class);
+        MetadataCliente metadataCliente = gson.fromJson(jsonObject.toString(), MetadataCliente.class);
+        Log.d(TAG, metadataCliente.toString());
+        mContextRef.get().onClientCorrect(metadataCliente);
         return;
     }
 }

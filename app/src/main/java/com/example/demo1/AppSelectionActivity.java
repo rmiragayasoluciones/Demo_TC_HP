@@ -2,6 +2,7 @@ package com.example.demo1;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -15,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -23,11 +23,15 @@ import com.airbnb.lottie.LottieAnimationView;
 
 public class AppSelectionActivity extends AppCompatActivity {
 
+    private static final String TAG = "AppSelectionActivity";
+
     private static final int MAX_STEP = 3;
     private ViewPager viewPager;
     private MyViewPagerAdapter myViewPagerAdapter;
-    private long backPressedTime;
     private View cargandoProgresBar;
+
+    private Bitmap logo;
+    private String clientName;
 
     private String about_title_array[] = {
             "Apertura de Cuenta",
@@ -51,6 +55,16 @@ public class AppSelectionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_selection);
+
+//        Intent intent = getIntent();
+//        if (intent.hasExtra("logo")){
+//            Log.d(TAG, "Intent Has Extra!!!");
+//            logo = intent.getParcelableExtra("logo");
+//        }
+//        if (intent.hasExtra("nombre")){
+//            Log.d(TAG, "Intent Has Nombre!!!");
+//            clientName = intent.getStringExtra("nombre");
+//        }
 
         cargandoProgresBar = findViewById(R.id.selectAppProgressDialog);
 
@@ -133,22 +147,34 @@ public class AppSelectionActivity extends AppCompatActivity {
             btnNext.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     cargandoDialog();
+//                    /** test */
+//                    Intent intent = new Intent(v.getContext(), AperturaCuentaMainActivity.class);
+//                    startActivity(intent);
+//                    finish();
+//                    /** test */
+
+
                     int current = viewPager.getCurrentItem();
+                    Intent intent = new Intent();
                     switch (current) {
                         case 0:
-//                            Toast.makeText(AppSelectionActivity.this, "Abrir " + current + " App", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(v.getContext(), AperturaCuentaMainActivity.class);
-                            startActivity(intent);
+                            intent = new Intent(v.getContext(), AperturaCuentaMainActivity.class);
                             break;
                         case 1:
-                            Toast.makeText(AppSelectionActivity.this, "Abrir " + current + " App", Toast.LENGTH_SHORT).show();
+                            intent = new Intent(v.getContext(), CodigoBarraYQRActivity.class);
+                            startActivity(intent);
                             break;
                         case 2:
                             Toast.makeText(AppSelectionActivity.this, "Abrir " + current + " App", Toast.LENGTH_SHORT).show();
                             break;
 
                     }
+
+                    intent.putExtra("logo", logo);
+                    intent.putExtra("nombre", clientName);
+                    startActivity(intent);
                     finish();
                 }
 
@@ -195,17 +221,17 @@ public class AppSelectionActivity extends AppCompatActivity {
         }
     }
 
-    public void showCustomeToast(){
-        View layout = getLayoutInflater().inflate(R.layout.custom_toast, (ViewGroup) findViewById(R.id.custom_toast_layout_id));
-        TextView text = layout.findViewById(R.id.text);
-        text.setTextColor(Color.WHITE);
-        text.setText("Presione nuevamente para salir");
-        CardView lyt_card = layout.findViewById(R.id.lyt_card);
-        lyt_card.setCardBackgroundColor(getResources().getColor(R.color.colorPrimary));
-
-        Toast toast = new Toast(getApplicationContext());
-        toast.setDuration(Toast.LENGTH_SHORT);
-        toast.setView(layout);
-        toast.show();
-    }
+//    public void showCustomeToast(){
+//        View layout = getLayoutInflater().inflate(R.layout.custom_toast, (ViewGroup) findViewById(R.id.custom_toast_layout_id));
+//        TextView text = layout.findViewById(R.id.text);
+//        text.setTextColor(Color.WHITE);
+//        text.setText("Presione nuevamente para salir");
+//        CardView lyt_card = layout.findViewById(R.id.lyt_card);
+//        lyt_card.setCardBackgroundColor(getResources().getColor(R.color.colorPrimary));
+//
+//        Toast toast = new Toast(getApplicationContext());
+//        toast.setDuration(Toast.LENGTH_SHORT);
+//        toast.setView(layout);
+//        toast.show();
+//    }
 }

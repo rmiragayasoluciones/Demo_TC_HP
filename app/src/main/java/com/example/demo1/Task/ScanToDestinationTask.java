@@ -4,6 +4,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.demo1.DocuFiliatoriosActivity;
+import com.example.demo1.ProductoActivity;
+import com.example.demo1.QRandBarCodeActivity;
 import com.example.demo1.UserClass.ScanOptionsSelected;
 import com.example.demo1.UserClass.ScanUserAttriputes;
 import com.hp.jetadvantage.link.api.CapabilitiesExceededException;
@@ -22,6 +24,8 @@ public class ScanToDestinationTask extends AsyncTask<Void, Void, String> {
     private static final String TAG = "[ScanSample]" + ScanToDestinationTask.class.getSimpleName();
 
     private final WeakReference<DocuFiliatoriosActivity> mContextRef;
+    private final WeakReference<ProductoActivity> mContextRef2;
+    private final WeakReference<QRandBarCodeActivity> mContextRef3;
 
     private final ScanOptionsSelected mScanSelected = ScanOptionsSelected.getInstance();
 
@@ -31,34 +35,65 @@ public class ScanToDestinationTask extends AsyncTask<Void, Void, String> {
 
     private String filename;
 
-    public ScanToDestinationTask(final DocuFiliatoriosActivity context, String filename) {
+    public ScanToDestinationTask(final DocuFiliatoriosActivity context, String fileName) {
         this.mContextRef = new WeakReference<>(context);
-        this.filename = filename;
+        this.mContextRef2 = null;
+        this.mContextRef3 = null;
+
+        this.filename = fileName;
+    }
+
+    public ScanToDestinationTask(final ProductoActivity context, String fileName) {
+        this.mContextRef = null;
+        this.mContextRef2 = new WeakReference<>(context);
+        this.mContextRef3 = null;
+        this.filename = fileName;
+    }
+
+    public ScanToDestinationTask(final QRandBarCodeActivity context, String fileName) {
+        this.mContextRef = null;
+        this.mContextRef2 = null;
+        this.mContextRef3 = new WeakReference<>(context);
+        this.filename = fileName;
     }
 
     @Override
     protected String doInBackground(Void... voids) {
-        DocuFiliatoriosActivity activity = mContextRef.get();
+        Log.d(TAG, "doInBackground: call");
 
         try{
 
-            ScanAttributes attributes;
+            final boolean settingsUi = false;
 
-            final ScanAttributesCaps caps = ScanUserAttriputes.getInstance().getCaps();
+            ScanAttributes attributes = null;
 
-            if (caps == null) {
-                mErrorMsg = "Capabilities not loads";
-                return null;
+            if (!settingsUi){
+                final ScanAttributesCaps caps = ScanUserAttriputes.getInstance().getCaps();
+
+                if (caps == null) {
+                    mErrorMsg = "Capabilities not loads";
+                    return null;
+                }
+
+                attributes = buildScanAttributes(caps);
             }
 
-            attributes = buildScanAttributes(caps);
             final ScanletAttributes taskAttribs = new ScanletAttributes.Builder()
-                    .setShowSettingsUi(false)
+                    .setShowSettingsUi(settingsUi)
                     .build();
 
-
+            String rid = "";
             // Submit the job
-            final String rid = ScannerService.submit(activity, attributes, taskAttribs);
+            if (mContextRef!= null){
+                DocuFiliatoriosActivity activity = mContextRef.get();
+                rid = ScannerService.submit(activity, attributes, taskAttribs);
+            } else if (mContextRef2!= null){
+                ProductoActivity activity = mContextRef2.get();
+                rid = ScannerService.submit(activity, attributes, taskAttribs);
+            } else if (mContextRef3!= null){
+                QRandBarCodeActivity activity = mContextRef3.get();
+                rid = ScannerService.submit(activity, attributes, taskAttribs);
+            }
 
             Log.i(TAG, "Job submitted with rid = " + rid);
             return rid;
@@ -77,8 +112,6 @@ public class ScanToDestinationTask extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-//        // usar el callback
-//        mContextRef.get() callback
     }
 
     private ScanAttributes buildScanAttributes(ScanAttributesCaps capabilities)
@@ -124,7 +157,8 @@ public class ScanToDestinationTask extends AsyncTask<Void, Void, String> {
         final ScanAttributes.DocumentFormat df = ScanAttributes.DocumentFormat.MTIFF;
         Log.d(TAG, "Selected Doc Format:" + df);
 
-        final ScanAttributes.ColorMode cm = ScanAttributes.ColorMode.DEFAULT;
+        //todo Blanco y negro es igual a Gris?
+        final ScanAttributes.ColorMode cm = ScanAttributes.ColorMode.MONO;
         Log.d(TAG, "Selected Color Mode:" + cm.name());
 
         final ScanAttributes.Duplex du = ScanAttributes.Duplex.DEFAULT;
@@ -141,7 +175,7 @@ public class ScanToDestinationTask extends AsyncTask<Void, Void, String> {
 
         final ScanAttributes.ContrastAdjustment contrastAdjustment = ScanAttributes.ContrastAdjustment.DEFAULT;
 
-        final ScanAttributes.Resolution resolution = ScanAttributes.Resolution.DEFAULT;
+        final ScanAttributes.Resolution resolution = ScanAttributes.Resolution.DPI_200;
         Log.d(TAG, "Selected Resolution:" + resolution.name());
 
         final ScanAttributes.DarknessAdjustment darknessAdjustment = ScanAttributes.DarknessAdjustment.DEFAULT;
@@ -193,8 +227,8 @@ public class ScanToDestinationTask extends AsyncTask<Void, Void, String> {
 //        Log.d(TAG, "timeStamp: " + timeStampString);
 
         //Nombre del archivo es razonsocial ingresada
-//        Log.d(TAG, "nombre " + DemoViewModelSingleton.getInstance().getMetadataCliente().getRazonSocial().trim().toLowerCase());
-//        String fileName = DemoViewModelSingleton.getInstance().getMetadataCliente().getRazonSocial().trim().toLowerCase().replace(" ", "_");
+//        Log.d(TAG, "nombre " + DemoViewModelSingleton.getInstance().getMetadataCliente().getBusinessName().trim().toLowerCase());
+//        String fileName = DemoViewModelSingleton.getInstance().getMetadataCliente().getBusinessName().trim().toLowerCase().replace(" ", "_");
 //        Log.d(TAG, "file name: " + fileName);
 
 
@@ -256,14 +290,20 @@ public class ScanToDestinationTask extends AsyncTask<Void, Void, String> {
 
         Log.d(TAG, "buildScanAttributes: to string " + scanAttributesCreated.toString());
 
-
         return scanAttributesCreated;
     }
 
     public FileOptionsAttributesCaps requestFileOptionsCapabilities(ScanAttributes.ColorMode colorMode, ScanAttributes.DocumentFormat docFormat) {
         // cache file options capabilities for building FileOptionsAttributes later
         Result result = new Result();
-        mFileOptionsAttributesCaps = ScannerService.getFileOptionsCapabilities(mContextRef.get(), colorMode, docFormat, result);
+        if (mContextRef!= null){
+            mFileOptionsAttributesCaps = ScannerService.getFileOptionsCapabilities(mContextRef.get(), colorMode, docFormat, result);
+        } else if (mContextRef2!=null){
+            mFileOptionsAttributesCaps = ScannerService.getFileOptionsCapabilities(mContextRef2.get(), colorMode, docFormat, result);
+        } else if (mContextRef3!=null){
+            mFileOptionsAttributesCaps = ScannerService.getFileOptionsCapabilities(mContextRef3.get(), colorMode, docFormat, result);
+        }
+
         if (result.getCode() == Result.RESULT_OK) {
             Log.i(TAG, "ColorMode=" + colorMode.name() + ", DocFormat=" + docFormat.name() + " : "
                     + "getOcrLanguageList: " + mFileOptionsAttributesCaps.getOcrLanguageList().toString()

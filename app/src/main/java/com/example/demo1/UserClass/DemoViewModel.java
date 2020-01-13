@@ -9,33 +9,35 @@ public class DemoViewModel {
     private int id;
     private int tcId;
     private String name;
+    private String clientName;
     private String description;
     private String logo;
     private String token;
-    private String expirationTime;
+    private String tokenExpirationTime;
     private boolean isExpired;
     private boolean isActive;
     private String creationTime;
     private String updateTime;
     private String url;
     private String workPathConfig;
-    private String oXPDConfig;
+    private String oxpdConfig;
 
-    public DemoViewModel(int id, int tcId, String name, String description, Base64 logo, String token, Date expirationTime, boolean isExpired, boolean isActive, Date creationTime, Date updateTime, String url, String workPathConfig, String oXPDConfig) {
+    public DemoViewModel(int id, int tcId, String name,String clientName, String description, Base64 logo, String token, Date tokenExpirationTime, boolean isExpired, boolean isActive, Date creationTime, Date updateTime, String url, String workPathConfig, String oxpdConfig) {
         this.id = id;
         this.tcId = tcId;
         this.name = name;
+        this.clientName = clientName;
         this.description = description;
         this.logo = logo.toString();
         this.token = token;
-        this.expirationTime = expirationTime.toString();
+        this.tokenExpirationTime = tokenExpirationTime.toString();
         this.isExpired = isExpired;
         this.isActive = isActive;
         this.creationTime = creationTime.toString();
         this.updateTime = updateTime.toString();
         this.url = url;
         this.workPathConfig = workPathConfig;
-        this.oXPDConfig = oXPDConfig;
+        this.oxpdConfig = oxpdConfig;
     }
 
     public int getId() {
@@ -86,12 +88,20 @@ public class DemoViewModel {
         this.token = token;
     }
 
-    public String getExpirationTime() {
-        return expirationTime;
+    public String getTokenExpirationTime() {
+        return tokenExpirationTime;
     }
 
-    public void setExpirationTime(String expirationTime) {
-        this.expirationTime = expirationTime;
+    public void setTokenExpirationTime(String tokenExpirationTime) {
+        this.tokenExpirationTime = tokenExpirationTime;
+    }
+
+    public String getClientName() {
+        return clientName;
+    }
+
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
     }
 
     public boolean isExpired() {
@@ -142,12 +152,12 @@ public class DemoViewModel {
         this.workPathConfig = workPathConfig;
     }
 
-    public String getoXPDConfig() {
-        return oXPDConfig;
+    public String getOxpdConfig() {
+        return oxpdConfig;
     }
 
-    public void setoXPDConfig(String oXPDConfig) {
-        this.oXPDConfig = oXPDConfig;
+    public void setOxpdConfig(String oxpdConfig) {
+        this.oxpdConfig = oxpdConfig;
     }
 
     @Override
@@ -156,17 +166,18 @@ public class DemoViewModel {
                 "id=" + id +
                 ", tcId=" + tcId +
                 ", name='" + name + '\'' +
+                ", clientName='" + clientName + '\'' +
                 ", description='" + description + '\'' +
-                ", logo='" + logo + '\'' +
+//                ", logo='" + logo + '\'' +
                 ", token='" + token + '\'' +
-                ", expirationTime='" + expirationTime + '\'' +
+                ", tokenExpirationTime='" + tokenExpirationTime + '\'' +
                 ", isExpired=" + isExpired +
                 ", isActive=" + isActive +
                 ", creationTime='" + creationTime + '\'' +
                 ", updateTime='" + updateTime + '\'' +
                 ", url='" + url + '\'' +
                 ", workPathConfig='" + workPathConfig + '\'' +
-                ", oXPDConfig='" + oXPDConfig + '\'' +
+                ", oxpdConfig='" + oxpdConfig + '\'' +
                 '}';
     }
 }

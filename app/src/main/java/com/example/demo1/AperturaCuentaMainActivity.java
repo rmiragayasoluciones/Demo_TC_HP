@@ -3,7 +3,10 @@ package com.example.demo1;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,24 +15,28 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.demo1.Dialogs.BuscarIdDialog;
 import com.example.demo1.Dialogs.DatePickerFragment;
 import com.example.demo1.Dialogs.VolleyErrorResponseDialog;
 import com.example.demo1.Task.GetDemoClientMetadata;
-import com.example.demo1.UserClass.DemoClientMetadataViewModel;
 import com.example.demo1.UserClass.DemoViewModelSingleton;
 import com.example.demo1.UserClass.MetadataCliente;
 import com.example.demo1.Utils.ViewAnimation;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -38,6 +45,7 @@ import java.util.Calendar;
 public class AperturaCuentaMainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener,
         BuscarIdDialog.BuscarIdDialogListener,
         DatePickerDialog.OnDateSetListener {
+
     private static final String TAG = "AperturaCuentaMainActiv";
 
     private ArrayList<PaisItem> paisItemArrayList;
@@ -46,16 +54,9 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
     private EditText razonSocial, mail;
     private RadioButton femenino, masculino, noEspecifica;
     private Spinner spinner;
-
-    private View lyt_mic;
-    private View lyt_call;
     private boolean rotate = false;
-    private View back_drop;
-    private View buscarString;
-    private View sigString;
+    private View lyt_mic, lyt_call, back_drop;
     private FloatingActionButton fab_add;
-    private FloatingActionButton fab_buscarCliente;
-    private FloatingActionButton fab_continuar;
 
     private View cargandoProgresBar;
     private Button calendar;
@@ -65,6 +66,38 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
         super.onCreate(savedInstanceState);
         setContentView(R.layout.apertura_cuenta_card_overlaps_layout);
 
+//        Intent intent = getIntent();
+//        if (intent.hasExtra("logo")){
+//            Log.d(TAG, "Intent Has Logo!!!");
+//            Bitmap bitmap = (Bitmap) intent.getParcelableExtra("logo");
+//            ImageView logoImageView = findViewById(R.id.logoHPOEmpresaId);
+//            logoImageView.setImageBitmap(bitmap);
+//        }
+//
+//        if (intent.hasExtra("nombre")){
+//            Log.d(TAG, "Intent Has Nombre!!!");
+//            String nombreEmpresa = intent.getStringExtra("nombre");
+//            TextView nombreEmpresaTextView = findViewById(R.id.tituloEmpresaId);
+//            nombreEmpresaTextView.setText(nombreEmpresa);
+//        }
+
+        //todo cargar imagen y nombre ed empresa
+        DemoViewModelSingleton demoViewModelSingleton = DemoViewModelSingleton.getInstance();
+        String nombreEmpresa = demoViewModelSingleton.getDemoViewModelGuardado().getClientName();
+        String logoEnString = demoViewModelSingleton.getDemoViewModelGuardado().getLogo();
+
+        if (nombreEmpresa!=null){
+            TextView nombreEmpresaTextView = findViewById(R.id.tituloEmpresaId);
+            nombreEmpresaTextView.setText(nombreEmpresa);
+        }
+        if (logoEnString!= null){
+            ImageView logoImageView = findViewById(R.id.logoHPOEmpresaId);
+            logoImageView.setImageBitmap(loadImage(logoEnString));
+        }
+
+
+
+
         initToolbar();
         razonSocial = findViewById(R.id.editTextRazonSocialId);
         mail = findViewById(R.id.edittextMailId);
@@ -73,32 +106,21 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
         noEspecifica = findViewById(R.id.noEspecificaRadioBtn);
         noEspecifica.setChecked(true);
         back_drop = findViewById(R.id.back_drop);
-        fab_buscarCliente = findViewById(R.id.fab_search);
-        fab_continuar = findViewById(R.id.fab_continue);
         cargandoProgresBar = findViewById(R.id.llProgressBar);
         calendar = findViewById(R.id.calendarBtn);
-        selectActualDate();
+
         spinner = findViewById(R.id.spinnerPaisesId);
-        sigString = findViewById(R.id.escanearCardViewId);
         fab_add = findViewById(R.id.fab_add);
         lyt_mic = findViewById(R.id.lyt_mic);
         lyt_call = findViewById(R.id.lyt_call);
-        buscarString = findViewById(R.id.buscarCardViewId);
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        /** para testing singleton */
-        DemoViewModelSingleton demoViewModelSingleton = DemoViewModelSingleton.getInstance();
-        Log.d(TAG, "################################");
-        Log.d(TAG, "DemoViewModelSingleton: " + demoViewModelSingleton.getDemoViewModelGuardado().toString());
-        Log.d(TAG, "################################");
-        /** para testing singleton */
-
         initList();
+        selectActualDate();
 
         paisAdapter = new PaisAdapter(this, paisItemArrayList);
         spinner.setAdapter(paisAdapter);
@@ -114,24 +136,23 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
             }
         });
 
-        buscarString.setOnClickListener(new View.OnClickListener() {
+        lyt_mic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Buscar", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "click en el layout");
+//                Toast.makeText(getApplicationContext(), "Buscar", Toast.LENGTH_SHORT).show();
                 toggleFabMode(fab_add);
                 openSearchIdDialog();
-
             }
         });
 
-
-        sigString.setOnClickListener(new View.OnClickListener() {
+        lyt_call.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "click en el layout");
                 toggleFabMode(fab_add);
                 guardarInputs();
                 startSerieDocuActivity();
-
             }
         });
 
@@ -142,22 +163,6 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
             }
         });
 
-        fab_buscarCliente.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggleFabMode(fab_add);
-                openSearchIdDialog();
-            }
-        });
-
-        fab_continuar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sigString.callOnClick();
-
-            }
-        });
-
         calendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -165,7 +170,9 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
                 datePickerFragt.show(getSupportFragmentManager(), "date Picker");
             }
         });
+
     }
+
 
     private void toggleFabMode(View v) {
         rotate = ViewAnimation.rotateFab(v, !rotate);
@@ -183,13 +190,13 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
 
     private void initList() {
         paisItemArrayList = new ArrayList<>();
-        paisItemArrayList.add(new PaisItem("Argentina", R.drawable.argentina));
-        paisItemArrayList.add(new PaisItem("Chile", R.drawable.chile));
-        paisItemArrayList.add(new PaisItem("Brasil", R.drawable.brasil));
-        paisItemArrayList.add(new PaisItem("Colombia", R.drawable.colombia));
-        paisItemArrayList.add(new PaisItem("Uruguay", R.drawable.uruguay));
-        paisItemArrayList.add(new PaisItem("Peru", R.drawable.peru));
-        paisItemArrayList.add(new PaisItem("Venezuela", R.drawable.venezuela));
+        paisItemArrayList.add(new PaisItem("Argentina", R.drawable.bandera_argentina));
+        paisItemArrayList.add(new PaisItem("Brasil", R.drawable.bandera_brasil));
+        paisItemArrayList.add(new PaisItem("Chile", R.drawable.bandera_chile));
+        paisItemArrayList.add(new PaisItem("Colombia", R.drawable.bandera_colombia));
+        paisItemArrayList.add(new PaisItem("Uruguay", R.drawable.bandera_uruguay));
+        paisItemArrayList.add(new PaisItem("Peru", R.drawable.bandera_peru));
+        paisItemArrayList.add(new PaisItem("Venezuela", R.drawable.bandera_venezuela));
     }
 
     @Override
@@ -210,7 +217,6 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
 
     private void openSearchIdDialog() {
         Log.d(TAG, "dialog CALL");
-
         BuscarIdDialog buscarIdDialog = new BuscarIdDialog();
         buscarIdDialog.show(getSupportFragmentManager(), "buscarId Dialog");
     }
@@ -229,25 +235,28 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
     @Override
     public void buscarId(String idCliente) {
         //aca llama al Async
-        new GetDemoClientMetadata(this, idCliente).execute();
         closeKeyboard();
+        new GetDemoClientMetadata(this, idCliente).execute();
         cargandoDialog();
     }
 
-    public void onClientCorrect(DemoClientMetadataViewModel demoCliente) {
-//        ConstraintLayout maxLayout =findViewById(R.id.maxLayout);
-//        maxLayout.requestFocus();
+    public void onClientCorrect(MetadataCliente demoCliente) {
+        ConstraintLayout maxLayout =findViewById(R.id.maxLayout);
+
+        Snackbar snackbar = Snackbar.make(maxLayout,"Ususario " + demoCliente.getBusinessName() + " encontrado", Snackbar.LENGTH_SHORT);
+        snackbar.getView().setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        snackbar.show();
         closeKeyboard();
         cargandoDialog();
         llenarCampos(demoCliente);
     }
 
-    private void llenarCampos(DemoClientMetadataViewModel demoCliente) {
+    private void llenarCampos(MetadataCliente demoCliente) {
         if (demoCliente.getBusinessName() != null) {
             razonSocial.setText(demoCliente.getBusinessName());
         }
-        if (demoCliente.getMail() != null) {
-            mail.setText(demoCliente.getMail());
+        if (demoCliente.getEmail() != null) {
+            mail.setText(demoCliente.getEmail());
         }
         if (demoCliente.getCountry() != null) {
             checkPaisSpinerSelection(demoCliente.getCountry());
@@ -291,7 +300,7 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
         String paisSeleccionado = paisSeleccionadoObj.getmPaisNombre();
         String fecha = calendar.getText().toString();
 
-        MetadataCliente metadataCliente = new MetadataCliente(razonSocialIngresad,mailIngresado,sexoIngresado, paisSeleccionado,fecha);
+        MetadataCliente metadataCliente = new MetadataCliente(razonSocialIngresad,mailIngresado,sexoIngresado, paisSeleccionado,null, null, null, fecha);
         DemoViewModelSingleton.getInstance().setMetadataCliente(metadataCliente);
 
         Log.d(TAG, " RazonSocial " + razonSocialIngresad +
@@ -302,9 +311,11 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
     }
 
     private String getRadioBtnSelected() {
-        if (femenino.isSelected()) {
+        if (femenino.isChecked()) {
+            Log.d(TAG, "femenino");
             return femenino.getText().toString();
-        } else if (masculino.isSelected()) {
+        } else if (masculino.isChecked()) {
+            Log.d(TAG, "masculino");
             return masculino.getText().toString();
         } else return noEspecifica.getText().toString();
 
@@ -380,6 +391,15 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
         finish();
 
     }
+
+    private Bitmap loadImage(String logoEnString){
+
+        byte[] decodeString = Base64.decode(logoEnString, Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodeString, 0 , decodeString.length);
+
+        return  decodedByte;
+    }
+
     //    @Override
 //    public void finish() {
 //        super.finish();

@@ -2,11 +2,15 @@
 <resources>
     <color name="colorPrimary">#0096d6</color>
     <color name="colorPrimaryDark">#0096d6</color>
+    <color name="colorPrimarymasDark">#0075A5</color>
     <color name="colorAccent">#0096d6</color>
     <color name="soluWhite">#EFEFEF</color>
     <color name="azulHp">#0096d6</color>
     <color name="light_green_600">#7CB342</color>
     <color name="greentranslucent">#AE9DFF3A</color>
     <color name="grey_90">#263238</color>
+    <color name="gris">#5E5E5E</color>
     <color name="overlay_light_80">#CCFFFFFF</color>
+    <color name="errorColor">#F44336</color>
+
 </resources>

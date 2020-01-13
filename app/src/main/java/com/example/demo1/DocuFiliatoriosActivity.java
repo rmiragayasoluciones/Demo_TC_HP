@@ -9,21 +9,28 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.preference.PreferenceManager;
 
 import com.example.demo1.Dialogs.DigitalizarDocuFiliatoriosDialog;
+import com.example.demo1.Dialogs.FinalizacionDeTrabajo;
+import com.example.demo1.Task.CreateDocument;
 import com.example.demo1.Task.InitializationTask;
 import com.example.demo1.Task.JobCompleteReciever;
 import com.example.demo1.Task.ScanToDestinationTask;
+import com.example.demo1.UserClass.CreateDocumentViewModel;
+import com.example.demo1.UserClass.DemoViewModelSingleton;
 import com.example.demo1.UserClass.ScanOptionsSelected;
 import com.example.demo1.UserClass.ScanUserAttriputes;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
 import com.hp.jetadvantage.link.api.Result;
 import com.hp.jetadvantage.link.api.job.JobInfo;
 import com.hp.jetadvantage.link.api.job.JobService;
@@ -33,12 +40,12 @@ import com.hp.jetadvantage.link.api.scanner.ScanAttributes;
 import com.hp.jetadvantage.link.api.scanner.ScanAttributesCaps;
 
 import java.io.File;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class DocuFiliatoriosActivity extends AppCompatActivity {
+public class DocuFiliatoriosActivity extends AppCompatActivity implements FinalizacionDeTrabajo.FinalizacionDeTrabajoListener,
+                                                                    CreateDocument.OnCreateDocumentsListener {
     private static final String TAG = "DocuFiliatoriosActivity";
 
     private ConstraintLayout layout;
@@ -55,12 +62,15 @@ public class DocuFiliatoriosActivity extends AppCompatActivity {
     private DigitalizarDocuFiliatoriosDialog dialog;
     private int dialogNumero = 0;
 
-    private List<String> listFilesPath = new ArrayList<>();
+    private TextView paperSizeSelected;
 
-    private String job_builder_selected;
-    private String scan_preview_selected;
-    private String paper_size_selected;
-    private String blank_pages_selected;
+    private List<String> listFilesPath = new ArrayList<>();
+    private List<String> listFilesNames = new ArrayList<>();
+
+//    private String job_builder_selected;
+    private SwitchCompat jobBuilderSwitch, scanPreviewSwitch, blankPagesSwitch;
+//    private String scan_preview_selected;
+    private String paper_size_selected = "A4";
 
     /* Background task for JetAdvantageLink API initialization */
     private InitializationTask mInitializationTask;
@@ -72,11 +82,18 @@ public class DocuFiliatoriosActivity extends AppCompatActivity {
     private View coverView;
     private ConstraintLayout progressBar;
 
+    /* ScanCount */
+    private int scanCount = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_docu_filiatorios);
+        setContentView(R.layout.activity_docu_filiatorios2);
+
+        blankPagesSwitch = findViewById(R.id.blankPagesId);
+        jobBuilderSwitch = findViewById(R.id.jobBuilderSwitch);
+        scanPreviewSwitch = findViewById(R.id.scanPreviewSwitch);
 
         cargarOpcionesaBotones();
 
@@ -84,7 +101,7 @@ public class DocuFiliatoriosActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.llProgressBar);
 
         /* JobObserver */
-        mJobObserver = new JobObserver(new Handler(), this);
+        mJobObserver = new JobObserver(new Handler());
 
         layout = findViewById(R.id.layoutforSnack);
 
@@ -93,6 +110,8 @@ public class DocuFiliatoriosActivity extends AppCompatActivity {
         paperSizeCardV = findViewById(R.id.paperSize);
         removeBlankPagesCardV = findViewById(R.id.removeBlankPages);
         siguiente = findViewById(R.id.siguienteBtnId);
+        paperSizeSelected = findViewById(R.id.paperSelectedId);
+
 
         siguiente.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,33 +122,37 @@ public class DocuFiliatoriosActivity extends AppCompatActivity {
         });
 
 
-        jobBuilderCardV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showJobBuilderDialog();
-            }
-        });
+//        jobBuilderCardV.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(DocuFiliatoriosActivity.this, "Job Builder", Toast.LENGTH_SHORT).show();
+////                showJobBuilderDialog();
+//            }
+//        });
 
-        scanPrevieweCardV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showScanPreviewDialog();
-            }
-        });
+//        scanPrevieweCardV.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(DocuFiliatoriosActivity.this, "scanPrevieweCardV", Toast.LENGTH_SHORT).show();
+////                showScanPreviewDialog();
+//            }
+//        });
 
         paperSizeCardV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                Toast.makeText(DocuFiliatoriosActivity.this, "paperSizeCardV", Toast.LENGTH_SHORT).show();
                 showPaperSizeDialog();
             }
         });
 
-        removeBlankPagesCardV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showBlankPagesDialog();
-            }
-        });
+//        removeBlankPagesCardV.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(DocuFiliatoriosActivity.this, "removeBlankPagesCardV", Toast.LENGTH_SHORT).show();
+////                showBlankPagesDialog();
+//            }
+//        });
 
     }
 
@@ -156,7 +179,7 @@ public class DocuFiliatoriosActivity extends AppCompatActivity {
     private void openDialogDigitalizacion(int numeroDeDialog) {
         dialog = new DigitalizarDocuFiliatoriosDialog(this, numeroDeDialog);
         dialog.show(getSupportFragmentManager(), "digitalizar fragment");
-        dialog.setCancelable(false);
+//        dialog.setCancelable(false);
     }
 
     /**
@@ -235,74 +258,97 @@ public class DocuFiliatoriosActivity extends AppCompatActivity {
 
         //**********************************
 
+        jobBuilderSwitch.setChecked(false);
+        scanPreviewSwitch.setChecked(false);
+        blankPagesSwitch.setChecked(false);
+
     }
 
-
-    private void showJobBuilderDialog() {
-        //get prev selecction
-        int checkedItem;
-        if (job_builder_selected != null) {
-            checkedItem = jobassemblymode.indexOf(job_builder_selected);
-        } else {
-            checkedItem = 0;
-        }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Job Builder");
-        builder.setSingleChoiceItems(JOBBUILDER, checkedItem, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                job_builder_selected = JOBBUILDER[i];
-            }
-        });
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Snackbar.make(layout, "selected : " + job_builder_selected, Snackbar.LENGTH_SHORT).show();
-            }
-        });
-        builder.show();
-    }
-
-
-    private void showScanPreviewDialog() {
-        //get prev selecction
-        int checkedItem;
-        if (scan_preview_selected != null) {
-            checkedItem = scanpreview.indexOf(scan_preview_selected);
-        } else {
-            checkedItem = 0;
-        }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Scan Preview");
-        builder.setSingleChoiceItems(SCANPREVIEW, checkedItem, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                scan_preview_selected = SCANPREVIEW[i];
-            }
-        });
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Snackbar.make(layout, "selected : " + scan_preview_selected, Snackbar.LENGTH_SHORT).show();
-            }
-        });
-        builder.show();
-    }
-
+//    private void showJobBuilderDialog() {
+//        //get prev selecction
+//        int checkedItem;
+//        if (job_builder_selected != null) {
+//            checkedItem = jobassemblymode.indexOf(job_builder_selected);
+//        } else {
+//            checkedItem = 0;
+//        }
+//
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setTitle("Job Builder");
+//        builder.setSingleChoiceItems(JOBBUILDER, checkedItem, new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                job_builder_selected = JOBBUILDER[i];
+//            }
+//        });
+//        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                Snackbar.make(layout, "selected : " + job_builder_selected, Snackbar.LENGTH_SHORT).show();
+//            }
+//        });
+//        builder.show();
+//    }
+//
+//
+//    private void showScanPreviewDialog() {
+//        //get prev selecction
+//        int checkedItem;
+//        if (scan_preview_selected != null) {
+//            checkedItem = scanpreview.indexOf(scan_preview_selected);
+//        } else {
+//            checkedItem = 0;
+//        }
+//
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setTitle("Scan Preview");
+//        builder.setSingleChoiceItems(SCANPREVIEW, checkedItem, new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                scan_preview_selected = SCANPREVIEW[i];
+//            }
+//        });
+//        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                Snackbar.make(layout, "selected : " + scan_preview_selected, Snackbar.LENGTH_SHORT).show();
+//            }
+//        });
+//        builder.show();
+//    }
+    //    private void showBlankPagesDialog() {
+//        //get prev selecction
+//        int checkedItem;
+//        if (blank_pages_selected != null) {
+//            checkedItem = blackImageRemovalEntries.indexOf(blank_pages_selected);
+//        } else {
+//            checkedItem = 0;
+//        }
+//
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setTitle("Remove Blank Pages");
+//        builder.setSingleChoiceItems(BLANKPAGES, checkedItem, new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                blank_pages_selected = BLANKPAGES[i];
+//            }
+//        });
+//        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                Snackbar.make(layout, "selected : " + blank_pages_selected, Snackbar.LENGTH_SHORT).show();
+//            }
+//        });
+//        builder.show();
+//    }
 
     private void showPaperSizeDialog() {
         //get prev selecction
-        int checkedItem;
-        if (paper_size_selected != null) {
-            checkedItem = paperSize.indexOf(paper_size_selected);
-        } else {
-            checkedItem = 0;
-        }
+
+        int checkedItem = paperSize.indexOf(paper_size_selected);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Paper Size");
+        builder.setTitle("Tamaño de hoja");
         builder.setSingleChoiceItems(PAPERSIZE, checkedItem, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -312,34 +358,8 @@ public class DocuFiliatoriosActivity extends AppCompatActivity {
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Snackbar.make(layout, "selected : " + paper_size_selected, Snackbar.LENGTH_SHORT).show();
-            }
-        });
-        builder.show();
-    }
-
-
-    private void showBlankPagesDialog() {
-        //get prev selecction
-        int checkedItem;
-        if (blank_pages_selected != null) {
-            checkedItem = blackImageRemovalEntries.indexOf(blank_pages_selected);
-        } else {
-            checkedItem = 0;
-        }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Remove Blank Pages");
-        builder.setSingleChoiceItems(BLANKPAGES, checkedItem, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                blank_pages_selected = BLANKPAGES[i];
-            }
-        });
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Snackbar.make(layout, "selected : " + blank_pages_selected, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(android.R.id.content), paper_size_selected + " seleccionado", Snackbar.LENGTH_SHORT).show();
+                paperSizeSelected.setText(paper_size_selected);
             }
         });
         builder.show();
@@ -348,15 +368,44 @@ public class DocuFiliatoriosActivity extends AppCompatActivity {
 
     private void saveOptionsSelected() {
         Log.d(TAG, "paperSize: " + paper_size_selected);
-        Log.d(TAG, "blankPages: " + blank_pages_selected);
-        Log.d(TAG, "scanPreview: " + scan_preview_selected);
-        Log.d(TAG, "JobBuilder: " + job_builder_selected);
+        Log.d(TAG, "blankPages isCheck: " + blankPagesSwitch.isChecked());
+        Log.d(TAG, "scanPreview isCheck: " + scanPreviewSwitch.isChecked());
+        Log.d(TAG, "JobBuilder isCheck: " + jobBuilderSwitch.isChecked());
+
+        String blank_pages_selected;
+        if (blankPagesSwitch.isChecked()){
+            blank_pages_selected = BLANKPAGES[1];
+            Log.d(TAG, "blank_pages_selected: " + blank_pages_selected);
+        } else {
+            blank_pages_selected = BLANKPAGES[2];
+            Log.d(TAG, "blank_pages_selected: " + blank_pages_selected);
+        }
+
+        String scan_preview_selected;
+        if (scanPreviewSwitch.isChecked()){
+            scan_preview_selected = SCANPREVIEW[2];
+            Log.d(TAG, "scan_preview_selected: " + scan_preview_selected);
+        } else {
+            scan_preview_selected = SCANPREVIEW[1];
+            Log.d(TAG, "scan_preview_selected: " + scan_preview_selected);
+        }
+
+        String job_builder_selected;
+        if (jobBuilderSwitch.isChecked()){
+            job_builder_selected = JOBBUILDER[2];
+            Log.d(TAG, "job_builder_selected: " + job_builder_selected);
+        } else {
+            job_builder_selected = JOBBUILDER[1];
+            Log.d(TAG, "job_builder_selected: " + job_builder_selected);
+        }
 
         ScanOptionsSelected scanOptionsSelected = ScanOptionsSelected.getInstance();
-        scanOptionsSelected.setBlankPagesSelected(blank_pages_selected);
         scanOptionsSelected.setPaperSize(paper_size_selected);
+
+        scanOptionsSelected.setBlankPagesSelected(blank_pages_selected);
         scanOptionsSelected.setScanPreviewSelected(scan_preview_selected);
         scanOptionsSelected.setJobBuilderSelected(job_builder_selected);
+
     }
 
     public void onDigitalizacionDialogResponse() {
@@ -374,7 +423,7 @@ public class DocuFiliatoriosActivity extends AppCompatActivity {
            case 3:
 
        }
-//       scanToDestination(DemoViewModelSingleton.getInstance().getMetadataCliente().getRazonSocial().trim().toLowerCase().replace(" ", "_"));
+//       scanToDestination(DemoViewModelSingleton.getInstance().getMetadataCliente().getBusinessName().trim().toLowerCase().replace(" ", "_"));
     }
 
     private void onScannResponse() {
@@ -385,21 +434,87 @@ public class DocuFiliatoriosActivity extends AppCompatActivity {
             for (String i : listFilesPath){
                 Log.d(TAG, "path " + i);
             }
-            //todo metodo volley para subir archivos
+            for (String i : listFilesNames){
+                Log.d(TAG, "path " + i);
+            }
             cartelSubirALaNube();
+            //todo metodo volley para subir archivos, call CREATEDOCUMENTS
+            subirArchivos(listFilesPath.get(0), listFilesNames.get(0));
+
             return;
         }
         openDialogDigitalizacion(dialogNumero);
     }
 
-    private void cartelSubirALaNube() {
+    private void subirArchivos(String filePath, String filename) {
+
+        new CreateDocument(this,filePath, filename, convertJsonBojectToString()).execute();
+        /** Async Simula la subida a la web*/
+//        new AsyncTask<Void, Void, Void>(){
+//            @Override
+//            protected void onPostExecute(Void aVoid) {
+//                super.onPostExecute(aVoid);
+//                cartelSubirALaNube();
+//
+//            }
+//
+//            @Override
+//            protected Void doInBackground(Void... voids) {
+//                try {
+//                    Thread.sleep(4000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                return null;
+//            }
+//        }.execute();
+        /** Async Simula la subida a la web*/
+    }
+
+    @Override
+    public void onCreateDocumentComplete() {
+        Log.d(TAG, "onCreateDocumentsFinish: scanCount es: " + scanCount);
+        switch (scanCount){
+            case 0:
+                subirArchivos(listFilesPath.get(1), listFilesNames.get(1));
+                break;
+            case 1:
+                subirArchivos(listFilesPath.get(2), listFilesNames.get(2));
+                break;
+            case 2:
+                cartelSubirALaNube();
+                cartelFinalizacionTRabajo();
+                break;
+        }
+        scanCount++;
+    }
+
+
+
+    public void cartelSubirALaNube() {
         Log.d(TAG, "progressDialodNubeUploadVISIBLE: CALL");
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                progressBar.setVisibility(View.VISIBLE);
-            }
-        });
+
+        if (progressBar.getVisibility() == View.INVISIBLE){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    progressBar.setVisibility(View.VISIBLE);
+                }
+            });
+        } else if (progressBar.getVisibility() == View.VISIBLE){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
+            });
+        }
+    }
+
+    public void cartelFinalizacionTRabajo(){
+        FinalizacionDeTrabajo finalizacionDeTrabajo = new FinalizacionDeTrabajo();
+        finalizacionDeTrabajo.setCancelable(false);
+        finalizacionDeTrabajo.show(getSupportFragmentManager(), "finalizacion fialog");
     }
 
     public void desButton() {
@@ -413,15 +528,48 @@ public class DocuFiliatoriosActivity extends AppCompatActivity {
         });
     }
 
+    
+    /** CallBack de FinalizacionTrabajo Dialog */
+    @Override
+    public void realizarOtroTrabajo(boolean siOno) {
+        if (siOno){
+            Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
+            finish();
+        } else {
+            closeApp();
+        }
+    }
+
+    private void closeApp() {
+        Intent intent = new Intent(getApplicationContext(), SeleccionSerieDocumentalActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("EXIT", true);
+        startActivity(intent);
+    }
+
+    private String convertJsonBojectToString(){
+
+        DemoViewModelSingleton demoViewModelSingleton = DemoViewModelSingleton.getInstance();
+
+
+        String serieName = "Filiation";
+        int demoId = demoViewModelSingleton.getDemoViewModelGuardado().getId();
+        String client = demoViewModelSingleton.getDemoViewModelGuardado().getClientName();
+
+        CreateDocumentViewModel createDocumentViewModel = new CreateDocumentViewModel(serieName, demoId, client, demoViewModelSingleton.getMetadataCliente());
+
+        Gson gson = new Gson();
+
+        return gson.toJson(createDocumentViewModel);
+
+    }
+
     private class JobObserver extends JobService.AbstractJobletObserver {
         private static final String TAG = "JobObserver";
 
-        private WeakReference<DocuFiliatoriosActivity> mContext;
 
-
-        public JobObserver(final Handler handler, final DocuFiliatoriosActivity context) {
+        public JobObserver(final Handler handler) {
             super(handler);
-            this.mContext = new WeakReference<>(context);
         }
 
         @Override
@@ -484,22 +632,13 @@ public class DocuFiliatoriosActivity extends AppCompatActivity {
             String file = ruta.split(splitBy)[1];
             Log.d(TAG, "onComplete file: " + file);
 
+            listFilesNames.add(file);
             listFilesPath.add(ruta);
 
-//            PersonaSeleccionada persona = PersonaSeleccionada.getInstance();
-//            persona.setPathToScanFile(ruta);
-//            persona.setScanFileName(file);
-//            persona.createTxtFile();
-//            //crea el TXT
-//            GraphHelper.getInstance().setmCallback(this);
-//            GraphHelper.getInstance().createFolder();
-////            scanProgresDialogEnds();
-//            progressDialodNubeUploadVISIBLE();
-            //cartelLoadVisible
             /** NUEVO*/
 
             // terminado el scan llama al metodo para cambiar el dialog
-            mContext.get().onScannResponse();
+            onScannResponse();
 
         }
 
@@ -526,13 +665,13 @@ public class DocuFiliatoriosActivity extends AppCompatActivity {
         public void onCancel(String s) {
             Log.d(TAG, "onCancel: CALL");
             Toast.makeText(DocuFiliatoriosActivity.this, "Escaneo Cancelado", Toast.LENGTH_SHORT).show();
-//            deleteAllFiles();
+            deleteAllFiles();
+            restartActivity();
 
         }
 
 
     }
-
 
     @Override
     protected void onStop() {
@@ -541,28 +680,36 @@ public class DocuFiliatoriosActivity extends AppCompatActivity {
         finish();
     }
 
+    private void restartActivity() {
+        Intent i = getIntent();
+        finish();
+        startActivity(i);
+    }
+
     private void deleteAllFiles() {
-        Log.d(TAG, "SE BORRA TODO LO DE LA CARPETA");
+        Log.d(TAG, "**************************");
 
         File folder2 = new File(this.getFilesDir().getAbsolutePath());
-        if (folder2.isDirectory()) {
-            String[] children = folder2.list();
-            Log.d(TAG, "deleteAllFiles: folder2.getAbsolutePath()" + folder2.getAbsolutePath());
-            Log.d(TAG, "deleteAllFiles: children.length " + children.length);
+        String[] children = folder2.list();
+        Log.d(TAG, "children.length: " + children.length);
+        Log.d(TAG, "folder2.getFreeSpace(): " + folder2.getFreeSpace());
+        deleteRecursive(folder2);
+        folder2 = new File(this.getFilesDir().getAbsolutePath());
+        Log.d(TAG, "children.length: " + children.length);
+        Log.d(TAG, "folder2.getFreeSpace(): " + folder2.getFreeSpace());
 
-            for (int i = 0; i < children.length; i++) {
-                Log.d(TAG, "deleteAllFiles children.length: " + children.length);
-                Log.d(TAG, "children " + i + children[i] + " se borrará");
-                Log.d(TAG, "children[i].toString()" + children[i].toString());
-                File filex = new File(this.getFilesDir().getAbsolutePath() + children[i]);
-                if (filex.exists()) {
-                    Log.d(TAG, "deleteAllFiles: file exist " + filex.getName());
-                    filex.delete();
-                }
+        Log.d(TAG, "**************************");
+    }
+
+    public void deleteRecursive(File fileOrDirectory) {
+
+        if (fileOrDirectory.isDirectory()) {
+            for (File child : fileOrDirectory.listFiles()) {
+                deleteRecursive(child);
             }
-
         }
-        Log.d(TAG, "SE BORRÓ TODO LO DE " + folder2.getAbsolutePath());
+        Log.d(TAG, "fileOrDirectory " + fileOrDirectory.getAbsolutePath() + " will be delete");
+        fileOrDirectory.delete();
     }
 
 
@@ -572,10 +719,10 @@ public class DocuFiliatoriosActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
-    public enum DialogStatus {
-        SOLICITA_ID,
-        SOLICITA_CONSTANCIA,
-        SOLICITA_OTRADOCU,
-        TERMINA
-    }
+//    public enum DialogStatus {
+//        SOLICITA_ID,
+//        SOLICITA_CONSTANCIA,
+//        SOLICITA_OTRADOCU,
+//        TERMINA
+//    }
 }

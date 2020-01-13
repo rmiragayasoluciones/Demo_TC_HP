@@ -1,50 +1,56 @@
 package com.example.demo1.UserClass;
 
 public class MetadataCliente {
-    private String razonSocial;
-    private String mail;
-    private String sexo;
-    private String pais;
+    private String businessName;
+    private String email;
+    private String sex;
+    private String country;
+    private String documentName;
+    private String code;
+    private String reason;
     private String fecha;
 
-    public MetadataCliente(String razonSocial, String mail, String sexo, String pais, String fecha) {
-        this.razonSocial = razonSocial;
-        this.mail = mail;
-        this.sexo = sexo;
-        this.pais = pais;
+    public MetadataCliente(String businessName, String mail, String sex, String country,String documentName, String codigoDe, String razonDe ,String fecha) {
+        this.businessName = businessName;
+        this.email = mail;
+        this.sex = sex;
+        this.country = country;
+        this.documentName = documentName;
+        this.code = codigoDe;
+        this.reason = razonDe;
         this.fecha = fecha;
     }
 
-    public String getRazonSocial() {
-        return razonSocial;
+    public String getBusinessName() {
+        return businessName;
     }
 
-    public void setRazonSocial(String razonSocial) {
-        this.razonSocial = razonSocial;
+    public void setBusinessName(String businessName) {
+        this.businessName = businessName;
     }
 
-    public String getMail() {
-        return mail;
+    public String getEmail() {
+        return email;
     }
 
-    public void setMail(String mail) {
-        this.mail = mail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getSexo() {
-        return sexo;
+    public String getSex() {
+        return sex;
     }
 
-    public void setSexo(String sexo) {
-        this.sexo = sexo;
+    public void setSex(String sex) {
+        this.sex = sex;
     }
 
-    public String getPais() {
-        return pais;
+    public String getCountry() {
+        return country;
     }
 
-    public void setPais(String pais) {
-        this.pais = pais;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public String getFecha() {
@@ -53,5 +59,29 @@ public class MetadataCliente {
 
     public void setFecha(String fecha) {
         this.fecha = fecha;
+    }
+
+    public String getDocumentName() {
+        return documentName;
+    }
+
+    public void setDocumentName(String documentName) {
+        this.documentName = documentName;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 }

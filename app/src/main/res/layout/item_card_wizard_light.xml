@@ -57,11 +57,10 @@
                 android:scaleType="centerInside"
                 android:layout_marginLeft="35dp"
                 android:layout_marginRight="35dp"
-                app:lottie_loop="false"
+                app:lottie_loop="true"
                 app:lottie_autoPlay="true"
                 android:padding="35dp"
                 app:lottie_fileName="abrir_cuenta.json"/>
-
             <com.balysv.materialripple.MaterialRippleLayout
                 style="@style/RippleStyleWhite"
                 android:layout_width="match_parent"

@@ -17,6 +17,10 @@ public class SeleccionSerieDocumentalActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seleccion_serie_documental);
 
+        if (getIntent().getBooleanExtra("EXIT", false)) {
+            finish();
+        }
+
         docuFiliatorios = findViewById(R.id.docuFiliatoriosId);
         docuFiliatorios.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,6 +58,5 @@ public class SeleccionSerieDocumentalActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AppSelectionActivity.class);
         startActivity(intent);
         finish();
-
     }
 }

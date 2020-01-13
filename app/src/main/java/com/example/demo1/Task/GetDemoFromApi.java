@@ -1,8 +1,12 @@
 package com.example.demo1.Task;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.Base64;
 import android.util.Log;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -17,6 +21,8 @@ import com.google.gson.Gson;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -27,6 +33,7 @@ import java.lang.ref.WeakReference;
 public class GetDemoFromApi extends AsyncTask<Void, Void, Void> {
     private static final String TAG = "GetDemoFromApi";
 
+    final String token = DemoViewModelSingleton.getInstance().getDemoViewModelGuardado().getToken();
     private final WeakReference<MainActivity> mContextRef;
     private String tokenCliente;
 
@@ -60,7 +67,15 @@ public class GetDemoFromApi extends AsyncTask<Void, Void, Void> {
                 Log.d(TAG, "onErrorResponse: " + error.getMessage());
                 mContextRef.get().onTokenError(error.getMessage());
             }
-        });
+        }){
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("Token", token);
+                return params;
+            }
+        };
         queue.add(jsonObjectRequestrequest);
         return null;
 
@@ -68,6 +83,7 @@ public class GetDemoFromApi extends AsyncTask<Void, Void, Void> {
 
     /** Crea el DemoViewModel y guarda en un singleton */
     private void saveInSingleton(JSONObject jsonObject){
+
         Gson gson = new Gson();
         DemoViewModel demoViewModel = gson.fromJson(jsonObject.toString(), DemoViewModel.class);
         DemoViewModelSingleton demoViewModelSingleton = DemoViewModelSingleton.getInstance(demoViewModel);
@@ -75,6 +91,7 @@ public class GetDemoFromApi extends AsyncTask<Void, Void, Void> {
         Log.d(TAG, "saveInSingleton: " + demoViewModelSingleton.getDemoViewModelGuardado().toString());
         Log.d(TAG, "################################");
         verificarEstadoDemo(demoViewModel);
+
     }
 
     /** verifica el estado de la demo una vez recibida de la api*/
@@ -87,8 +104,19 @@ public class GetDemoFromApi extends AsyncTask<Void, Void, Void> {
             mContextRef.get().onTokenError(mContextRef.get().getString(R.string.token_expirado));
             //toodo perfecto, vuelve a Main
         } else {
+
             mContextRef.get().onApiResponseComplete();
         }
+    }
+
+    private Bitmap loadImage(){
+        DemoViewModelSingleton demoViewModelSingleton = DemoViewModelSingleton.getInstance();
+        String logoEnString = demoViewModelSingleton.getDemoViewModelGuardado().getLogo();
+
+        byte[] decodeString = Base64.decode(logoEnString, Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodeString, 0 , decodeString.length);
+
+        return  decodedByte;
     }
 
 }

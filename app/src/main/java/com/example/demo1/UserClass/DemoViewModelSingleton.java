@@ -21,7 +21,6 @@ public class DemoViewModelSingleton {
         return mInstance;
     }
 
-
     public DemoViewModel getDemoViewModelGuardado() {
         return demoViewModel;
     }

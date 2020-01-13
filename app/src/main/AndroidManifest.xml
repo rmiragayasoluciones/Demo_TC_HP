@@ -14,7 +14,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".DocuFiliatoriosActivity"></activity>
+        <activity android:name=".QRandBarCodeActivity"></activity>
+        <activity android:name=".CodigoBarraYQRActivity" />
+        <activity android:name=".TestActivity" />
+        <activity android:name=".DocuFiliatoriosActivity" />
         <activity android:name=".ProductoActivity" />
         <activity android:name=".SeleccionSerieDocumentalActivity" />
         <activity android:name=".AperturaCuentaMainActivity" />

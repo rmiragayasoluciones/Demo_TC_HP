@@ -1,6 +1,5 @@
 package com.example.demo1;
 
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
@@ -153,6 +152,7 @@ public class MainActivity extends AppCompatActivity{
         Log.d(TAG, "startNextActivity: inicia");
 
         Intent intent = new Intent(this, AppSelectionActivity.class);
+//        Intent intent = new Intent(this, TestActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         finish();

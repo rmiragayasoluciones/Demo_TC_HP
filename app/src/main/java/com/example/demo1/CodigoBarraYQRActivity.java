@@ -58,7 +58,7 @@ public class CodigoBarraYQRActivity extends AppCompatActivity {
 
     private void startBarCodeActivity(){
         Intent intent = new Intent(this, QRandBarCodeActivity.class);
-        intent.putExtra("TIPO", "BARCODE");
+        intent.putExtra("TIPO", "Barcode");
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
@@ -84,8 +84,6 @@ public class CodigoBarraYQRActivity extends AppCompatActivity {
                     public void onAnimationEnd(Animator animation) {
                         barCodeCardView.setAlpha(0f);
                         barCodeCardView.setVisibility(View.VISIBLE);
-
-
                         barCodeCardView.animate()
                                 .alpha(1f)
                                 .setDuration(1000);

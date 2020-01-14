@@ -6,6 +6,7 @@ import android.util.Log;
 import com.example.demo1.DocuFiliatoriosActivity;
 import com.example.demo1.ProductoActivity;
 import com.example.demo1.QRandBarCodeActivity;
+import com.example.demo1.RecorteDeFirmaActivity;
 import com.example.demo1.UserClass.ScanOptionsSelected;
 import com.example.demo1.UserClass.ScanUserAttriputes;
 import com.hp.jetadvantage.link.api.CapabilitiesExceededException;
@@ -26,6 +27,7 @@ public class ScanToDestinationTask extends AsyncTask<Void, Void, String> {
     private final WeakReference<DocuFiliatoriosActivity> mContextRef;
     private final WeakReference<ProductoActivity> mContextRef2;
     private final WeakReference<QRandBarCodeActivity> mContextRef3;
+    private final WeakReference<RecorteDeFirmaActivity> mContextRef4;
 
     private final ScanOptionsSelected mScanSelected = ScanOptionsSelected.getInstance();
 
@@ -39,7 +41,7 @@ public class ScanToDestinationTask extends AsyncTask<Void, Void, String> {
         this.mContextRef = new WeakReference<>(context);
         this.mContextRef2 = null;
         this.mContextRef3 = null;
-
+        this.mContextRef4 = null;
         this.filename = fileName;
     }
 
@@ -47,6 +49,7 @@ public class ScanToDestinationTask extends AsyncTask<Void, Void, String> {
         this.mContextRef = null;
         this.mContextRef2 = new WeakReference<>(context);
         this.mContextRef3 = null;
+        this.mContextRef4 = null;
         this.filename = fileName;
     }
 
@@ -54,6 +57,15 @@ public class ScanToDestinationTask extends AsyncTask<Void, Void, String> {
         this.mContextRef = null;
         this.mContextRef2 = null;
         this.mContextRef3 = new WeakReference<>(context);
+        this.mContextRef4 = null;
+        this.filename = fileName;
+    }
+
+    public ScanToDestinationTask(final RecorteDeFirmaActivity context, String fileName) {
+        this.mContextRef = null;
+        this.mContextRef2 = null;
+        this.mContextRef3 = null;
+        this.mContextRef4 = new WeakReference<>(context);
         this.filename = fileName;
     }
 
@@ -92,6 +104,9 @@ public class ScanToDestinationTask extends AsyncTask<Void, Void, String> {
                 rid = ScannerService.submit(activity, attributes, taskAttribs);
             } else if (mContextRef3!= null){
                 QRandBarCodeActivity activity = mContextRef3.get();
+                rid = ScannerService.submit(activity, attributes, taskAttribs);
+            } else if (mContextRef4!= null){
+                RecorteDeFirmaActivity activity = mContextRef4.get();
                 rid = ScannerService.submit(activity, attributes, taskAttribs);
             }
 
@@ -302,6 +317,8 @@ public class ScanToDestinationTask extends AsyncTask<Void, Void, String> {
             mFileOptionsAttributesCaps = ScannerService.getFileOptionsCapabilities(mContextRef2.get(), colorMode, docFormat, result);
         } else if (mContextRef3!=null){
             mFileOptionsAttributesCaps = ScannerService.getFileOptionsCapabilities(mContextRef3.get(), colorMode, docFormat, result);
+        } else if (mContextRef4!=null){
+            mFileOptionsAttributesCaps = ScannerService.getFileOptionsCapabilities(mContextRef4.get(), colorMode, docFormat, result);
         }
 
         if (result.getCode() == Result.RESULT_OK) {

@@ -1,9 +1,6 @@
 package com.example.demo1.Task;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.util.Base64;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
@@ -33,7 +30,6 @@ import java.util.Map;
 public class GetDemoFromApi extends AsyncTask<Void, Void, Void> {
     private static final String TAG = "GetDemoFromApi";
 
-    final String token = DemoViewModelSingleton.getInstance().getDemoViewModelGuardado().getToken();
     private final WeakReference<MainActivity> mContextRef;
     private String tokenCliente;
 
@@ -72,7 +68,7 @@ public class GetDemoFromApi extends AsyncTask<Void, Void, Void> {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("Token", token);
+                params.put("Token", tokenCliente);
                 return params;
             }
         };
@@ -109,15 +105,6 @@ public class GetDemoFromApi extends AsyncTask<Void, Void, Void> {
         }
     }
 
-    private Bitmap loadImage(){
-        DemoViewModelSingleton demoViewModelSingleton = DemoViewModelSingleton.getInstance();
-        String logoEnString = demoViewModelSingleton.getDemoViewModelGuardado().getLogo();
-
-        byte[] decodeString = Base64.decode(logoEnString, Base64.DEFAULT);
-        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodeString, 0 , decodeString.length);
-
-        return  decodedByte;
-    }
 
 }
 

@@ -24,9 +24,12 @@ import com.example.demo1.Task.CreateDocument;
 import com.example.demo1.Task.InitializationTask;
 import com.example.demo1.Task.JobCompleteReciever;
 import com.example.demo1.Task.ScanToDestinationTask;
+import com.example.demo1.UserClass.CreateDocumentViewModel;
+import com.example.demo1.UserClass.DemoViewModelSingleton;
 import com.example.demo1.UserClass.ScanOptionsSelected;
 import com.example.demo1.UserClass.ScanUserAttriputes;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
 import com.hp.jetadvantage.link.api.Result;
 import com.hp.jetadvantage.link.api.job.JobInfo;
 import com.hp.jetadvantage.link.api.job.JobService;
@@ -39,6 +42,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import me.toptas.fancyshowcase.FancyShowCaseView;
 
 public class QRandBarCodeActivity extends AppCompatActivity implements FinalizacionDeTrabajo.FinalizacionDeTrabajoListener,
                                                                     CreateDocument.OnCreateDocumentsListener,
@@ -62,7 +67,7 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
 
     private TextView paperSizeSelected;
 
-    private String filePath, fileName;
+    private String filePath, fileName, idCliente;
 
     //    private String job_builder_selected;
     private SwitchCompat jobBuilderSwitch, scanPreviewSwitch, blankPagesSwitch;
@@ -90,6 +95,8 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
         //Seleccionaron QR o Barcode
         qrOBarcode = getIntent().getStringExtra("TIPO");
         Log.d(TAG, "usuario seleccionó: " + qrOBarcode);
+
+        openDialogs();
 
         tituloActivity = findViewById(R.id.textView13);
         setTitulo();
@@ -119,8 +126,7 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
             @Override
             public void onClick(View v) {
                 saveOptionsSelected();
-                //todo ver que hacer al tocar el boton
-                openDialogs();
+                scanToDestination("qr-bardoce" + idCliente);
 
             }
         });
@@ -129,10 +135,12 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
             @Override
             public void onClick(View v) {
                 showPaperSizeDialog();
+
             }
         });
 
     }
+
 
     private void openDialogs() {
         DigitalizarQroBarcodeDialog dialog;
@@ -141,6 +149,7 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
         } else {
             dialog = new DigitalizarQroBarcodeDialog(false);
         }
+        dialog.setCancelable(true);
         dialog.show(getSupportFragmentManager(), "digitalizar Qr o Barcode");
     }
 
@@ -338,7 +347,6 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
     @Override
     public void realizarOtroTrabajo(boolean siOno) {
         if (siOno){
-            Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
             finish();
         } else {
             closeApp();
@@ -378,7 +386,11 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
     @Override
     public void onDigitalizarQroBarcodeDialog(String idCliente) {
         //todo guardar el ID cliente
-        scanToDestination("qr-bardoce" + idCliente);
+        Log.d(TAG, "onDigitalizarQroBarcodeDialog: idCliente " + idCliente);
+        this.idCliente = idCliente;
+
+        showcaseEjemplo();
+
     }
 
     @Override
@@ -391,6 +403,15 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
         FinalizacionDeTrabajo finalizacionDeTrabajo = new FinalizacionDeTrabajo("La documentación fue subida correctamente");
         finalizacionDeTrabajo.setCancelable(false);
         finalizacionDeTrabajo.show(getSupportFragmentManager(), "finalizacion fialog");
+    }
+
+    public void showcaseEjemplo(){
+        new FancyShowCaseView.Builder(this)
+                .focusOn(scanPrevieweCardV)
+                .title("Seleccione scan Preview")
+                .showOnce("fancy1")
+                .build()
+                .show();
     }
 
 
@@ -500,6 +521,7 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
 
     private void onScannResponse() {
         //todo despues de haber impreso
+        Log.d(TAG, "onScannResponse: va a subir el archivo");
 
         cartelSubirALaNube();
         subirArchivo(filePath);
@@ -511,7 +533,25 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
         Log.d(TAG, "fileName: " + fileName);
         Log.d(TAG, "******************");
         //todo pasar el objeto a string
-        new CreateDocument(this,filePath, fileName, "pasar el objeto a String").execute();
+        new CreateDocument(this,filePath, fileName, convertJsonBojectToString()).execute();
+    }
+
+    private String convertJsonBojectToString() {
+
+        DemoViewModelSingleton demoViewModelSingleton = DemoViewModelSingleton.getInstance();
+        demoViewModelSingleton.borrarMetadataCliente();
+        int demoId = demoViewModelSingleton.getDemoViewModelGuardado().getId();
+
+        Log.d(TAG, "idClient " + this.idCliente);
+        demoViewModelSingleton.getMetadataCliente().setDocumentName(this.idCliente);
+
+
+        CreateDocumentViewModel createDocumentViewModel = new CreateDocumentViewModel(qrOBarcode, demoId, this.idCliente, demoViewModelSingleton.getMetadataCliente());
+
+        Gson gson = new Gson();
+
+        return gson.toJson(createDocumentViewModel);
+
     }
 
     public void cartelSubirALaNube() {
@@ -544,7 +584,6 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
         folder2 = new File(this.getFilesDir().getAbsolutePath());
         Log.d(TAG, "children.length: " + children.length);
         Log.d(TAG, "folder2.getFreeSpace(): " + folder2.getFreeSpace());
-
         Log.d(TAG, "**************************");
     }
 

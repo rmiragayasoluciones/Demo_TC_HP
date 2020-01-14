@@ -21,14 +21,18 @@ import androidx.preference.PreferenceManager;
 import com.example.demo1.Dialogs.BottomSheetDialogProducto;
 import com.example.demo1.Dialogs.DigitalizarAltaProductoDialog;
 import com.example.demo1.Dialogs.DigitalizarBajaProductoDialog;
+import com.example.demo1.Dialogs.DigitalizarModificacionProductoDialog;
 import com.example.demo1.Dialogs.FinalizacionDeTrabajo;
 import com.example.demo1.Task.CreateDocument;
 import com.example.demo1.Task.InitializationTask;
 import com.example.demo1.Task.JobCompleteReciever;
 import com.example.demo1.Task.ScanToDestinationTask;
+import com.example.demo1.UserClass.CreateDocumentViewModel;
+import com.example.demo1.UserClass.DemoViewModelSingleton;
 import com.example.demo1.UserClass.ScanOptionsSelected;
 import com.example.demo1.UserClass.ScanUserAttriputes;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
 import com.hp.jetadvantage.link.api.Result;
 import com.hp.jetadvantage.link.api.job.JobInfo;
 import com.hp.jetadvantage.link.api.job.JobService;
@@ -43,10 +47,11 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ProductoActivity extends AppCompatActivity implements BottomSheetDialogProducto.BottomSheetAltaBajaListener,
-                                                                CreateDocument.OnCreateDocumentsListener,
-                                                             FinalizacionDeTrabajo.FinalizacionDeTrabajoListener,
-                                                         DigitalizarBajaProductoDialog.DigitalizarBajaDialogListener,
-                                                    DigitalizarAltaProductoDialog.DigitalizarAltaProductoDialogListener {
+        CreateDocument.OnCreateDocumentsListener,
+        FinalizacionDeTrabajo.FinalizacionDeTrabajoListener,
+        DigitalizarBajaProductoDialog.DigitalizarBajaDialogListener,
+        DigitalizarAltaProductoDialog.DigitalizarAltaProductoDialogListener,
+        DigitalizarModificacionProductoDialog.DigitalizarModificacionDialogListener {
     private static final String TAG = "ProductoActivity";
 
     private TextView tituloActivity;
@@ -62,6 +67,9 @@ public class ProductoActivity extends AppCompatActivity implements BottomSheetDi
     private String[] PAPERSIZE;
     private String[] BLANKPAGES;
     private Button siguiente;
+    private String serieName;
+    private String reasonLow;
+    private String codeHigh;
 
     private TextView paperSizeSelected;
 
@@ -172,24 +180,41 @@ public class ProductoActivity extends AppCompatActivity implements BottomSheetDi
         });
     }
 
-    private void openBottomSheet(){
+    private void openBottomSheet() {
         BottomSheetDialogProducto bottomSheet = new BottomSheetDialogProducto();
         bottomSheet.show(getSupportFragmentManager(), "bottomSheet");
     }
 
-
-    /** dialog Alta */
+    /**
+     * dialog Alta
+     */
     private void openDialogAlta() {
         //todo va DigitalzarProductosDialogs (codigo de alta + docu ó motivo de baja + docu)
+        serieName = "High";
         DigitalizarAltaProductoDialog dialog = new DigitalizarAltaProductoDialog();
-        dialog.show(getSupportFragmentManager(), "digitalizar fragment");
+        dialog.show(getSupportFragmentManager(), "alta Dialog");
     }
 
+    /**
+     * dialog baja
+     */
     private void openDialogBaja() {
         //todo lo mismo que arriba pero para Baja
+        serieName = "Low";
         DigitalizarBajaProductoDialog dialogBaja = new DigitalizarBajaProductoDialog();
         dialogBaja.show(getSupportFragmentManager(), "baja Dialog");
     }
+
+    /**
+     * dialog Modificación
+     */
+    private void openDialogModificacion() {
+        //todo lo mismo que arriba pero para modificacion
+        serieName = "Modification";
+        DigitalizarModificacionProductoDialog dialogModificacion = new DigitalizarModificacionProductoDialog();
+        dialogModificacion.show(getSupportFragmentManager(), "modificacion Dialog");
+    }
+
 
     private void showPaperSizeDialog() {
         //get prev selecction
@@ -222,7 +247,7 @@ public class ProductoActivity extends AppCompatActivity implements BottomSheetDi
         Log.d(TAG, "JobBuilder isCheck: " + jobBuilderSwitch.isChecked());
 
         String blank_pages_selected;
-        if (blankPagesSwitch.isChecked()){
+        if (blankPagesSwitch.isChecked()) {
             blank_pages_selected = BLANKPAGES[1];
             Log.d(TAG, "blank_pages_selected: " + blank_pages_selected);
         } else {
@@ -231,7 +256,7 @@ public class ProductoActivity extends AppCompatActivity implements BottomSheetDi
         }
 
         String scan_preview_selected;
-        if (scanPreviewSwitch.isChecked()){
+        if (scanPreviewSwitch.isChecked()) {
             scan_preview_selected = SCANPREVIEW[2];
             Log.d(TAG, "scan_preview_selected: " + scan_preview_selected);
         } else {
@@ -240,7 +265,7 @@ public class ProductoActivity extends AppCompatActivity implements BottomSheetDi
         }
 
         String job_builder_selected;
-        if (jobBuilderSwitch.isChecked()){
+        if (jobBuilderSwitch.isChecked()) {
             job_builder_selected = JOBBUILDER[2];
             Log.d(TAG, "job_builder_selected: " + job_builder_selected);
         } else {
@@ -328,24 +353,30 @@ public class ProductoActivity extends AppCompatActivity implements BottomSheetDi
 
     }
 
-
     @Override
     public void onDigitalizacionAltaDialogRespons(String codigoAlta) {
         //todo cuargar el dato que me devuelve el edittext (codigo Alta)
+        codeHigh = codigoAlta;
         Log.d(TAG, "onDigitalizacionDialogResponse: volvio con: " + codigoAlta);
-        scanToDestination("alta-" + codigoAlta.toLowerCase().trim());
+        scanToDestination("high-" + codigoAlta.toLowerCase().trim());
         //todo una vez que vuelve del del dialog.
     }
 
     @Override
     public void onDigitalizacionBajaDialogRespons(String razonBaja, String otros) {
         //todo guardar razonBaja y otros
+        reasonLow = razonBaja;
         Log.d(TAG, "onDigitalizacionDialogResponse: volvio con: " + razonBaja);
-        if (otros != null){
-            Log.d(TAG, "Razón \"otros\" : " + otros );
+        if (otros != null) {
+            Log.d(TAG, "Razón \"otros\" : " + otros);
         }
-        scanToDestination("baja-" + razonBaja.trim());
+        scanToDestination("low-" + razonBaja.trim());
+    }
 
+    @Override
+    public void onDigitalizacionModificacionDialogRespons() {
+        Log.d(TAG, "onDigitalizacionModificacionDialogRespons: call");
+        scanToDestination("modification");
     }
 
 
@@ -356,8 +387,8 @@ public class ProductoActivity extends AppCompatActivity implements BottomSheetDi
     }
 
     @Override
-    public void onAltaBajaClick(String text) {
-        switch (text){
+    public void onAltaBajaModificacionClick(String text) {
+        switch (text) {
             case "alta":
                 Log.d(TAG, "onAltaBajaClick: alta");
                 openDialogAlta();
@@ -365,6 +396,10 @@ public class ProductoActivity extends AppCompatActivity implements BottomSheetDi
             case "baja":
                 Log.d(TAG, "onAltaBajaClick: baja");
                 openDialogBaja();
+                break;
+            case "modificacion":
+                Log.d(TAG, "onAltaBajaClick: modificacion");
+                openDialogModificacion();
                 break;
         }
     }
@@ -375,17 +410,18 @@ public class ProductoActivity extends AppCompatActivity implements BottomSheetDi
         cartelFinalizacionTRabajo();
     }
 
-    public void cartelFinalizacionTRabajo(){
+    public void cartelFinalizacionTRabajo() {
         FinalizacionDeTrabajo finalizacionDeTrabajo = new FinalizacionDeTrabajo("La documentación fue subida correctamente");
         finalizacionDeTrabajo.setCancelable(false);
-        finalizacionDeTrabajo.show(getSupportFragmentManager(), "finalizacion fialog");
+        finalizacionDeTrabajo.show(getSupportFragmentManager(), "finalizacion dialog");
     }
 
-    /** CallBack de FinalizacionTrabajo Dialog */
+    /**
+     * CallBack de FinalizacionTrabajo Dialog
+     */
     @Override
     public void realizarOtroTrabajo(boolean siOno) {
-        if (siOno){
-            Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
+        if (siOno) {
             finish();
         } else {
             closeApp();
@@ -405,7 +441,6 @@ public class ProductoActivity extends AppCompatActivity implements BottomSheetDi
         deleteAllFiles();
         finish();
     }
-
 
 
     private class JobObserver extends JobService.AbstractJobletObserver {
@@ -473,7 +508,7 @@ public class ProductoActivity extends AppCompatActivity implements BottomSheetDi
             Log.d(TAG, "onComplete file: " + file);
 
             //guarda la ruta del archivo
-            fileName = scanJobData.getFileNames().get(0);
+            fileName = file;
             filePath = ruta;
 
             /** NUEVO*/
@@ -493,13 +528,6 @@ public class ProductoActivity extends AppCompatActivity implements BottomSheetDi
             Log.d(TAG, "result.getCode()= " + result.getCode());
             Log.d(TAG, "s= " + s);
 
-            //borra todos los elementos dela carpeta
-//            deleteAllFiles();
-            // vuelve a llamar al metodo de scaneo
-//            scanProgresDialogEnds();
-//            scanToDestination();
-            // deshabilita los botones
-//            desButton();
         }
 
         @Override
@@ -514,30 +542,49 @@ public class ProductoActivity extends AppCompatActivity implements BottomSheetDi
 
     private void onScannResponse() {
         //todo despues de haber impreso
-
         cartelSubirALaNube();
         subirArchivo(filePath);
-
-
     }
 
     private void subirArchivo(String filePath) {
-    //todo pasar el objeto a String
-        new CreateDocument(this,filePath, fileName, "pasar el objeto a String").execute();
+        //todo pasar el objeto a String
+        new CreateDocument(this, filePath, fileName, convertJsonBojectToString()).execute();
+
+    }
+
+    private String convertJsonBojectToString() {
+
+        DemoViewModelSingleton demoViewModelSingleton = DemoViewModelSingleton.getInstance();
+        int demoId = demoViewModelSingleton.getDemoViewModelGuardado().getId();
+        String client = demoViewModelSingleton.getDemoViewModelGuardado().getClient();
+
+        switch (serieName) {
+            case "Low":
+                demoViewModelSingleton.getMetadataCliente().setReason(reasonLow);
+                break;
+            case "High":
+                demoViewModelSingleton.getMetadataCliente().setCode(codeHigh);
+                break;
+        }
+        CreateDocumentViewModel createDocumentViewModel = new CreateDocumentViewModel(serieName, demoId, client, demoViewModelSingleton.getMetadataCliente());
+
+        Gson gson = new Gson();
+
+        return gson.toJson(createDocumentViewModel);
 
     }
 
     public void cartelSubirALaNube() {
         Log.d(TAG, "progressDialodNubeUploadVISIBLE: CALL");
 
-        if (progressBar.getVisibility() == View.INVISIBLE){
+        if (progressBar.getVisibility() == View.INVISIBLE) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     progressBar.setVisibility(View.VISIBLE);
                 }
             });
-        } else if (progressBar.getVisibility() == View.VISIBLE){
+        } else if (progressBar.getVisibility() == View.VISIBLE) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

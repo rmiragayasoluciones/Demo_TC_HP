@@ -9,7 +9,7 @@ public class DemoViewModel {
     private int id;
     private int tcId;
     private String name;
-    private String clientName;
+    private String client;
     private String description;
     private String logo;
     private String token;
@@ -22,11 +22,11 @@ public class DemoViewModel {
     private String workPathConfig;
     private String oxpdConfig;
 
-    public DemoViewModel(int id, int tcId, String name,String clientName, String description, Base64 logo, String token, Date tokenExpirationTime, boolean isExpired, boolean isActive, Date creationTime, Date updateTime, String url, String workPathConfig, String oxpdConfig) {
+    public DemoViewModel(int id, int tcId, String name, String client, String description, Base64 logo, String token, Date tokenExpirationTime, boolean isExpired, boolean isActive, Date creationTime, Date updateTime, String url, String workPathConfig, String oxpdConfig) {
         this.id = id;
         this.tcId = tcId;
         this.name = name;
-        this.clientName = clientName;
+        this.client = client;
         this.description = description;
         this.logo = logo.toString();
         this.token = token;
@@ -96,12 +96,12 @@ public class DemoViewModel {
         this.tokenExpirationTime = tokenExpirationTime;
     }
 
-    public String getClientName() {
-        return clientName;
+    public String getClient() {
+        return client;
     }
 
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
+    public void setClient(String client) {
+        this.client = client;
     }
 
     public boolean isExpired() {
@@ -166,7 +166,7 @@ public class DemoViewModel {
                 "id=" + id +
                 ", tcId=" + tcId +
                 ", name='" + name + '\'' +
-                ", clientName='" + clientName + '\'' +
+                ", client='" + client + '\'' +
                 ", description='" + description + '\'' +
 //                ", logo='" + logo + '\'' +
                 ", token='" + token + '\'' +

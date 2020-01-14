@@ -46,8 +46,6 @@ public class DigitalizarDocuFiliatoriosDialog extends AppCompatDialogFragment {
 
         titulo = view.findViewById(R.id.tituloDialogId);
         subtitulo = view.findViewById(R.id.subtitulo);
-        editText = view.findViewById(R.id.textEditDocuId);
-        editTextLayout = view.findViewById(R.id.textimputlayout);
 
         Button btn = view.findViewById(R.id.digitalizacionBtnId);
         btn.setOnClickListener(new View.OnClickListener() {
@@ -81,22 +79,18 @@ public class DigitalizarDocuFiliatoriosDialog extends AppCompatDialogFragment {
     }
 
     private void solicitarId(){
-        titulo.setText("Ingrese ID");
-        subtitulo.setText("Ingrese ID del trabajo");
-        //todo borrar el layout
-        editTextLayout.setVisibility(View.VISIBLE);
+        titulo.setText("DNI");
+        subtitulo.setText("Ingrese DNI y presione Siguiente");
     }
 
     private void solicitarIngresoConstancia(){
         titulo.setText("Constancia");
         subtitulo.setText("Ingrese Constancia de ingreso y presione Siguiente");
-        editTextLayout.setVisibility(View.GONE);
     }
 
     private void solicitarOtraDocu(){
-        titulo.setText("DNI");
-        subtitulo.setText("Ingrese DNI y presione Siguiente");
-        editTextLayout.setVisibility(View.GONE);
+        titulo.setText("Documentación Extra");
+        subtitulo.setText("Ingrese documentación extra y presione Siguiente");
     }
 
 }

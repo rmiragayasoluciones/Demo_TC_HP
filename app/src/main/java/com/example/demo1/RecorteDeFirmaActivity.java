@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,7 +18,7 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.preference.PreferenceManager;
 
-import com.example.demo1.Dialogs.DigitalizarDocuFiliatoriosDialog;
+import com.example.demo1.Dialogs.DigitalizarRecorteFirmaDialog;
 import com.example.demo1.Dialogs.FinalizacionDeTrabajo;
 import com.example.demo1.Task.CreateDocument;
 import com.example.demo1.Task.InitializationTask;
@@ -44,9 +43,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class DocuFiliatoriosActivity extends AppCompatActivity implements FinalizacionDeTrabajo.FinalizacionDeTrabajoListener,
-                                                                    CreateDocument.OnCreateDocumentsListener {
-    private static final String TAG = "DocuFiliatoriosActivity";
+public class RecorteDeFirmaActivity extends AppCompatActivity implements FinalizacionDeTrabajo.FinalizacionDeTrabajoListener,
+        CreateDocument.OnCreateDocumentsListener ,
+        DigitalizarRecorteFirmaDialog.RecorteFirmaDialogListener {
+    private static final String TAG = "RecorteDeFirmaActivity";
+
+    private TextView tituloActivity;
 
     private ConstraintLayout layout;
     CardView jobBuilderCardV, scanPrevieweCardV, paperSizeCardV, removeBlankPagesCardV;
@@ -59,17 +61,15 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
     private String[] PAPERSIZE;
     private String[] BLANKPAGES;
     private Button siguiente;
-    private DigitalizarDocuFiliatoriosDialog dialog;
-    private int dialogNumero = 0;
 
     private TextView paperSizeSelected;
 
     private List<String> listFilesPath = new ArrayList<>();
     private List<String> listFilesNames = new ArrayList<>();
 
-//    private String job_builder_selected;
+    //    private String job_builder_selected;
     private SwitchCompat jobBuilderSwitch, scanPreviewSwitch, blankPagesSwitch;
-//    private String scan_preview_selected;
+    //    private String scan_preview_selected;
     private String paper_size_selected = "A4";
 
     /* Background task for JetAdvantageLink API initialization */
@@ -82,14 +82,17 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
     private View coverView;
     private ConstraintLayout progressBar;
 
-    /* ScanCount */
-    private int scanCount = 0;
-
+    private String filePath, fileName, idCliente;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_docu_filiatorios2);
+
+        openDialogs();
+
+        tituloActivity = findViewById(R.id.textView13);
+        tituloActivity.setText("Recorte de Firmas");
 
         blankPagesSwitch = findViewById(R.id.blankPagesId);
         jobBuilderSwitch = findViewById(R.id.jobBuilderSwitch);
@@ -117,42 +120,17 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
             @Override
             public void onClick(View v) {
                 saveOptionsSelected();
-                openDialogDigitalizacion(dialogNumero);
+                scanToDestination("recortefirmas-" + idCliente);
             }
         });
 
-
-//        jobBuilderCardV.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(DocuFiliatoriosActivity.this, "Job Builder", Toast.LENGTH_SHORT).show();
-////                showJobBuilderDialog();
-//            }
-//        });
-
-//        scanPrevieweCardV.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(DocuFiliatoriosActivity.this, "scanPrevieweCardV", Toast.LENGTH_SHORT).show();
-////                showScanPreviewDialog();
-//            }
-//        });
 
         paperSizeCardV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(DocuFiliatoriosActivity.this, "paperSizeCardV", Toast.LENGTH_SHORT).show();
                 showPaperSizeDialog();
             }
         });
-
-//        removeBlankPagesCardV.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(DocuFiliatoriosActivity.this, "removeBlankPagesCardV", Toast.LENGTH_SHORT).show();
-////                showBlankPagesDialog();
-//            }
-//        });
 
     }
 
@@ -176,10 +154,10 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
         mInitializationTask = null;
     }
 
-    private void openDialogDigitalizacion(int numeroDeDialog) {
-        dialog = new DigitalizarDocuFiliatoriosDialog(this, numeroDeDialog);
-        dialog.show(getSupportFragmentManager(), "digitalizar fragment");
-//        dialog.setCancelable(false);
+    private void openDialogs() {
+        DigitalizarRecorteFirmaDialog dialog = new DigitalizarRecorteFirmaDialog();
+        dialog.setCancelable(false);
+        dialog.show(getSupportFragmentManager(), "digitalizar Qr o Barcode");
     }
 
     /**
@@ -264,7 +242,6 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
 
     }
 
-
     private void showPaperSizeDialog() {
         //get prev selecction
 
@@ -331,85 +308,9 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
 
     }
 
-    public void onDigitalizacionDialogResponse() {
-       dialog.getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-       switch (dialogNumero){
-           case 0:
-               scanToDestination("dni");
-               break;
-           case 1:
-               scanToDestination("constancia-ingresos");
-               break;
-           case 2:
-               scanToDestination("otra-documentacion");
-               break;
-
-       }
+    private void subirArchivo() {
+        new CreateDocument(this,filePath, fileName, convertJsonBojectToString()).execute();
     }
-
-    private void onScannResponse() {
-        dialogNumero++;
-        if (dialogNumero == 3){
-
-            Log.d(TAG, "onScannResponse: se digitalizaron los archivos, debieramos subirlos y después cerrar la app");
-            for (String i : listFilesPath){
-                Log.d(TAG, "path " + i);
-            }
-            for (String i : listFilesNames){
-                Log.d(TAG, "path " + i);
-            }
-            cartelSubirALaNube();
-            subirArchivos(listFilesPath.get(0), listFilesNames.get(0));
-
-            return;
-        }
-        openDialogDigitalizacion(dialogNumero);
-    }
-
-    private void subirArchivos(String filePath, String filename) {
-
-        new CreateDocument(this,filePath, filename, convertJsonBojectToString(filename)).execute();
-        /** Async Simula la subida a la web*/
-//        new AsyncTask<Void, Void, Void>(){
-//            @Override
-//            protected void onPostExecute(Void aVoid) {
-//                super.onPostExecute(aVoid);
-//                cartelSubirALaNube();
-//
-//            }
-//
-//            @Override
-//            protected Void doInBackground(Void... voids) {
-//                try {
-//                    Thread.sleep(4000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                return null;
-//            }
-//        }.execute();
-        /** Async Simula la subida a la web*/
-    }
-
-    @Override
-    public void onCreateDocumentComplete() {
-        Log.d(TAG, "onCreateDocumentsFinish: scanCount es: " + scanCount);
-        switch (scanCount){
-            case 0:
-                subirArchivos(listFilesPath.get(1), listFilesNames.get(1));
-                break;
-            case 1:
-                subirArchivos(listFilesPath.get(2), listFilesNames.get(2));
-                break;
-            case 2:
-                cartelSubirALaNube();
-                cartelFinalizacionTRabajo();
-                break;
-        }
-        scanCount++;
-    }
-
-
 
     public void cartelSubirALaNube() {
         Log.d(TAG, "progressDialodNubeUploadVISIBLE: CALL");
@@ -448,41 +349,71 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
         });
     }
 
-    
+
     /** CallBack de FinalizacionTrabajo Dialog */
     @Override
     public void realizarOtroTrabajo(boolean siOno) {
+        Log.d(TAG, "realizarOtroTrabajo: sioNo es " + siOno);
         if (siOno){
-            finish();
+            Log.d(TAG, "finish");
+            menuPrincipal();
         } else {
-            closeApp();
+            Log.d(TAG, "closeApp");
+           finish();
         }
     }
 
-    private void closeApp() {
-        Intent intent = new Intent(getApplicationContext(), SeleccionSerieDocumentalActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("EXIT", true);
+    private void menuPrincipal(){
+        Intent intent = new Intent(getApplicationContext(), AppSelectionActivity.class);
         startActivity(intent);
+        finish();
     }
 
-    private String convertJsonBojectToString(String documentName){
+//    private void closeApp() {
+//        Intent intent = new Intent(getApplicationContext(), AppSelectionActivity.class);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        intent.putExtra("EXIT", true);
+//        startActivity(intent);
+//        finish();
+//    }
+
+    //todo VER ESTO
+    private String convertJsonBojectToString(){
 
         DemoViewModelSingleton demoViewModelSingleton = DemoViewModelSingleton.getInstance();
+        demoViewModelSingleton.borrarMetadataCliente();
 
-        String serieName = "Filiation";
+        String serieName = "Signature";
         int demoId = demoViewModelSingleton.getDemoViewModelGuardado().getId();
-        String client = demoViewModelSingleton.getDemoViewModelGuardado().getClient();
-        Log.d(TAG, "client es " + client);
-        demoViewModelSingleton.getMetadataCliente().setDocumentName(documentName);
 
-        CreateDocumentViewModel createDocumentViewModel = new CreateDocumentViewModel(serieName, demoId, client, demoViewModelSingleton.getMetadataCliente());
+        Log.d(TAG, "idClient " + this.idCliente);
+        demoViewModelSingleton.getMetadataCliente().setDocumentName(fileName);
+
+        CreateDocumentViewModel createDocumentViewModel = new CreateDocumentViewModel(serieName, demoId, this.idCliente, demoViewModelSingleton.getMetadataCliente());
 
         Gson gson = new Gson();
 
         return gson.toJson(createDocumentViewModel);
-
     }
+
+    /**
+     * Calback de RecorteFirmaDialog
+     * */
+    @Override
+    public void onDigitalizarRecorteFirmaDialog(String idCliente) {
+        //todo guardar el ID cliente y fecha
+        Log.d(TAG, "onDigitalizarRecorteFirmaDialog: idCliente " + idCliente);
+        this.idCliente = idCliente;
+    }
+
+
+    /** CallBack despues de que se sube la documentación */
+    @Override
+    public void onCreateDocumentComplete() {
+        cartelSubirALaNube();
+        cartelFinalizacionTRabajo();
+    }
+
 
     private class JobObserver extends JobService.AbstractJobletObserver {
         private static final String TAG = "JobObserver";
@@ -496,10 +427,6 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
         public void onProgress(String rid, JobInfo jobInfo) {
             Log.d(TAG, "Received onProgress for rid " + rid);
             Log.d(TAG, "Received onProgress jobInfo " + jobInfo);
-//            int numeroDeHojaEscaneada = Integer.parseInt(jobInfo.getJobData().toString().substring(jobInfo.getJobData().toString().indexOf("imagesScanned=") + 14, jobInfo.getJobData().toString().indexOf(", imagesProcessed")));
-//            if (numeroDeHojaEscaneada > 0) {
-//                scanProgressDialog.changeText("Escaneando hoja " + numeroDeHojaEscaneada);
-//            }
 
             if (mJobId == null) {
                 if (jobInfo.getJobId() != null) {
@@ -523,7 +450,7 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
                         intent.putExtra(JobCompleteReciever.RID_EXTRA, rid);
                         intent.putExtra(JobCompleteReciever.JOB_ID_EXTRA, mJobId);
 
-                        final String jrid = JobService.monitorJobInForeground(DocuFiliatoriosActivity.this, mJobId, taskAttributes, intent);
+                        final String jrid = JobService.monitorJobInForeground(RecorteDeFirmaActivity.this, mJobId, taskAttributes, intent);
 
                         Log.d(TAG, "MonitorJob request: " + jrid);
                     }
@@ -552,8 +479,8 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
             String file = ruta.split(splitBy)[1];
             Log.d(TAG, "onComplete file: " + file);
 
-            listFilesNames.add(file);
-            listFilesPath.add(ruta);
+            fileName = file;
+            filePath = ruta;
 
             /** NUEVO*/
 
@@ -565,7 +492,7 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
         @Override
         public void onFail(String s, Result result) {
             Log.d(TAG, "onFail: CALL");
-            Toast.makeText(DocuFiliatoriosActivity.this, "Espere unos segundos", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RecorteDeFirmaActivity.this, "Espere unos segundos", Toast.LENGTH_SHORT).show();
             Log.d(TAG, "result.getCause()=" + result.getCause());
             Log.d(TAG, "result.getErrorCode()= " + result.getErrorCode());
             Log.d(TAG, "result.toString()= " + result.toString());
@@ -584,13 +511,17 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
         @Override
         public void onCancel(String s) {
             Log.d(TAG, "onCancel: CALL");
-            Toast.makeText(DocuFiliatoriosActivity.this, "Escaneo Cancelado", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RecorteDeFirmaActivity.this, "Escaneo Cancelado", Toast.LENGTH_SHORT).show();
             deleteAllFiles();
             restartActivity();
-
         }
 
+    }
 
+    private void onScannResponse() {
+        Log.d(TAG, "onScannResponse: va a subir el archivo");
+        cartelSubirALaNube();
+        subirArchivo();
     }
 
     @Override
@@ -632,17 +563,4 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
         fileOrDirectory.delete();
     }
 
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-    }
-
-//    public enum DialogStatus {
-//        SOLICITA_ID,
-//        SOLICITA_CONSTANCIA,
-//        SOLICITA_OTRADOCU,
-//        TERMINA
-//    }
 }

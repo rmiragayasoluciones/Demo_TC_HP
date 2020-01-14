@@ -3,7 +3,7 @@ package com.example.demo1.UserClass;
 public class DemoViewModelSingleton {
     private static DemoViewModelSingleton mInstance;
     private DemoViewModel demoViewModel;
-    private MetadataCliente metadataCliente;
+    private MetadataCliente metadataCliente = new MetadataCliente();
 
     private DemoViewModelSingleton(DemoViewModel demoViewModel){
         this.demoViewModel = demoViewModel;
@@ -32,5 +32,9 @@ public class DemoViewModelSingleton {
 
     public MetadataCliente getMetadataCliente() {
         return metadataCliente;
+    }
+
+    public void borrarMetadataCliente(){
+        this.metadataCliente = new MetadataCliente();
     }
 }

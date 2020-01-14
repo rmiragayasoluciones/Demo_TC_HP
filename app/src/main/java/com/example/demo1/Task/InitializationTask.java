@@ -8,6 +8,7 @@ import com.example.demo1.MainActivity;
 import com.example.demo1.ProductoActivity;
 import com.example.demo1.QRandBarCodeActivity;
 import com.example.demo1.R;
+import com.example.demo1.RecorteDeFirmaActivity;
 import com.hp.jetadvantage.link.api.JetAdvantageLink;
 import com.hp.jetadvantage.link.api.SsdkUnsupportedException;
 import com.hp.jetadvantage.link.api.config.ConfigService;
@@ -26,33 +27,46 @@ public class InitializationTask extends AsyncTask<Void, Void, InitializationTask
     private final WeakReference<DocuFiliatoriosActivity> mContextRef2;
     private final WeakReference<ProductoActivity> mContextRef3;
     private final WeakReference<QRandBarCodeActivity> mContextRef4;
+    private final WeakReference<RecorteDeFirmaActivity> mContextRef5;
 
-    public InitializationTask(MainActivity context){
+    public InitializationTask(MainActivity context) {
         this.mContextRef = new WeakReference<>(context);
         this.mContextRef2 = null;
         this.mContextRef3 = null;
         this.mContextRef4 = null;
+        this.mContextRef5 = null;
     }
 
-    public InitializationTask(DocuFiliatoriosActivity context){
+    public InitializationTask(DocuFiliatoriosActivity context) {
         this.mContextRef = null;
         this.mContextRef2 = new WeakReference<>(context);
         this.mContextRef3 = null;
         this.mContextRef4 = null;
+        this.mContextRef5 = null;
     }
 
-    public InitializationTask(ProductoActivity context){
+    public InitializationTask(ProductoActivity context) {
         this.mContextRef = null;
         this.mContextRef2 = null;
         this.mContextRef3 = new WeakReference<>(context);
         this.mContextRef4 = null;
+        this.mContextRef5 = null;
     }
 
-    public InitializationTask(QRandBarCodeActivity context){
+    public InitializationTask(QRandBarCodeActivity context) {
         this.mContextRef = null;
         this.mContextRef2 = null;
         this.mContextRef3 = null;
         this.mContextRef4 = new WeakReference<>(context);
+        this.mContextRef5 = null;
+    }
+
+    public InitializationTask(RecorteDeFirmaActivity context){
+        this.mContextRef = null;
+        this.mContextRef2 = null;
+        this.mContextRef3 = null;
+        this.mContextRef4 = null;
+        this.mContextRef5 = new WeakReference<>(context);
     }
 
     @Override
@@ -70,6 +84,8 @@ public class InitializationTask extends AsyncTask<Void, Void, InitializationTask
                 JetAdvantageLink.getInstance().initialize(mContextRef3.get());
             } else if (mContextRef4 != null) {
                 JetAdvantageLink.getInstance().initialize(mContextRef4.get());
+            }else if (mContextRef5 != null) {
+                JetAdvantageLink.getInstance().initialize(mContextRef5.get());
             }
 
         }catch (final SsdkUnsupportedException e){
@@ -100,6 +116,11 @@ public class InitializationTask extends AsyncTask<Void, Void, InitializationTask
             }
         } else if (mContextRef4 != null) {
             if (status == InitStatus.NO_ERROR && (!ScannerService.isSupported(mContextRef4.get()) || !JobService.isSupported(mContextRef4.get()))) {
+                // ScannerService is not supported on this device
+                status = InitStatus.NOT_SUPPORTED;
+            }
+        }else if (mContextRef5 != null) {
+            if (status == InitStatus.NO_ERROR && (!ScannerService.isSupported(mContextRef5.get()) || !JobService.isSupported(mContextRef5.get()))) {
                 // ScannerService is not supported on this device
                 status = InitStatus.NOT_SUPPORTED;
             }

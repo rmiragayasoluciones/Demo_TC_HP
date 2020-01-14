@@ -60,4 +60,7 @@ dependencies {
     //preference
     implementation 'androidx.preference:preference:1.1.0'
 
+    //fancy Showcase
+    implementation 'me.toptas.fancyshowcase:fancyshowcaseview:1.2.1'
+
 }

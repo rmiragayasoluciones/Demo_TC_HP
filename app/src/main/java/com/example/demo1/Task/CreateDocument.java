@@ -88,6 +88,7 @@ public class CreateDocument extends AsyncTask<Void, Void, Void> {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
+                Log.d(TAG, "Headers Agrego Token: " + token);
                 params.put("Token", token);
                 return params;
             }

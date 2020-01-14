@@ -19,62 +19,58 @@ import com.example.demo1.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
-public class DigitalizarQroBarcodeDialog extends AppCompatDialogFragment {
-    private static final String TAG = "DigitalizarQroBarcodeDi";
+public class DigitalizarRecorteFirmaDialog extends AppCompatDialogFragment {
+    private static final String TAG = "DigitalizarRecorteFirma";
 
-    private DigitalizarQroBarcodeDialogListener listener;
-    private boolean esQr;
+    private RecorteFirmaDialogListener listener;
+    private Button btnSiguiente;
     private TextInputEditText editText;
     private TextInputLayout editTextLayout;
     private TextView subtitulo;
     private int fase;
     private String editTextGuardado;
-    private Button btnSiguiente;
+
     private ConstraintLayout constraintLayout;
     private ConstraintSet constraintSet;
 
-    public DigitalizarQroBarcodeDialog(boolean esQr) {
-        this.esQr = esQr;
-        this.fase = 0;
-    }
+
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
-        View view = inflater.inflate(R.layout.qr_or_barcode_dialog, null);
+        View view = inflater.inflate(R.layout.recorte_firma_dialog, null);
         builder.setView(view);
 
-        constraintLayout = view.findViewById(R.id.dialogQrBarcodeConstraintId);
+        constraintLayout = view.findViewById(R.id.constraintLayoutRecorteFirmeDialog);
         constraintSet = new ConstraintSet();
         constraintSet.clone(constraintLayout);
 
-        subtitulo = view.findViewById(R.id.subtituloqrBarcode);
+        //todo set Views
+        editText = view.findViewById(R.id.editTextRecorteFirmaDialog);
+        editTextLayout = view.findViewById(R.id.textInputLayoutRecorteFirma);
+        subtitulo = view.findViewById(R.id.subtituloRecorteFirma);
         subtitulo.setText("ingrese ID del cliente");
-        editTextLayout =view.findViewById(R.id.textimputlayoutQrBarcode);
-        editText = view.findViewById(R.id.textEditDocuIdQrBarcode);
 
-        btnSiguiente = view.findViewById(R.id.digitalizacionBtnIdQrBarcode);
+
+        //todo set Buttons y OnclickListener + listener
+
+        btnSiguiente = view.findViewById(R.id.btnSiguienteRecorteFirmaDialog);
         btnSiguiente.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (fase == 0){
                     editTextGuardado = editText.getText().toString();
                     cambiarLayout();
-                  fase++;
+                    fase++;
                 } else {
                     dismiss();
-                    listener.onDigitalizarQroBarcodeDialog(editTextGuardado);
+                    listener.onDigitalizarRecorteFirmaDialog(editTextGuardado);
                 }
-
-
             }
         });
-
-
 
         Dialog dialog = builder.create();
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
@@ -82,27 +78,29 @@ public class DigitalizarQroBarcodeDialog extends AppCompatDialogFragment {
         return dialog;
     }
 
+
+    private void cambiarLayout(){
+        constraintSet.connect(btnSiguiente.getId(), ConstraintSet.TOP, subtitulo.getId(),ConstraintSet.BOTTOM,16);
+        constraintSet.applyTo(constraintLayout);
+        constraintLayout.removeView(editTextLayout);
+        constraintLayout.removeView(editText);
+        subtitulo.setText("Ingrese la documentacion a escanear y presione siguiente");
+    }
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
         try {
-            listener = (DigitalizarQroBarcodeDialogListener) context;
+            listener = (RecorteFirmaDialogListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() +
                     "must implement DigitalizarQroBarcodeDialogListener");
         }
     }
 
-    public interface DigitalizarQroBarcodeDialogListener {
-        void onDigitalizarQroBarcodeDialog(String idCliente);
-    }
 
-    private void cambiarLayout(){
-        constraintSet.connect(btnSiguiente.getId(),ConstraintSet.TOP, subtitulo.getId(),ConstraintSet.BOTTOM,16);
-        constraintSet.applyTo(constraintLayout);
-        constraintLayout.removeView(editTextLayout);
-        constraintLayout.removeView(editText);
-        subtitulo.setText("Ingrese la documentacion a escanear y presione siguiente");
+    public interface RecorteFirmaDialogListener {
+        void onDigitalizarRecorteFirmaDialog(String idCliente);
     }
 }

@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="500dp"
+        android:layout_width="700dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
@@ -52,45 +52,24 @@
                 android:id="@+id/subtitulo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:gravity="center"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textimputlayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textColorHint="@color/colorPrimary"
-                app:boxStrokeColor="@color/colorPrimary"
-                app:errorTextAppearance="@style/TextAppearance.AppCompat.Body1"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/subtitulo">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/textEditDocuId"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:hint="Id"
-                    android:textSize="24sp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
             <Button
                 android:id="@+id/digitalizacionBtnId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginBottom="16dp"
                 android:text="SIGUIENTE"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textimputlayout" />
+                app:layout_constraintTop_toBottomOf="@+id/subtitulo" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

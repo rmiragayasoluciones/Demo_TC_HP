@@ -61,29 +61,16 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
     private View cargandoProgresBar;
     private Button calendar;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.apertura_cuenta_card_overlaps_layout);
 
-//        Intent intent = getIntent();
-//        if (intent.hasExtra("logo")){
-//            Log.d(TAG, "Intent Has Logo!!!");
-//            Bitmap bitmap = (Bitmap) intent.getParcelableExtra("logo");
-//            ImageView logoImageView = findViewById(R.id.logoHPOEmpresaId);
-//            logoImageView.setImageBitmap(bitmap);
-//        }
-//
-//        if (intent.hasExtra("nombre")){
-//            Log.d(TAG, "Intent Has Nombre!!!");
-//            String nombreEmpresa = intent.getStringExtra("nombre");
-//            TextView nombreEmpresaTextView = findViewById(R.id.tituloEmpresaId);
-//            nombreEmpresaTextView.setText(nombreEmpresa);
-//        }
 
         //todo cargar imagen y nombre ed empresa
         DemoViewModelSingleton demoViewModelSingleton = DemoViewModelSingleton.getInstance();
-        String nombreEmpresa = demoViewModelSingleton.getDemoViewModelGuardado().getClientName();
+        String nombreEmpresa = demoViewModelSingleton.getDemoViewModelGuardado().getClient();
         String logoEnString = demoViewModelSingleton.getDemoViewModelGuardado().getLogo();
 
         if (nombreEmpresa!=null){
@@ -234,6 +221,7 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
 
     @Override
     public void buscarId(String idCliente) {
+        //todo GUARDAR ESTE IDCLIENTE
         //aca llama al Async
         closeKeyboard();
         new GetDemoClientMetadata(this, idCliente).execute();
@@ -302,6 +290,8 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
 
         MetadataCliente metadataCliente = new MetadataCliente(razonSocialIngresad,mailIngresado,sexoIngresado, paisSeleccionado,null, null, null, fecha);
         DemoViewModelSingleton.getInstance().setMetadataCliente(metadataCliente);
+        DemoViewModelSingleton.getInstance().getDemoViewModelGuardado().setClient(razonSocialIngresad);
+
 
         Log.d(TAG, " RazonSocial " + razonSocialIngresad +
                 " Mail " + mailIngresado +
@@ -355,6 +345,7 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
 
     public void onClientError(String errorMsg) {
         cargandoDialog();
+        // si de la busqueda vuelve con error, borra el idCliente que habia guardado
         Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show();
     }
 

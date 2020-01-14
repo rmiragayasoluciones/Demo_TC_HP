@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.PagerAdapter;
@@ -55,6 +54,12 @@ public class AppSelectionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_selection);
+
+
+        if (getIntent().getBooleanExtra("EXIT", false)) {
+            finish();
+        }
+
 
 //        Intent intent = getIntent();
 //        if (intent.hasExtra("logo")){
@@ -164,10 +169,9 @@ public class AppSelectionActivity extends AppCompatActivity {
                             break;
                         case 1:
                             intent = new Intent(v.getContext(), CodigoBarraYQRActivity.class);
-                            startActivity(intent);
                             break;
                         case 2:
-                            Toast.makeText(AppSelectionActivity.this, "Abrir " + current + " App", Toast.LENGTH_SHORT).show();
+                            intent = new Intent(v.getContext(), RecorteDeFirmaActivity.class);
                             break;
 
                     }

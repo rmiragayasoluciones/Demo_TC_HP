@@ -35,11 +35,12 @@ public class BottomSheetDialogProducto extends BottomSheetDialogFragment {
 
         Button altaBtn = v.findViewById(R.id.altaBtn);
         Button bajaBtn = v.findViewById(R.id.bajaBtn);
+        Button modificacionBtn = v.findViewById(R.id.modificacionBtn);
 
         altaBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onAltaBajaClick("alta");
+                mListener.onAltaBajaModificacionClick("alta");
                 dismiss();
             }
         });
@@ -47,7 +48,15 @@ public class BottomSheetDialogProducto extends BottomSheetDialogFragment {
         bajaBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onAltaBajaClick("baja");
+                mListener.onAltaBajaModificacionClick("baja");
+                dismiss();
+            }
+        });
+
+        modificacionBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onAltaBajaModificacionClick("modificacion");
                 dismiss();
             }
         });
@@ -56,7 +65,7 @@ public class BottomSheetDialogProducto extends BottomSheetDialogFragment {
     }
 
     public interface BottomSheetAltaBajaListener {
-        void onAltaBajaClick(String text);
+        void onAltaBajaModificacionClick(String text);
     }
 
     @Override

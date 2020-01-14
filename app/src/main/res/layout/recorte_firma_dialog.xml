@@ -20,20 +20,19 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/dialogQrBarcodeConstraintId"
+            android:id="@+id/constraintLayoutRecorteFirmeDialog"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-
             <TextView
-                android:id="@+id/tituloqrBarcodeDialogId"
+                android:id="@+id/tituloDialogRecorteFirma"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/hp_simplified_265"
                 android:gravity="center"
-                android:text="Ingrese ID"
+                android:text="Cliente"
                 android:textSize="24sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -46,21 +45,23 @@
                 android:background="@color/colorPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tituloqrBarcodeDialogId" />
+                app:layout_constraintTop_toBottomOf="@id/tituloDialogRecorteFirma" />
 
             <TextView
-                android:id="@+id/subtituloqrBarcode"
+                android:id="@+id/subtituloRecorteFirma"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:gravity="center"
+                android:fontFamily="@font/hp_simplified_265"
                 android:textSize="20sp"
+                android:text="Ingrese Id de Cliente"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textimputlayoutQrBarcode"
+                android:id="@+id/textInputLayoutRecorteFirma"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
@@ -70,18 +71,21 @@
                 app:errorTextAppearance="@style/TextAppearance.AppCompat.Body1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/subtituloqrBarcode">
+                app:layout_constraintTop_toBottomOf="@+id/subtituloRecorteFirma">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/textEditDocuIdQrBarcode"
+                    android:id="@+id/editTextRecorteFirmaDialog"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="Id"
                     android:textSize="24sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
+
+
+
             <Button
-                android:id="@+id/digitalizacionBtnIdQrBarcode"
+                android:id="@+id/btnSiguienteRecorteFirmaDialog"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -90,11 +94,14 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textimputlayoutQrBarcode" />
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutRecorteFirma" />
+
+
+
+
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

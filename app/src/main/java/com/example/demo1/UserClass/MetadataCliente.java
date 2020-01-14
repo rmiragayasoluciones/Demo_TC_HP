@@ -21,6 +21,9 @@ public class MetadataCliente {
         this.fecha = fecha;
     }
 
+    public MetadataCliente() {
+    }
+
     public String getBusinessName() {
         return businessName;
     }

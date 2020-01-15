@@ -9,7 +9,7 @@ public class DemoViewModel {
     private int id;
     private int tcId;
     private String name;
-    private String client;
+    private String clientName;
     private String description;
     private String logo;
     private String token;
@@ -21,12 +21,13 @@ public class DemoViewModel {
     private String url;
     private String workPathConfig;
     private String oxpdConfig;
+    private String clientNameNew;
 
-    public DemoViewModel(int id, int tcId, String name, String client, String description, Base64 logo, String token, Date tokenExpirationTime, boolean isExpired, boolean isActive, Date creationTime, Date updateTime, String url, String workPathConfig, String oxpdConfig) {
+    public DemoViewModel(int id, int tcId, String name, String clientName, String description, Base64 logo, String token, Date tokenExpirationTime, boolean isExpired, boolean isActive, Date creationTime, Date updateTime, String url, String workPathConfig, String oxpdConfig) {
         this.id = id;
         this.tcId = tcId;
         this.name = name;
-        this.client = client;
+        this.clientName = clientName;
         this.description = description;
         this.logo = logo.toString();
         this.token = token;
@@ -97,12 +98,12 @@ public class DemoViewModel {
     }
 
     public String getClient() {
-        return client;
+        return clientName;
     }
 
-    public void setClient(String client) {
-        this.client = client;
-    }
+//    public void setClient(String client) {
+//        this.client = client;
+//    }
 
     public boolean isExpired() {
         return isExpired;
@@ -160,13 +161,21 @@ public class DemoViewModel {
         this.oxpdConfig = oxpdConfig;
     }
 
+    public String getClientNameNew() {
+        return clientNameNew;
+    }
+
+    public void setClientNameNew(String clientNameNew) {
+        this.clientNameNew = clientNameNew;
+    }
+
     @Override
     public String toString() {
         return "DemoViewModel{" +
                 "id=" + id +
                 ", tcId=" + tcId +
                 ", name='" + name + '\'' +
-                ", client='" + client + '\'' +
+                ", client='" + clientName + '\'' +
                 ", description='" + description + '\'' +
 //                ", logo='" + logo + '\'' +
                 ", token='" + token + '\'' +

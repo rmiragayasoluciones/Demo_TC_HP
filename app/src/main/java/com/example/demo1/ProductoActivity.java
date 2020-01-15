@@ -112,10 +112,28 @@ public class ProductoActivity extends AppCompatActivity implements BottomSheetDi
 
         layout = findViewById(R.id.layoutforSnack);
 
-        jobBuilderCardV = findViewById(R.id.jobBuilder);
-        scanPrevieweCardV = findViewById(R.id.scanPreview);
         paperSizeCardV = findViewById(R.id.paperSize);
+        jobBuilderCardV = findViewById(R.id.jobBuilder);
+        jobBuilderCardV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                jobBuilderSwitch.performClick();
+            }
+        });
+        scanPrevieweCardV = findViewById(R.id.scanPreview);
+        scanPrevieweCardV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scanPreviewSwitch.performClick();
+            }
+        });
         removeBlankPagesCardV = findViewById(R.id.removeBlankPages);
+        removeBlankPagesCardV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                blankPagesSwitch.performClick();
+            }
+        });
         siguiente = findViewById(R.id.siguienteBtnId);
         paperSizeSelected = findViewById(R.id.paperSelectedId);
 
@@ -364,11 +382,11 @@ public class ProductoActivity extends AppCompatActivity implements BottomSheetDi
 
     @Override
     public void onDigitalizacionBajaDialogRespons(String razonBaja, String otros) {
-        //todo guardar razonBaja y otros
         reasonLow = razonBaja;
         Log.d(TAG, "onDigitalizacionDialogResponse: volvio con: " + razonBaja);
-        if (otros != null) {
+        if (otros != null && !otros.isEmpty()) {
             Log.d(TAG, "Razón \"otros\" : " + otros);
+            reasonLow = razonBaja +": "+ otros;
         }
         scanToDestination("low-" + razonBaja.trim());
     }
@@ -501,7 +519,7 @@ public class ProductoActivity extends AppCompatActivity implements BottomSheetDi
 
 
             /** NUEVO*/
-            String ruta = scanJobData.getFileNames().get(0).toLowerCase();
+            String ruta = scanJobData.getFileNames().get(0);
             Log.d(TAG, "onComplete Ruta: " + ruta);
             String splitBy = "/" + jobInfo.getJobId() + "/";
             String file = ruta.split(splitBy)[1];
@@ -556,7 +574,7 @@ public class ProductoActivity extends AppCompatActivity implements BottomSheetDi
 
         DemoViewModelSingleton demoViewModelSingleton = DemoViewModelSingleton.getInstance();
         int demoId = demoViewModelSingleton.getDemoViewModelGuardado().getId();
-        String client = demoViewModelSingleton.getDemoViewModelGuardado().getClient();
+        String client = demoViewModelSingleton.getDemoViewModelGuardado().getClientNameNew();
 
         switch (serieName) {
             case "Low":

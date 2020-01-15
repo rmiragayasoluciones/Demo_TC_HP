@@ -64,8 +64,6 @@ public class RecorteDeFirmaActivity extends AppCompatActivity implements Finaliz
 
     private TextView paperSizeSelected;
 
-    private List<String> listFilesPath = new ArrayList<>();
-    private List<String> listFilesNames = new ArrayList<>();
 
     //    private String job_builder_selected;
     private SwitchCompat jobBuilderSwitch, scanPreviewSwitch, blankPagesSwitch;
@@ -82,7 +80,8 @@ public class RecorteDeFirmaActivity extends AppCompatActivity implements Finaliz
     private View coverView;
     private ConstraintLayout progressBar;
 
-    private String filePath, fileName, idCliente;
+    private String filePath, fileName;
+    private String idCliente = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,10 +107,28 @@ public class RecorteDeFirmaActivity extends AppCompatActivity implements Finaliz
 
         layout = findViewById(R.id.layoutforSnack);
 
-        jobBuilderCardV = findViewById(R.id.jobBuilder);
-        scanPrevieweCardV = findViewById(R.id.scanPreview);
         paperSizeCardV = findViewById(R.id.paperSize);
+        jobBuilderCardV = findViewById(R.id.jobBuilder);
+        jobBuilderCardV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                jobBuilderSwitch.performClick();
+            }
+        });
+        scanPrevieweCardV = findViewById(R.id.scanPreview);
+        scanPrevieweCardV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scanPreviewSwitch.performClick();
+            }
+        });
         removeBlankPagesCardV = findViewById(R.id.removeBlankPages);
+        removeBlankPagesCardV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                blankPagesSwitch.performClick();
+            }
+        });
         siguiente = findViewById(R.id.siguienteBtnId);
         paperSizeSelected = findViewById(R.id.paperSelectedId);
 
@@ -119,12 +136,15 @@ public class RecorteDeFirmaActivity extends AppCompatActivity implements Finaliz
         siguiente.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveOptionsSelected();
-                scanToDestination("recortefirmas-" + idCliente);
+                if (idCliente.isEmpty()){
+                    openDialogs();
+                } else {
+                    saveOptionsSelected();
+                    scanToDestination("recortefirmas-" + idCliente);
+                }
+
             }
         });
-
-
         paperSizeCardV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -156,7 +176,7 @@ public class RecorteDeFirmaActivity extends AppCompatActivity implements Finaliz
 
     private void openDialogs() {
         DigitalizarRecorteFirmaDialog dialog = new DigitalizarRecorteFirmaDialog();
-        dialog.setCancelable(false);
+        dialog.setCancelable(true);
         dialog.show(getSupportFragmentManager(), "digitalizar Qr o Barcode");
     }
 
@@ -363,6 +383,11 @@ public class RecorteDeFirmaActivity extends AppCompatActivity implements Finaliz
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        menuPrincipal();
+    }
+
     private void menuPrincipal(){
         Intent intent = new Intent(getApplicationContext(), AppSelectionActivity.class);
         startActivity(intent);
@@ -473,7 +498,8 @@ public class RecorteDeFirmaActivity extends AppCompatActivity implements Finaliz
 
 
             /** NUEVO*/
-            String ruta = scanJobData.getFileNames().get(0).toLowerCase();
+//            String ruta = scanJobData.getFileNames().get(0).toLowerCase();
+            String ruta = scanJobData.getFileNames().get(0);
             Log.d(TAG, "onComplete Ruta: " + ruta);
             String splitBy = "/" + jobInfo.getJobId() + "/";
             String file = ruta.split(splitBy)[1];

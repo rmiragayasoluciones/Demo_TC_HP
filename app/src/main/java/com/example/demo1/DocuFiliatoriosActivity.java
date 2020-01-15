@@ -85,11 +85,19 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
     /* ScanCount */
     private int scanCount = 0;
 
+    /* for this class only */
+    private int demoId;
+    private String client;
+    private DemoViewModelSingleton demoViewModelSingleton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_docu_filiatorios2);
+
+        demoViewModelSingleton = DemoViewModelSingleton.getInstance();
+        demoId = demoViewModelSingleton.getDemoViewModelGuardado().getId();
+        client = demoViewModelSingleton.getDemoViewModelGuardado().getClientNameNew();
 
         blankPagesSwitch = findViewById(R.id.blankPagesId);
         jobBuilderSwitch = findViewById(R.id.jobBuilderSwitch);
@@ -105,10 +113,28 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
 
         layout = findViewById(R.id.layoutforSnack);
 
-        jobBuilderCardV = findViewById(R.id.jobBuilder);
-        scanPrevieweCardV = findViewById(R.id.scanPreview);
         paperSizeCardV = findViewById(R.id.paperSize);
+        jobBuilderCardV = findViewById(R.id.jobBuilder);
+        jobBuilderCardV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                jobBuilderSwitch.performClick();
+            }
+        });
+        scanPrevieweCardV = findViewById(R.id.scanPreview);
+        scanPrevieweCardV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scanPreviewSwitch.performClick();
+            }
+        });
         removeBlankPagesCardV = findViewById(R.id.removeBlankPages);
+        removeBlankPagesCardV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                blankPagesSwitch.performClick();
+            }
+        });
         siguiente = findViewById(R.id.siguienteBtnId);
         paperSizeSelected = findViewById(R.id.paperSelectedId);
 
@@ -121,38 +147,18 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
             }
         });
 
-
-//        jobBuilderCardV.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(DocuFiliatoriosActivity.this, "Job Builder", Toast.LENGTH_SHORT).show();
-////                showJobBuilderDialog();
-//            }
-//        });
-
-//        scanPrevieweCardV.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(DocuFiliatoriosActivity.this, "scanPrevieweCardV", Toast.LENGTH_SHORT).show();
-////                showScanPreviewDialog();
-//            }
-//        });
-
         paperSizeCardV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(DocuFiliatoriosActivity.this, "paperSizeCardV", Toast.LENGTH_SHORT).show();
                 showPaperSizeDialog();
             }
         });
 
-//        removeBlankPagesCardV.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(DocuFiliatoriosActivity.this, "removeBlankPagesCardV", Toast.LENGTH_SHORT).show();
-////                showBlankPagesDialog();
-//            }
-//        });
+
+        demoViewModelSingleton = DemoViewModelSingleton.getInstance();
+
+        demoId = demoViewModelSingleton.getDemoViewModelGuardado().getId();
+        client = demoViewModelSingleton.getDemoViewModelGuardado().getClientNameNew();
 
     }
 
@@ -179,7 +185,7 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
     private void openDialogDigitalizacion(int numeroDeDialog) {
         dialog = new DigitalizarDocuFiliatoriosDialog(this, numeroDeDialog);
         dialog.show(getSupportFragmentManager(), "digitalizar fragment");
-//        dialog.setCancelable(false);
+        dialog.setCancelable(false);
     }
 
     /**
@@ -332,16 +338,17 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
     }
 
     public void onDigitalizacionDialogResponse() {
+
        dialog.getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
        switch (dialogNumero){
            case 0:
-               scanToDestination("dni");
+               scanToDestination(client + "-dni");
                break;
            case 1:
-               scanToDestination("constancia-ingresos");
+               scanToDestination(client + "-constancia-ingresos");
                break;
            case 2:
-               scanToDestination("otra-documentacion");
+               scanToDestination(client + "-otra-documentacion");
                break;
 
        }
@@ -468,14 +475,12 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
 
     private String convertJsonBojectToString(String documentName){
 
-        DemoViewModelSingleton demoViewModelSingleton = DemoViewModelSingleton.getInstance();
+
 
         String serieName = "Filiation";
-        int demoId = demoViewModelSingleton.getDemoViewModelGuardado().getId();
-        String client = demoViewModelSingleton.getDemoViewModelGuardado().getClient();
+
         Log.d(TAG, "client es " + client);
         demoViewModelSingleton.getMetadataCliente().setDocumentName(documentName);
-
         CreateDocumentViewModel createDocumentViewModel = new CreateDocumentViewModel(serieName, demoId, client, demoViewModelSingleton.getMetadataCliente());
 
         Gson gson = new Gson();
@@ -496,10 +501,6 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
         public void onProgress(String rid, JobInfo jobInfo) {
             Log.d(TAG, "Received onProgress for rid " + rid);
             Log.d(TAG, "Received onProgress jobInfo " + jobInfo);
-//            int numeroDeHojaEscaneada = Integer.parseInt(jobInfo.getJobData().toString().substring(jobInfo.getJobData().toString().indexOf("imagesScanned=") + 14, jobInfo.getJobData().toString().indexOf(", imagesProcessed")));
-//            if (numeroDeHojaEscaneada > 0) {
-//                scanProgressDialog.changeText("Escaneando hoja " + numeroDeHojaEscaneada);
-//            }
 
             if (mJobId == null) {
                 if (jobInfo.getJobId() != null) {
@@ -546,7 +547,7 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
 
 
             /** NUEVO*/
-            String ruta = scanJobData.getFileNames().get(0).toLowerCase();
+            String ruta = scanJobData.getFileNames().get(0);
             Log.d(TAG, "onComplete Ruta: " + ruta);
             String splitBy = "/" + jobInfo.getJobId() + "/";
             String file = ruta.split(splitBy)[1];
@@ -589,8 +590,6 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
             restartActivity();
 
         }
-
-
     }
 
     @Override
@@ -638,11 +637,4 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
         super.finish();
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
-
-//    public enum DialogStatus {
-//        SOLICITA_ID,
-//        SOLICITA_CONSTANCIA,
-//        SOLICITA_OTRADOCU,
-//        TERMINA
-//    }
 }

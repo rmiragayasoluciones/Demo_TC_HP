@@ -3,12 +3,12 @@ package com.example.demo1.Dialogs;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,7 +45,7 @@ public class DigitalizarBajaProductoDialog extends AppCompatDialogFragment {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 radioButton = view.findViewById(checkedId);
-                Toast.makeText(view.getContext(), "RButton " + radioButton.getText(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(view.getContext(), "RButton " + radioButton.getText(), Toast.LENGTH_SHORT).show();
                 if (checkedId== R.id.opcion3){
                     editTextLayout.setVisibility(View.VISIBLE);
 
@@ -64,6 +64,7 @@ public class DigitalizarBajaProductoDialog extends AppCompatDialogFragment {
             public void onClick(View v) {
 
                 if (editTextLayout.getVisibility() == View.VISIBLE){
+                    Log.d(TAG, "Layout Visible, envia el edittext: " + editText.getText().toString());
                     listener.onDigitalizacionBajaDialogRespons (radioButton.getText().toString().toLowerCase().trim() ,editText.getText().toString());
                 } else {
                     listener.onDigitalizacionBajaDialogRespons (radioButton.getText().toString().toLowerCase().trim() ,"");

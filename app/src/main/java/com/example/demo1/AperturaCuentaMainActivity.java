@@ -67,23 +67,21 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
         super.onCreate(savedInstanceState);
         setContentView(R.layout.apertura_cuenta_card_overlaps_layout);
 
-
         //todo cargar imagen y nombre ed empresa
         DemoViewModelSingleton demoViewModelSingleton = DemoViewModelSingleton.getInstance();
         String nombreEmpresa = demoViewModelSingleton.getDemoViewModelGuardado().getClient();
         String logoEnString = demoViewModelSingleton.getDemoViewModelGuardado().getLogo();
+//        String logoEnString = getResources().getString(R.string.long_string);
 
         if (nombreEmpresa!=null){
             TextView nombreEmpresaTextView = findViewById(R.id.tituloEmpresaId);
             nombreEmpresaTextView.setText(nombreEmpresa);
         }
-        if (logoEnString!= null){
+        if (logoEnString!= null && !logoEnString.isEmpty()){
+            Log.d(TAG, "logoenstring "+ logoEnString);
             ImageView logoImageView = findViewById(R.id.logoHPOEmpresaId);
-            logoImageView.setImageBitmap(loadImage(logoEnString));
+            logoImageView.setImageBitmap(resize(loadImage(logoEnString), 70, 70));
         }
-
-
-
 
         initToolbar();
         razonSocial = findViewById(R.id.editTextRazonSocialId);
@@ -100,6 +98,27 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
         fab_add = findViewById(R.id.fab_add);
         lyt_mic = findViewById(R.id.lyt_mic);
         lyt_call = findViewById(R.id.lyt_call);
+    }
+
+    private Bitmap resize(Bitmap image, int maxWidth, int maxHeight) {
+        if (maxHeight > 0 && maxWidth > 0) {
+            int width = image.getWidth();
+            int height = image.getHeight();
+            float ratioBitmap = (float) width / (float) height;
+            float ratioMax = (float) maxWidth / (float) maxHeight;
+
+            int finalWidth = maxWidth;
+            int finalHeight = maxHeight;
+            if (ratioMax > ratioBitmap) {
+                finalWidth = (int) ((float)maxHeight * ratioBitmap);
+            } else {
+                finalHeight = (int) ((float)maxWidth / ratioBitmap);
+            }
+            image = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
+            return image;
+        } else {
+            return image;
+        }
     }
 
     @Override
@@ -138,8 +157,19 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
             public void onClick(View v) {
                 Log.d(TAG, "click en el layout");
                 toggleFabMode(fab_add);
-                guardarInputs();
-                startSerieDocuActivity();
+
+                // comprueba si el los campos estan llenos y luego si el mail es valido
+                if (camposLLenos()){
+                    if (esMailValido(mail.getText().toString())){
+                        guardarInputs();
+                        startSerieDocuActivity();
+                    }else {
+                        Toast.makeText(AperturaCuentaMainActivity.this, "El mail no es valido", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(AperturaCuentaMainActivity.this, "Llene todos los campos para continuar", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
@@ -160,6 +190,15 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
 
     }
 
+    private boolean camposLLenos(){
+        String mailParaVerificar =  mail.getText().toString();
+        if(razonSocial.getText().toString().isEmpty() || mailParaVerificar.isEmpty()){
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 
     private void toggleFabMode(View v) {
         rotate = ViewAnimation.rotateFab(v, !rotate);
@@ -172,6 +211,13 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
             ViewAnimation.showOut(lyt_call);
             back_drop.setVisibility(View.GONE);
         }
+    }
+
+    private boolean esMailValido(CharSequence target){
+        if (target == null) {
+            return false;
+        }
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 
 
@@ -196,7 +242,7 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
 
     private void initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_menu);
+//        toolbar.setNavigationIcon(R.drawable.);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Apertura de Cuenta");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -290,7 +336,8 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
 
         MetadataCliente metadataCliente = new MetadataCliente(razonSocialIngresad,mailIngresado,sexoIngresado, paisSeleccionado,null, null, null, fecha);
         DemoViewModelSingleton.getInstance().setMetadataCliente(metadataCliente);
-        DemoViewModelSingleton.getInstance().getDemoViewModelGuardado().setClient(razonSocialIngresad);
+        //todo guardar RazonSocialIngresada como client en DocumentViewModel
+        DemoViewModelSingleton.getInstance().getDemoViewModelGuardado().setClientNameNew(razonSocialIngresad);
 
 
         Log.d(TAG, " RazonSocial " + razonSocialIngresad +

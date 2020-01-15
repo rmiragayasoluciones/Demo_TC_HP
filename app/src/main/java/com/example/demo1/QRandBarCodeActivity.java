@@ -44,6 +44,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import me.toptas.fancyshowcase.FancyShowCaseView;
+import me.toptas.fancyshowcase.FocusShape;
 
 public class QRandBarCodeActivity extends AppCompatActivity implements FinalizacionDeTrabajo.FinalizacionDeTrabajoListener,
                                                                     CreateDocument.OnCreateDocumentsListener,
@@ -53,7 +54,7 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
 
     private TextView tituloActivity;
 
-    private ConstraintLayout layout;
+    private ConstraintLayout layout, layoutCardsViewForShowcase;
     CardView jobBuilderCardV, scanPrevieweCardV, paperSizeCardV, removeBlankPagesCardV;
     private ArrayList<String> blackImageRemovalEntries = new ArrayList<>();
     private ArrayList<String> paperSize = new ArrayList<>();
@@ -105,6 +106,7 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
         jobBuilderSwitch = findViewById(R.id.jobBuilderSwitch);
         scanPreviewSwitch = findViewById(R.id.scanPreviewSwitch);
 
+
         cargarOpcionesaBotones();
 
         coverView = findViewById(R.id.viewcoverid);
@@ -114,19 +116,43 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
         mJobObserver = new JobObserver(new Handler());
 
         layout = findViewById(R.id.layoutforSnack);
+        layoutCardsViewForShowcase = findViewById(R.id.groupConstraintLayoutId);
 
-        jobBuilderCardV = findViewById(R.id.jobBuilder);
-        scanPrevieweCardV = findViewById(R.id.scanPreview);
         paperSizeCardV = findViewById(R.id.paperSize);
+        jobBuilderCardV = findViewById(R.id.jobBuilder);
+        jobBuilderCardV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                jobBuilderSwitch.performClick();
+            }
+        });
+        scanPrevieweCardV = findViewById(R.id.scanPreview);
+        scanPrevieweCardV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scanPreviewSwitch.performClick();
+            }
+        });
         removeBlankPagesCardV = findViewById(R.id.removeBlankPages);
+        removeBlankPagesCardV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                blankPagesSwitch.performClick();
+            }
+        });
         siguiente = findViewById(R.id.siguienteBtnId);
         paperSizeSelected = findViewById(R.id.paperSelectedId);
 
         siguiente.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveOptionsSelected();
-                scanToDestination("qr-bardoce" + idCliente);
+                if (idCliente == null){
+                    openDialogs();
+                }else {
+                    saveOptionsSelected();
+                    scanToDestination("qr-bardoce" + idCliente);
+                }
+
 
             }
         });
@@ -158,7 +184,7 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
             case "QR":
                 tituloActivity.setText("Ruteo de Documento por QR");
                 break;
-            case "BARCODE":
+            case "Barcode":
                 tituloActivity.setText("Ruteo de Documento por Código de Barras");
                 break;
         }
@@ -388,9 +414,7 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
         //todo guardar el ID cliente
         Log.d(TAG, "onDigitalizarQroBarcodeDialog: idCliente " + idCliente);
         this.idCliente = idCliente;
-
-        showcaseEjemplo();
-
+//        showcaseEjemplo();
     }
 
     @Override
@@ -405,11 +429,16 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
         finalizacionDeTrabajo.show(getSupportFragmentManager(), "finalizacion fialog");
     }
 
+
+    // NO FUNCA
     public void showcaseEjemplo(){
+        Log.d(TAG, "showcaseEjemplo: CALL");
         new FancyShowCaseView.Builder(this)
-                .focusOn(scanPrevieweCardV)
+                .focusOn(layoutCardsViewForShowcase)
                 .title("Seleccione scan Preview")
-                .showOnce("fancy1")
+                .showOnce("fancy2")
+                .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                .roundRectRadius(90)
                 .build()
                 .show();
     }
@@ -473,7 +502,7 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
 
 
             /** NUEVO*/
-            String ruta = scanJobData.getFileNames().get(0).toLowerCase();
+            String ruta = scanJobData.getFileNames().get(0);
             Log.d(TAG, "onComplete Ruta: " + ruta);
             String splitBy = "/" + jobInfo.getJobId() + "/";
             String file = ruta.split(splitBy)[1];

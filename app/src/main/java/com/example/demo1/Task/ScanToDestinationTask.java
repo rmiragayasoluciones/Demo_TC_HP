@@ -74,6 +74,7 @@ public class ScanToDestinationTask extends AsyncTask<Void, Void, String> {
         Log.d(TAG, "doInBackground: call");
 
         try{
+            Log.d(TAG, "doInBackground: nombre del file al comenzar scan: " + this.filename);
 
             final boolean settingsUi = false;
 

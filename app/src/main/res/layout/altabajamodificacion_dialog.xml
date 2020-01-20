@@ -1,39 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout3"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="700dp"
+        android:id="@+id/cardViewGeneral"
+        android:layout_width="800dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        app:cardCornerRadius="2dp"
-        app:cardElevation="2dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/consrtaintLayoutAltaBajaModificacionLayOut"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/tituloDialogId"
+                android:id="@+id/tituloAltaBajaModificacionTitulo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
                 android:fontFamily="@font/hp_simplified_265"
                 android:gravity="center"
-                android:text="Alta"
+                android:text="Producto"
                 android:textSize="24sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -45,28 +46,28 @@
                 android:background="@color/colorPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tituloDialogId" />
+                app:layout_constraintTop_toBottomOf="@id/tituloAltaBajaModificacionTitulo" />
 
             <TextView
                 android:id="@+id/subtitulo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
                 android:fontFamily="@font/hp_simplified_265"
-                android:gravity="center"
-                android:lines="2"
-                android:text="Ingrese código de Alta"
-                android:textSize="20sp"
+                android:text="Documento"
+                android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textimputlayout"
+                android:id="@+id/editTextLayOutNombreDocumento"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:textColorHint="@color/colorPrimary"
                 app:boxStrokeColor="@color/colorPrimary"
                 app:errorTextAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -75,46 +76,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/subtitulo">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/textEditaltaId"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:hint="Código Alta"
-                    android:inputType="textFilter"
-                    android:maxLength="50"
-                    android:maxLines="1"
-                    android:textSize="24sp" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <TextView
-                android:id="@+id/sub2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:fontFamily="@font/hp_simplified_265"
-                android:gravity="center"
-                android:lines="2"
-                android:text="Ingrese nombre del Documento"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textimputlayout" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layoutDocumentName"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textColorHint="@color/colorPrimary"
-                app:boxStrokeColor="@color/colorPrimary"
-                app:errorTextAppearance="@style/TextAppearance.AppCompat.Body1"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sub2">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editTextDocumentName"
+                    android:id="@+id/editTextNombreDocumento"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="Nombre Documento"
@@ -122,23 +84,75 @@
                     android:maxLength="50"
                     android:maxLines="1"
                     android:textSize="24sp" />
-
             </com.google.android.material.textfield.TextInputLayout>
 
+            <RadioGroup
+                android:id="@+id/razonRadioGroup"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="32dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editTextLayOutNombreDocumento">
+
+                <RadioButton
+                    android:id="@+id/altaRadioBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:gravity="center"
+                    android:text="Alta"
+                    android:textSize="24sp" />
+
+                <RadioButton
+                    android:id="@+id/bajaRadioBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Baja"
+                    android:textSize="24sp" />
+
+                <RadioButton
+                    android:id="@+id/modificacionRadioBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Modificación"
+                    android:textSize="24sp" />
+            </RadioGroup>
+
+            <include
+                android:id="@+id/constraintSetToModify"
+                layout="@layout/alta_constraintset"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/razonRadioGroup" />
+
             <Button
-                android:id="@+id/digitalizacionBtnId"
+                android:id="@+id/botonId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
-                android:text="SIGUIENTE"
+                android:text="Button"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/layoutDocumentName" />
-
-
+                app:layout_constraintTop_toBottomOf="@+id/constraintSetToModify" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

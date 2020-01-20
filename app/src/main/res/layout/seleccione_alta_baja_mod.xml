@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="800dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tituloAltaBajaModificacionTitulo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="@font/hp_simplified_265"
+                android:gravity="center"
+                android:text="Producto"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/colorPrimary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tituloAltaBajaModificacionTitulo" />
+
+            <Button
+                android:id="@+id/altaBtn"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="32dp"
+                android:fontFamily="@font/hp_simplified_265"
+                android:text="ALTA"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/bajaBtn"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view" />
+
+            <Button
+                android:id="@+id/bajaBtn"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:fontFamily="@font/hp_simplified_265"
+                android:text="BAJA"
+                app:layout_constraintBottom_toBottomOf="@+id/altaBtn"
+                app:layout_constraintEnd_toStartOf="@+id/modificacionBtn"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/altaBtn" />
+
+            <Button
+                android:id="@+id/modificacionBtn"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:fontFamily="@font/hp_simplified_265"
+                android:text="MODIFICACIÓN"
+                app:layout_constraintBottom_toBottomOf="@+id/bajaBtn"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/bajaBtn" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -34,7 +34,7 @@ public class BottomSheetDialogProducto extends BottomSheetDialogFragment {
         View v = inflater.inflate(R.layout.bottom_sheet_productoaltabaja_layout, container, false);
 
         Button altaBtn = v.findViewById(R.id.altaBtn);
-        Button bajaBtn = v.findViewById(R.id.bajaBtn);
+        Button bajaBtn = v.findViewById(R.id.altaBtn);
         Button modificacionBtn = v.findViewById(R.id.modificacionBtn);
 
         altaBtn.setOnClickListener(new View.OnClickListener() {
@@ -64,6 +64,7 @@ public class BottomSheetDialogProducto extends BottomSheetDialogFragment {
         return v;
     }
 
+    /* esto agregarlo al nuevo dialog que voy a crear con los botones alta/baja/mod */
     public interface BottomSheetAltaBajaListener {
         void onAltaBajaModificacionClick(String text);
     }

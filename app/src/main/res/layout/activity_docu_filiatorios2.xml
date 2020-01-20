@@ -29,6 +29,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="@font/hp_simplified_265"
+        android:text="Configuración de atributos"
+        android:textColor="@color/soluWhite"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/groupConstraintLayoutId"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/groupConstraintLayoutId"
         android:layout_width="wrap_content"
@@ -81,7 +96,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Paper Size"
+                    android:text="Tamaño de Papel"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                     android:textColor="@color/grey_90" />
 
@@ -142,7 +157,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Scan Preview"
+                    android:text="Previsualización"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                     android:textColor="@color/grey_90" />
 
@@ -196,7 +211,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Job Builder"
+                    android:text="Armado de Digitalización"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                     android:textColor="@color/grey_90" />
 
@@ -251,7 +266,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Remove Blank Pages"
+                    android:text="Remover Páginas en Blanco"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                     android:textColor="@color/grey_90" />
 
@@ -268,6 +283,58 @@
 
             </LinearLayout>
 
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/duplexCardV"
+            android:layout_width="400dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            app:cardCornerRadius="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/removeBlankPages">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:gravity="center_vertical"
+                android:minHeight="@dimen/spacing_xxlarge"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/spacing_medium"
+                android:paddingRight="@dimen/spacing_medium">
+
+            <ImageButton
+                android:layout_width="@dimen/spacing_xmlarge"
+                android:layout_height="@dimen/spacing_xmlarge"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_mail"
+                android:tint="@color/colorPrimaryDark" />
+
+            <View
+                android:layout_width="@dimen/spacing_small"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Duplex"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:textColor="@color/grey_90" />
+
+            <View
+                android:layout_width="@dimen/spacing_large"
+                android:layout_height="match_parent" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/duplexSwitchId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    app:thumbTint="@color/switch_color" />
+            </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 

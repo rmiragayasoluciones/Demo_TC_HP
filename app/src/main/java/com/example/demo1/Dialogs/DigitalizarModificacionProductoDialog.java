@@ -13,11 +13,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.example.demo1.R;
+import com.google.android.material.textfield.TextInputEditText;
 
 public class DigitalizarModificacionProductoDialog extends AppCompatDialogFragment {
     private static final String TAG = "DigitalizarModificacion";
 
     private DigitalizarModificacionDialogListener listener;
+    private TextInputEditText nombreDocumento;
 
     @NonNull
     @Override
@@ -28,14 +30,17 @@ public class DigitalizarModificacionProductoDialog extends AppCompatDialogFragme
         final View view = inflater.inflate(R.layout.modificacion_producto_dialog, null);
         builder.setView(view);
 
-
+        nombreDocumento = view.findViewById(R.id.modificacionNombredocumentoEdittext);
 
         Button btn = view.findViewById(R.id.digitalizacionBtnId);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onDigitalizacionModificacionDialogRespons();
-                dismiss();
+                if (validarCampos()){
+                    listener.onDigitalizacionModificacionDialogRespons(nombreDocumento.getText().toString().toLowerCase().trim());
+                    dismiss();
+                }
+
             }
         });
 
@@ -43,6 +48,14 @@ public class DigitalizarModificacionProductoDialog extends AppCompatDialogFragme
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         return dialog;
+    }
+
+    private boolean validarCampos(){
+        if (nombreDocumento.length() == 0){
+            nombreDocumento.setError("Campo obligatorio");
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -58,7 +71,7 @@ public class DigitalizarModificacionProductoDialog extends AppCompatDialogFragme
     }
 
     public interface DigitalizarModificacionDialogListener {
-        void onDigitalizacionModificacionDialogRespons();
+        void onDigitalizacionModificacionDialogRespons(String documentName);
     }
 
 }

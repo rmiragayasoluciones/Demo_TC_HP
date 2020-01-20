@@ -81,6 +81,8 @@ public class CreateDocument extends AsyncTask<Void, Void, Void> {
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
+
+                mListener.onCreateDocumentError(error);
                 // todo, cartel de error al subir archivos a la api
             }
         }){
@@ -126,6 +128,7 @@ public class CreateDocument extends AsyncTask<Void, Void, Void> {
 
     public interface OnCreateDocumentsListener{
          void onCreateDocumentComplete();
+         void onCreateDocumentError(VolleyError volleyError);
     }
 
     private byte[] getByteArrayFromFile(String filepath) {

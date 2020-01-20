@@ -27,7 +27,6 @@ public class DigitalizarQroBarcodeDialog extends AppCompatDialogFragment {
     private TextInputEditText editText;
     private TextInputLayout editTextLayout;
     private TextView subtitulo;
-    private int fase;
     private String editTextGuardado;
     private Button btnSiguiente;
     private ConstraintLayout constraintLayout;
@@ -35,7 +34,6 @@ public class DigitalizarQroBarcodeDialog extends AppCompatDialogFragment {
 
     public DigitalizarQroBarcodeDialog(boolean esQr) {
         this.esQr = esQr;
-        this.fase = 0;
     }
 
     @NonNull
@@ -53,7 +51,7 @@ public class DigitalizarQroBarcodeDialog extends AppCompatDialogFragment {
         constraintSet.clone(constraintLayout);
 
         subtitulo = view.findViewById(R.id.subtituloqrBarcode);
-        subtitulo.setText("ingrese ID del cliente");
+        subtitulo.setText("Ingrese ID del cliente");
         editTextLayout =view.findViewById(R.id.textimputlayoutQrBarcode);
         editText = view.findViewById(R.id.textEditDocuIdQrBarcode);
 
@@ -61,19 +59,13 @@ public class DigitalizarQroBarcodeDialog extends AppCompatDialogFragment {
         btnSiguiente.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (fase == 0){
-                    editTextGuardado = editText.getText().toString();
-                    cambiarLayout();
-                  fase++;
-                } else {
+                    listener.onDigitalizarQroBarcodeDialog(editText.getText().toString());
                     dismiss();
-                    listener.onDigitalizarQroBarcodeDialog(editTextGuardado);
-                }
+
 
 
             }
         });
-
 
 
         Dialog dialog = builder.create();

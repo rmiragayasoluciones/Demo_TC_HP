@@ -18,6 +18,7 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.preference.PreferenceManager;
 
+import com.android.volley.VolleyError;
 import com.example.demo1.Dialogs.DigitalizarQroBarcodeDialog;
 import com.example.demo1.Dialogs.FinalizacionDeTrabajo;
 import com.example.demo1.Task.CreateDocument;
@@ -43,9 +44,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import me.toptas.fancyshowcase.FancyShowCaseView;
-import me.toptas.fancyshowcase.FocusShape;
-
 public class QRandBarCodeActivity extends AppCompatActivity implements FinalizacionDeTrabajo.FinalizacionDeTrabajoListener,
                                                                     CreateDocument.OnCreateDocumentsListener,
                                                                 DigitalizarQroBarcodeDialog.DigitalizarQroBarcodeDialogListener {
@@ -55,15 +53,18 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
     private TextView tituloActivity;
 
     private ConstraintLayout layout, layoutCardsViewForShowcase;
-    CardView jobBuilderCardV, scanPrevieweCardV, paperSizeCardV, removeBlankPagesCardV;
+    CardView jobBuilderCardV, scanPrevieweCardV, paperSizeCardV, removeBlankPagesCardV, duplexCardView;
     private ArrayList<String> blackImageRemovalEntries = new ArrayList<>();
     private ArrayList<String> paperSize = new ArrayList<>();
     private ArrayList<String> jobassemblymode = new ArrayList<>();
     private ArrayList<String> scanpreview = new ArrayList<>();
+    private ArrayList<String> duplex = new ArrayList<>();
     private String[] JOBBUILDER;
     private String[] SCANPREVIEW;
     private String[] PAPERSIZE;
     private String[] BLANKPAGES;
+    private String[] DUPLEX;
+
     private Button siguiente;
 
     private TextView paperSizeSelected;
@@ -71,7 +72,7 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
     private String filePath, fileName, idCliente;
 
     //    private String job_builder_selected;
-    private SwitchCompat jobBuilderSwitch, scanPreviewSwitch, blankPagesSwitch;
+    private SwitchCompat jobBuilderSwitch, scanPreviewSwitch, blankPagesSwitch, duplexSwitch;
     //    private String scan_preview_selected;
     private String paper_size_selected = "A4";
 
@@ -105,6 +106,7 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
         blankPagesSwitch = findViewById(R.id.blankPagesId);
         jobBuilderSwitch = findViewById(R.id.jobBuilderSwitch);
         scanPreviewSwitch = findViewById(R.id.scanPreviewSwitch);
+        duplexSwitch = findViewById(R.id.duplexSwitchId);
 
 
         cargarOpcionesaBotones();
@@ -142,6 +144,13 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
         });
         siguiente = findViewById(R.id.siguienteBtnId);
         paperSizeSelected = findViewById(R.id.paperSelectedId);
+        duplexCardView = findViewById(R.id.duplexCardV);
+        duplexCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                duplexSwitch.performClick();
+            }
+        });
 
         siguiente.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,7 +159,7 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
                     openDialogs();
                 }else {
                     saveOptionsSelected();
-                    scanToDestination("qr-bardoce" + idCliente);
+                    scanToDestination("qr-bardoce");
                 }
 
 
@@ -182,10 +191,10 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
     private void setTitulo() {
         switch (qrOBarcode){
             case "QR":
-                tituloActivity.setText("Ruteo de Documento por QR");
+                tituloActivity.setText("QR");
                 break;
             case "Barcode":
-                tituloActivity.setText("Ruteo de Documento por Código de Barras");
+                tituloActivity.setText("Código de Barras");
                 break;
         }
     }
@@ -259,6 +268,7 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
         Log.d(TAG, "blankPages isCheck: " + blankPagesSwitch.isChecked());
         Log.d(TAG, "scanPreview isCheck: " + scanPreviewSwitch.isChecked());
         Log.d(TAG, "JobBuilder isCheck: " + jobBuilderSwitch.isChecked());
+        Log.d(TAG, "Dulpex usCheck: " + duplexSwitch.isChecked());
 
         String blank_pages_selected;
         if (blankPagesSwitch.isChecked()){
@@ -287,12 +297,23 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
             Log.d(TAG, "job_builder_selected: " + job_builder_selected);
         }
 
+        String duplex_selected;
+        if (duplexSwitch.isChecked()){
+            duplex_selected = DUPLEX[2];
+            Log.d(TAG, "duplex_selected: " + duplex_selected);
+        } else {
+            duplex_selected = DUPLEX[1];
+            Log.d(TAG, "duplex_selected: " + duplex_selected);
+        }
+
+
         ScanOptionsSelected scanOptionsSelected = ScanOptionsSelected.getInstance();
         scanOptionsSelected.setPaperSize(paper_size_selected);
 
         scanOptionsSelected.setBlankPagesSelected(blank_pages_selected);
         scanOptionsSelected.setScanPreviewSelected(scan_preview_selected);
         scanOptionsSelected.setJobBuilderSelected(job_builder_selected);
+        scanOptionsSelected.setDuplexSelected(duplex_selected);
 
     }
 
@@ -361,9 +382,25 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
 
         //**********************************
 
+        for (ScanAttributes.Duplex duplex : mCapabilities.getDuplexList()) {
+            this.duplex.add(duplex.name());
+        }
+
+        DUPLEX = new String[this.duplex.size()];
+
+        objArr = this.duplex.toArray();
+
+        int d = 0;
+        for (Object obj : objArr) {
+            DUPLEX[d++] = (String) obj;
+        }
+
+        //**********************************
+
         jobBuilderSwitch.setChecked(false);
         scanPreviewSwitch.setChecked(false);
         blankPagesSwitch.setChecked(false);
+        duplexSwitch.setChecked(false);
 
     }
 
@@ -423,25 +460,17 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
         cartelFinalizacionTRabajo();
     }
 
+    @Override
+    public void onCreateDocumentError(VolleyError volleyError) {
+        //todo: aca cortar toddo y meter cartel de error con la info de NetworkResponse
+    }
+
     public void cartelFinalizacionTRabajo(){
         FinalizacionDeTrabajo finalizacionDeTrabajo = new FinalizacionDeTrabajo("La documentación fue subida correctamente");
         finalizacionDeTrabajo.setCancelable(false);
         finalizacionDeTrabajo.show(getSupportFragmentManager(), "finalizacion fialog");
     }
 
-
-    // NO FUNCA
-    public void showcaseEjemplo(){
-        Log.d(TAG, "showcaseEjemplo: CALL");
-        new FancyShowCaseView.Builder(this)
-                .focusOn(layoutCardsViewForShowcase)
-                .title("Seleccione scan Preview")
-                .showOnce("fancy2")
-                .focusShape(FocusShape.ROUNDED_RECTANGLE)
-                .roundRectRadius(90)
-                .build()
-                .show();
-    }
 
 
     private class JobObserver extends JobService.AbstractJobletObserver {
@@ -572,8 +601,10 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
         int demoId = demoViewModelSingleton.getDemoViewModelGuardado().getId();
 
         Log.d(TAG, "idClient " + this.idCliente);
-        demoViewModelSingleton.getMetadataCliente().setDocumentName(this.idCliente);
 
+        String newDocumentName = fileName.split("-001")[0];
+        Log.d(TAG, "document viene " + fileName + " y lo paso a " + newDocumentName);
+        demoViewModelSingleton.getMetadataCliente().setDocumentName(newDocumentName);
 
         CreateDocumentViewModel createDocumentViewModel = new CreateDocumentViewModel(qrOBarcode, demoId, this.idCliente, demoViewModelSingleton.getMetadataCliente());
 

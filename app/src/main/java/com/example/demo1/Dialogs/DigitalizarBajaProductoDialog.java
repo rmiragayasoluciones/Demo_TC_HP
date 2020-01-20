@@ -27,7 +27,7 @@ public class DigitalizarBajaProductoDialog extends AppCompatDialogFragment {
     private RadioGroup radioGroup;
     private RadioButton radioButton;
     private TextInputLayout editTextLayout;
-    private TextInputEditText editText;
+    private TextInputEditText editText, nombreDocumento;
 
     @NonNull
     @Override
@@ -39,6 +39,7 @@ public class DigitalizarBajaProductoDialog extends AppCompatDialogFragment {
         builder.setView(view);
 
         editText = view.findViewById(R.id.editTextBajaOtro);
+        nombreDocumento = view.findViewById(R.id.bajaDocumentNameEditText);
         editTextLayout = view.findViewById(R.id.textInputBajaLayout);
         radioGroup = view.findViewById(R.id.radioGroupRazonBaja);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -62,15 +63,17 @@ public class DigitalizarBajaProductoDialog extends AppCompatDialogFragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (validarCampos()){
+                    if (editTextLayout.getVisibility() == View.VISIBLE){
+                        Log.d(TAG, "Layout Visible, envia el edittext: " + editText.getText().toString());
+                        listener.onDigitalizacionBajaDialogRespons (nombreDocumento.getText().toString().toLowerCase().trim(),radioButton.getText().toString().toLowerCase().trim() ,editText.getText().toString());
+                    } else {
+                        listener.onDigitalizacionBajaDialogRespons (nombreDocumento.getText().toString().toLowerCase().trim(),radioButton.getText().toString().toLowerCase().trim() ,"");
+                    }
 
-                if (editTextLayout.getVisibility() == View.VISIBLE){
-                    Log.d(TAG, "Layout Visible, envia el edittext: " + editText.getText().toString());
-                    listener.onDigitalizacionBajaDialogRespons (radioButton.getText().toString().toLowerCase().trim() ,editText.getText().toString());
-                } else {
-                    listener.onDigitalizacionBajaDialogRespons (radioButton.getText().toString().toLowerCase().trim() ,"");
+                    dismiss();
                 }
 
-                dismiss();
             }
         });
 
@@ -78,6 +81,14 @@ public class DigitalizarBajaProductoDialog extends AppCompatDialogFragment {
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         return dialog;
+    }
+
+    private boolean validarCampos(){
+        if (nombreDocumento.length() == 0){
+            nombreDocumento.setError("Campo obligatorio");
+            return false;
+        }
+        return true;
     }
 
 
@@ -94,7 +105,7 @@ public class DigitalizarBajaProductoDialog extends AppCompatDialogFragment {
     }
 
     public interface DigitalizarBajaDialogListener {
-        void onDigitalizacionBajaDialogRespons(String razonBaja, String otros);
+        void onDigitalizacionBajaDialogRespons(String documentNAme, String razonBaja, String otros);
     }
 
 

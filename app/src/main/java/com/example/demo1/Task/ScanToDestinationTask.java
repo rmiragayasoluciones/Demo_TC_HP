@@ -170,15 +170,22 @@ public class ScanToDestinationTask extends AsyncTask<Void, Void, String> {
         }
 
 
+
+        final ScanAttributes.Duplex du;
+        if (mScanSelected.getDuplexSelected() == null){
+            du = ScanAttributes.Duplex.DEFAULT;
+            Log.d(TAG, "Selected Duplex:" + du.name());
+        } else {
+            du = ScanAttributes.Duplex.valueOf(mScanSelected.getDuplexSelected());
+            Log.d(TAG, "Selected Duplex:" + du.name());
+        }
+
         final ScanAttributes.DocumentFormat df = ScanAttributes.DocumentFormat.MTIFF;
         Log.d(TAG, "Selected Doc Format:" + df);
 
         //todo Blanco y negro es igual a Gris?
         final ScanAttributes.ColorMode cm = ScanAttributes.ColorMode.MONO;
         Log.d(TAG, "Selected Color Mode:" + cm.name());
-
-        final ScanAttributes.Duplex du = ScanAttributes.Duplex.DEFAULT;
-        Log.d(TAG, "Selected Duplex Mode:" + du.name());
 
         final ScanAttributes.Orientation orientation =  ScanAttributes.Orientation.DEFAULT;
         Log.d(TAG, "Selected Orientation:" + orientation.name());

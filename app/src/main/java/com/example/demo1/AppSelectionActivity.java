@@ -2,7 +2,6 @@ package com.example.demo1;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -29,18 +28,16 @@ public class AppSelectionActivity extends AppCompatActivity {
     private MyViewPagerAdapter myViewPagerAdapter;
     private View cargandoProgresBar;
 
-    private Bitmap logo;
-    private String clientName;
 
     private String about_title_array[] = {
             "Apertura de Cuenta",
-            "Ruteo de Documentos\nCodigo de Barra / QR",
-            "Recorte de Firmas"
+            "Clasificación de Documentos",
+            "Captura de Firma"
     };
     private String about_description_array[] = {
-            "Abre una cuenta de forma maravillosa nunca antes vista por el ojo humano. Utiliza documentacion general y del producto",
-            "Selecciona y separa documentos de un lote en distintas particiones basándose en el codigo de barra/QR",
-            "Se digitaliza un documento para recortar la firma del cliente desde un formulario de firmas"
+            "Cargue la documentación de sus clientes de forma rápida y sencilla.",
+            "Direccione sus documentos de forma dinámica mediante la lectura de códigos de Barra/QR.",
+            "Recorte la firma de sus clientes plasmadas en formularios de manera dinámica."
 
     };
     private String about_images_array[] = {
@@ -173,11 +170,8 @@ public class AppSelectionActivity extends AppCompatActivity {
                         case 2:
                             intent = new Intent(v.getContext(), RecorteDeFirmaActivity.class);
                             break;
-
                     }
 
-                    intent.putExtra("logo", logo);
-                    intent.putExtra("nombre", clientName);
                     startActivity(intent);
                     finish();
                 }
@@ -206,17 +200,6 @@ public class AppSelectionActivity extends AppCompatActivity {
         }
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        if(backPressedTime + 2000 > System.currentTimeMillis()){
-//            super.onBackPressed();
-//            return;
-//        } else {
-//            showCustomeToast();
-//        }
-//        backPressedTime = System.currentTimeMillis();
-//    }
-
     private void cargandoDialog(){
         if (cargandoProgresBar.getVisibility() == View.GONE) {
             cargandoProgresBar.setVisibility(View.VISIBLE);
@@ -225,17 +208,4 @@ public class AppSelectionActivity extends AppCompatActivity {
         }
     }
 
-//    public void showCustomeToast(){
-//        View layout = getLayoutInflater().inflate(R.layout.custom_toast, (ViewGroup) findViewById(R.id.custom_toast_layout_id));
-//        TextView text = layout.findViewById(R.id.text);
-//        text.setTextColor(Color.WHITE);
-//        text.setText("Presione nuevamente para salir");
-//        CardView lyt_card = layout.findViewById(R.id.lyt_card);
-//        lyt_card.setCardBackgroundColor(getResources().getColor(R.color.colorPrimary));
-//
-//        Toast toast = new Toast(getApplicationContext());
-//        toast.setDuration(Toast.LENGTH_SHORT);
-//        toast.setView(layout);
-//        toast.show();
-//    }
 }

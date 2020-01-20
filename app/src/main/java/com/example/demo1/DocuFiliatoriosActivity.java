@@ -19,6 +19,7 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.preference.PreferenceManager;
 
+import com.android.volley.VolleyError;
 import com.example.demo1.Dialogs.DigitalizarDocuFiliatoriosDialog;
 import com.example.demo1.Dialogs.FinalizacionDeTrabajo;
 import com.example.demo1.Task.CreateDocument;
@@ -49,15 +50,17 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
     private static final String TAG = "DocuFiliatoriosActivity";
 
     private ConstraintLayout layout;
-    CardView jobBuilderCardV, scanPrevieweCardV, paperSizeCardV, removeBlankPagesCardV;
+    CardView jobBuilderCardV, scanPrevieweCardV, paperSizeCardV, removeBlankPagesCardV, duplexCardView;
     private ArrayList<String> blackImageRemovalEntries = new ArrayList<>();
     private ArrayList<String> paperSize = new ArrayList<>();
     private ArrayList<String> jobassemblymode = new ArrayList<>();
     private ArrayList<String> scanpreview = new ArrayList<>();
+    private ArrayList<String> duplex = new ArrayList<>();
     private String[] JOBBUILDER;
     private String[] SCANPREVIEW;
     private String[] PAPERSIZE;
     private String[] BLANKPAGES;
+    private String[] DUPLEX;
     private Button siguiente;
     private DigitalizarDocuFiliatoriosDialog dialog;
     private int dialogNumero = 0;
@@ -68,7 +71,7 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
     private List<String> listFilesNames = new ArrayList<>();
 
 //    private String job_builder_selected;
-    private SwitchCompat jobBuilderSwitch, scanPreviewSwitch, blankPagesSwitch;
+    private SwitchCompat jobBuilderSwitch, scanPreviewSwitch, blankPagesSwitch, duplexSwitch;
 //    private String scan_preview_selected;
     private String paper_size_selected = "A4";
 
@@ -102,6 +105,7 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
         blankPagesSwitch = findViewById(R.id.blankPagesId);
         jobBuilderSwitch = findViewById(R.id.jobBuilderSwitch);
         scanPreviewSwitch = findViewById(R.id.scanPreviewSwitch);
+        duplexSwitch = findViewById(R.id.duplexSwitchId);
 
         cargarOpcionesaBotones();
 
@@ -135,6 +139,14 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
                 blankPagesSwitch.performClick();
             }
         });
+        duplexCardView = findViewById(R.id.duplexCardV);
+        duplexCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                duplexSwitch.performClick();
+            }
+        });
+
         siguiente = findViewById(R.id.siguienteBtnId);
         paperSizeSelected = findViewById(R.id.paperSelectedId);
 
@@ -264,9 +276,26 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
 
         //**********************************
 
+
+        for (ScanAttributes.Duplex duplex : mCapabilities.getDuplexList()) {
+            this.duplex.add(duplex.name());
+        }
+
+        DUPLEX = new String[this.duplex.size()];
+
+        objArr = this.duplex.toArray();
+
+        int d = 0;
+        for (Object obj : objArr) {
+            DUPLEX[d++] = (String) obj;
+        }
+
+        //**********************************
+
         jobBuilderSwitch.setChecked(false);
         scanPreviewSwitch.setChecked(false);
         blankPagesSwitch.setChecked(false);
+        duplexSwitch.setChecked(false);
 
     }
 
@@ -300,6 +329,7 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
         Log.d(TAG, "blankPages isCheck: " + blankPagesSwitch.isChecked());
         Log.d(TAG, "scanPreview isCheck: " + scanPreviewSwitch.isChecked());
         Log.d(TAG, "JobBuilder isCheck: " + jobBuilderSwitch.isChecked());
+        Log.d(TAG, "Dulpex usCheck: " + duplexSwitch.isChecked());
 
         String blank_pages_selected;
         if (blankPagesSwitch.isChecked()){
@@ -328,12 +358,22 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
             Log.d(TAG, "job_builder_selected: " + job_builder_selected);
         }
 
+        String duplex_selected;
+        if (duplexSwitch.isChecked()){
+            duplex_selected = DUPLEX[2];
+            Log.d(TAG, "duplex_selected: " + duplex_selected);
+        } else {
+            duplex_selected = DUPLEX[1];
+            Log.d(TAG, "duplex_selected: " + duplex_selected);
+        }
+
         ScanOptionsSelected scanOptionsSelected = ScanOptionsSelected.getInstance();
         scanOptionsSelected.setPaperSize(paper_size_selected);
 
         scanOptionsSelected.setBlankPagesSelected(blank_pages_selected);
         scanOptionsSelected.setScanPreviewSelected(scan_preview_selected);
         scanOptionsSelected.setJobBuilderSelected(job_builder_selected);
+        scanOptionsSelected.setDuplexSelected(duplex_selected);
 
     }
 
@@ -342,13 +382,13 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
        dialog.getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
        switch (dialogNumero){
            case 0:
-               scanToDestination(client + "-dni");
+               scanToDestination("id-cliente");
                break;
            case 1:
-               scanToDestination(client + "-constancia-ingresos");
+               scanToDestination("constancia");
                break;
            case 2:
-               scanToDestination(client + "-otra-documentacion");
+               scanToDestination("otra");
                break;
 
        }
@@ -375,6 +415,7 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
 
     private void subirArchivos(String filePath, String filename) {
 
+
         new CreateDocument(this,filePath, filename, convertJsonBojectToString(filename)).execute();
         /** Async Simula la subida a la web*/
 //        new AsyncTask<Void, Void, Void>(){
@@ -396,6 +437,11 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
 //            }
 //        }.execute();
         /** Async Simula la subida a la web*/
+    }
+
+    @Override
+    public void onCreateDocumentError(VolleyError volleyError) {
+        //todo: aca cortar toddo y meter cartel de error con la info de NetworkResponse
     }
 
     @Override
@@ -475,12 +521,13 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
 
     private String convertJsonBojectToString(String documentName){
 
-
-
         String serieName = "Filiation";
 
         Log.d(TAG, "client es " + client);
-        demoViewModelSingleton.getMetadataCliente().setDocumentName(documentName);
+
+        String newDocumentName = documentName.split("-001")[0];
+        Log.d(TAG, "document viene " + documentName + " y lo paso a " + newDocumentName);
+        demoViewModelSingleton.getMetadataCliente().setDocumentName(newDocumentName);
         CreateDocumentViewModel createDocumentViewModel = new CreateDocumentViewModel(serieName, demoId, client, demoViewModelSingleton.getMetadataCliente());
 
         Gson gson = new Gson();

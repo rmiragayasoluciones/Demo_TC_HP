@@ -34,7 +34,7 @@ public class SeleccionSerieDocumentalActivity extends AppCompatActivity {
         productos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(SeleccionSerieDocumentalActivity.this, "Productos", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SeleccionSerieDocumentalActivity.this, "Producto", Toast.LENGTH_SHORT).show();
                 startProductosIdActivity();
             }
         });

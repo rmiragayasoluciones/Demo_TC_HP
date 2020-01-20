@@ -8,6 +8,7 @@ public class ScanOptionsSelected {
     private String scanPreviewSelected;
     private String blankPagesSelected;
     private String paperSize;
+    private String duplexSelected;
 
     public ScanOptionsSelected() {
 
@@ -35,6 +36,14 @@ public class ScanOptionsSelected {
 
     public String getPaperSize() {
         return paperSize;
+    }
+
+    public String getDuplexSelected() {
+        return duplexSelected;
+    }
+
+    public void setDuplexSelected(String duplexSelected) {
+        this.duplexSelected = duplexSelected;
     }
 
     public static void setmInstance(ScanOptionsSelected mInstance) {

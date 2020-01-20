@@ -80,17 +80,17 @@ public class DigitalizarDocuFiliatoriosDialog extends AppCompatDialogFragment {
 
     private void solicitarId(){
         titulo.setText("DNI");
-        subtitulo.setText("Ingrese DNI y presione Siguiente");
+        subtitulo.setText("Ingrese ID del Cliente y presione Siguiente");
     }
 
     private void solicitarIngresoConstancia(){
         titulo.setText("Constancia");
-        subtitulo.setText("Ingrese Constancia de ingreso y presione Siguiente");
+        subtitulo.setText("Ingrese Constancia de ingresos y presione Siguiente");
     }
 
     private void solicitarOtraDocu(){
         titulo.setText("Documentación Extra");
-        subtitulo.setText("Ingrese documentación extra y presione Siguiente");
+        subtitulo.setText("Ingrese Otra Documentación y presione Siguiente");
     }
 
 }

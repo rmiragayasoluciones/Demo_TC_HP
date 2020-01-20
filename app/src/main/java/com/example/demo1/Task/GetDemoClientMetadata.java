@@ -72,8 +72,7 @@ public class GetDemoClientMetadata extends AsyncTask<Void, Void, Void> {
                     mContextRef.get().onClientError("AuthFailureError Error");
                 } else if (error instanceof ServerError) {
                     Log.d(TAG, "status Code: " + error.networkResponse.statusCode);
-                    mContextRef.get().volleyResponseError("Código: " + error.networkResponse.statusCode +
-                            "\nUsuario no encontrado");
+                    mContextRef.get().volleyResponseError("Usuario no encontrado");
 
                 } else if (error instanceof NetworkError) {
                     mContextRef.get().onClientError("NetworkError Error");
@@ -98,7 +97,6 @@ public class GetDemoClientMetadata extends AsyncTask<Void, Void, Void> {
     /** Crea el DemoViewModel*/
     private void createObjectFromResponse(JSONObject jsonObject){
         Gson gson = new Gson();
-//        DemoClientMetadataViewModel demoClientMetadataViewModel = gson.fromJson(jsonObject.toString(), DemoClientMetadataViewModel.class);
         MetadataCliente metadataCliente = gson.fromJson(jsonObject.toString(), MetadataCliente.class);
         Log.d(TAG, metadataCliente.toString());
         mContextRef.get().onClientCorrect(metadataCliente);

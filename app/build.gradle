@@ -37,12 +37,6 @@ dependencies {
 
     implementation 'com.airbnb.android:lottie:3.2.2'
 
-    //retrofit
-//    implementation 'com.squareup.retrofit2:retrofit:2.6.2'
-
-    //Gson
-//    implementation 'com.squareup.retrofit2:converter-gson:2.2.0'
-
     //googlePlay Services
     implementation 'com.google.android.gms:play-services-plus:17.0.0'
 
@@ -62,10 +56,9 @@ dependencies {
     //preference
     implementation 'androidx.preference:preference:1.1.0'
 
-    //fancy Showcase
-    implementation 'me.toptas.fancyshowcase:fancyshowcaseview:1.2.1'
-    implementation "androidx.core:core-ktx:+"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    //desing
+    implementation 'com.google.android.material:material:1.0.0'
+
 
 }
 repositories {

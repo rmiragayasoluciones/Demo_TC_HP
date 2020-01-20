@@ -27,7 +27,6 @@ public class DigitalizarRecorteFirmaDialog extends AppCompatDialogFragment {
     private TextInputEditText editText;
     private TextInputLayout editTextLayout;
     private TextView subtitulo;
-    private int fase;
     private String editTextGuardado;
 
     private ConstraintLayout constraintLayout;
@@ -52,7 +51,7 @@ public class DigitalizarRecorteFirmaDialog extends AppCompatDialogFragment {
         editText = view.findViewById(R.id.editTextRecorteFirmaDialog);
         editTextLayout = view.findViewById(R.id.textInputLayoutRecorteFirma);
         subtitulo = view.findViewById(R.id.subtituloRecorteFirma);
-        subtitulo.setText("ingrese ID del cliente");
+        subtitulo.setText("Ingrese ID del Cliente");
 
 
         //todo set Buttons y OnclickListener + listener
@@ -61,14 +60,8 @@ public class DigitalizarRecorteFirmaDialog extends AppCompatDialogFragment {
         btnSiguiente.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (fase == 0){
-                    editTextGuardado = editText.getText().toString();
-                    cambiarLayout();
-                    fase++;
-                } else {
                     dismiss();
-                    listener.onDigitalizarRecorteFirmaDialog(editTextGuardado);
-                }
+                    listener.onDigitalizarRecorteFirmaDialog(editText.getText().toString());
             }
         });
 
@@ -79,13 +72,13 @@ public class DigitalizarRecorteFirmaDialog extends AppCompatDialogFragment {
     }
 
 
-    private void cambiarLayout(){
-        constraintSet.connect(btnSiguiente.getId(), ConstraintSet.TOP, subtitulo.getId(),ConstraintSet.BOTTOM,16);
-        constraintSet.applyTo(constraintLayout);
-        constraintLayout.removeView(editTextLayout);
-        constraintLayout.removeView(editText);
-        subtitulo.setText("Ingrese la documentacion a escanear y presione siguiente");
-    }
+//    private void cambiarLayout(){
+//        constraintSet.connect(btnSiguiente.getId(), ConstraintSet.TOP, subtitulo.getId(),ConstraintSet.BOTTOM,16);
+//        constraintSet.applyTo(constraintLayout);
+//        constraintLayout.removeView(editTextLayout);
+//        constraintLayout.removeView(editText);
+//        subtitulo.setText("Ingrese la documentacion a escanear y presione siguiente");
+//    }
 
     @Override
     public void onAttach(@NonNull Context context) {

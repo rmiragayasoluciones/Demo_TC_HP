@@ -44,7 +44,8 @@ import java.util.Calendar;
 
 public class AperturaCuentaMainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener,
         BuscarIdDialog.BuscarIdDialogListener,
-        DatePickerDialog.OnDateSetListener {
+        DatePickerDialog.OnDateSetListener,
+        VolleyErrorResponseDialog.IntentarReconectListener{
 
     private static final String TAG = "AperturaCuentaMainActiv";
 
@@ -390,22 +391,13 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
         }
     }
 
-    public void onClientError(String errorMsg) {
-        cargandoDialog();
-        // si de la busqueda vuelve con error, borra el idCliente que habia guardado
-        Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show();
-    }
 
     public void volleyResponseError(String mensajeError){
         cargandoDialog();
         setAllInputsEmpty();
-        if (mensajeError == null){
-            VolleyErrorResponseDialog volleyErrorResponseDialog = new VolleyErrorResponseDialog(this, null);
-            volleyErrorResponseDialog.show(getSupportFragmentManager(), "noConfigLoaded");
-        } else {
-            VolleyErrorResponseDialog volleyErrorResponseDialog = new VolleyErrorResponseDialog(this, mensajeError);
-            volleyErrorResponseDialog.show(getSupportFragmentManager(), "noConfigLoaded");
-        }
+        VolleyErrorResponseDialog volleyErrorResponseDialog = new VolleyErrorResponseDialog(mensajeError);
+        volleyErrorResponseDialog.show(getSupportFragmentManager(), "noConfigLoaded");
+
     }
 
     public void setAllInputsEmpty(){
@@ -436,6 +428,11 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodeString, 0 , decodeString.length);
 
         return  decodedByte;
+    }
+
+    @Override
+    public void reconectarYsubirArchivo() {
+        Log.d(TAG, "reconectarYsubirArchivo: acá nada");
     }
 
     //    @Override

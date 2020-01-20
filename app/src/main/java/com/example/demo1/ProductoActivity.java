@@ -18,12 +18,12 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.preference.PreferenceManager;
 
-import com.android.volley.VolleyError;
 import com.example.demo1.Dialogs.DigitalizarAltaProductoDialog;
 import com.example.demo1.Dialogs.DigitalizarBajaProductoDialog;
 import com.example.demo1.Dialogs.DigitalizarModificacionProductoDialog;
 import com.example.demo1.Dialogs.FinalizacionDeTrabajo;
 import com.example.demo1.Dialogs.SeleccioneAltaBajaOModificacion;
+import com.example.demo1.Dialogs.VolleyErrorResponseDialog;
 import com.example.demo1.Task.CreateDocument;
 import com.example.demo1.Task.InitializationTask;
 import com.example.demo1.Task.JobCompleteReciever;
@@ -52,6 +52,7 @@ public class ProductoActivity extends AppCompatActivity implements SeleccioneAlt
         DigitalizarBajaProductoDialog.DigitalizarBajaDialogListener,
         DigitalizarModificacionProductoDialog.DigitalizarModificacionDialogListener,
         CreateDocument.OnCreateDocumentsListener,
+VolleyErrorResponseDialog.IntentarReconectListener,
         FinalizacionDeTrabajo.FinalizacionDeTrabajoListener{
     private static final String TAG = "ProductoActivity";
 
@@ -94,6 +95,9 @@ public class ProductoActivity extends AppCompatActivity implements SeleccioneAlt
     /* View cover */
     private View coverView;
     private ConstraintLayout progressBar;
+
+    /* dialog */
+    private SeleccioneAltaBajaOModificacion dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -220,8 +224,8 @@ public class ProductoActivity extends AppCompatActivity implements SeleccioneAlt
 
     private void openDialogInicio(){
         //todo abre dialog con las opciones de alta, baja o modificacion
-
-        SeleccioneAltaBajaOModificacion dialog = new SeleccioneAltaBajaOModificacion();
+        serieName = "";
+        dialog = new SeleccioneAltaBajaOModificacion();
         dialog.setCancelable(true);
         dialog.show(getSupportFragmentManager(), "Alta baja o modificacion");
     }
@@ -270,8 +274,6 @@ public class ProductoActivity extends AppCompatActivity implements SeleccioneAlt
      * dialog Modificación
      */
     private void openDialogModificacion() {
-        //todo lo mismo que arriba pero para modificacion
-
         DigitalizarModificacionProductoDialog dialogModificacion = new DigitalizarModificacionProductoDialog();
         dialogModificacion.show(getSupportFragmentManager(), "modificacion Dialog");
     }
@@ -283,36 +285,6 @@ public class ProductoActivity extends AppCompatActivity implements SeleccioneAlt
         this.documentName = documentName;
 
     }
-
-//    @Override
-//    public void onAltaSeleccion(String documentName, String high) {
-//        //todo guardar documentNAme
-//        this.serieName = "High";
-//        codeHigh = high;
-//        this.documentName = documentName;
-//        Log.d(TAG, "onAltaSeleccion: volvio con: " + high + " y " + documentName);
-//        scanToDestination("high" );
-//
-//    }
-//
-//    @Override
-//    public void onBajaSeleccion(String documentName, String reason) {
-//        //todo guardar documentNAme
-//        this.serieName = "Low";
-//        reasonLow = reason;
-//        this.documentName = documentName;
-//        Log.d(TAG, "onBajaSeleccion: volvio con " + reason + " y " + documentName);
-//        scanToDestination("low");
-//    }
-//
-//    @Override
-//    public void onModificacionSeleccion(String documentName) {
-//        //todo guardar documentNAme
-//        this.serieName = "Modification";
-//        Log.d(TAG, "onModificacionSeleccion volvio con " + documentName);
-//        this.documentName = documentName;
-//        scanToDestination("modification");
-//    }
 
 
     private void showPaperSizeDialog() {
@@ -507,14 +479,25 @@ public class ProductoActivity extends AppCompatActivity implements SeleccioneAlt
     }
 
     @Override
+    public void volverActivityAnterior() {
+        //vuelve del dialog y lo cierra
+        dialog.dismiss();
+        finish();
+    }
+
+
+    @Override
     public void onCreateDocumentComplete() {
         cartelSubirALaNube();
         cartelFinalizacionTRabajo();
     }
 
     @Override
-    public void onCreateDocumentError(VolleyError volleyError) {
+    public void onCreateDocumentError(String volleyError) {
         //todo: aca cortar toddo y meter cartel de error con la info de NetworkResponse
+        cartelSubirALaNube();
+        VolleyErrorResponseDialog volleyErrorResponseDialog = new VolleyErrorResponseDialog(volleyError);
+        volleyErrorResponseDialog.show(getSupportFragmentManager(), "noConfigLoaded");
     }
 
     public void cartelFinalizacionTRabajo() {
@@ -549,6 +532,10 @@ public class ProductoActivity extends AppCompatActivity implements SeleccioneAlt
         finish();
     }
 
+    @Override
+    public void reconectarYsubirArchivo() {
+        onScannResponse();
+    }
 
 
     private class JobObserver extends JobService.AbstractJobletObserver {
@@ -733,5 +720,21 @@ public class ProductoActivity extends AppCompatActivity implements SeleccioneAlt
         Intent i = getIntent();
         finish();
         startActivity(i);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.d(TAG, "onBackPressed: call");
+        if (dialog.isVisible()){
+            Log.d(TAG, "onBackPressed, dialog visible");
+            //que vaya a la activity anterior, no solo cierre el dialog
+            super.onBackPressed();
+            finish();
+        } else {
+            Log.d(TAG, "onBackPressed: dialog no visible");
+
+            openDialogInicio();
+        }
+
     }
 }

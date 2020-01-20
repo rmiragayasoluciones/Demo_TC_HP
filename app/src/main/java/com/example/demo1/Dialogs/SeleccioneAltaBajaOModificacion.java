@@ -2,7 +2,9 @@ package com.example.demo1.Dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -61,6 +63,25 @@ public class SeleccioneAltaBajaOModificacion  extends AppCompatDialogFragment  {
         return dialog;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+
+                if ((keyCode ==  android.view.KeyEvent.KEYCODE_BACK))
+                {
+                    mListener.volverActivityAnterior();
+                    return true;
+                }
+                else
+                    return false;
+
+            }
+        });
+    }
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -76,5 +97,9 @@ public class SeleccioneAltaBajaOModificacion  extends AppCompatDialogFragment  {
 
     public interface SeleccionesAltaBajaModListener{
         void onAltaBajaModificacionClick(String text);
+        void volverActivityAnterior();
     }
+
+
+
 }

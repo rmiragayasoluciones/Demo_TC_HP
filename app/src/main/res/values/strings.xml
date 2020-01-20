@@ -10,8 +10,9 @@
     <string name="unknown_error">Unexpected error:</string>
 
     <string name="config_error">No se han encontrado configuraciones cargadas. Por favor contactarse con la mesa de ayuda.</string>
-    <string name="token_no_activo">El token no se encuentra activo</string>
-    <string name="token_expirado">El token se encuentra expirado</string>
+    <string name="token_no_activo">El token no se encuentra activo. Por favor contactarse con la mesa de ayuda.</string>
+    <string name="token_expirado">El token se encuentra expirado. Por favor contactarse con la mesa de ayuda.</string>
+    <string name="error_conexion">Error de conexión. Verifique la red y configuración</string>
 
     <string-array name="paises">
         <item>Argentina</item>

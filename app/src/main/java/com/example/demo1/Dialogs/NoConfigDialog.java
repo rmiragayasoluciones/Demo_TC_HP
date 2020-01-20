@@ -28,6 +28,8 @@ public class NoConfigDialog extends AppCompatDialogFragment {
         this.menssaje = menssajeError;
     }
 
+
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {

@@ -18,9 +18,9 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.preference.PreferenceManager;
 
-import com.android.volley.VolleyError;
 import com.example.demo1.Dialogs.DigitalizarQroBarcodeDialog;
 import com.example.demo1.Dialogs.FinalizacionDeTrabajo;
+import com.example.demo1.Dialogs.VolleyErrorResponseDialog;
 import com.example.demo1.Task.CreateDocument;
 import com.example.demo1.Task.InitializationTask;
 import com.example.demo1.Task.JobCompleteReciever;
@@ -46,7 +46,8 @@ import java.util.List;
 
 public class QRandBarCodeActivity extends AppCompatActivity implements FinalizacionDeTrabajo.FinalizacionDeTrabajoListener,
                                                                     CreateDocument.OnCreateDocumentsListener,
-                                                                DigitalizarQroBarcodeDialog.DigitalizarQroBarcodeDialogListener {
+                                                                DigitalizarQroBarcodeDialog.DigitalizarQroBarcodeDialogListener,
+VolleyErrorResponseDialog.IntentarReconectListener{
 
     private static final String TAG = "ProductoActivity";
 
@@ -461,8 +462,11 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
     }
 
     @Override
-    public void onCreateDocumentError(VolleyError volleyError) {
+    public void onCreateDocumentError(String volleyError) {
         //todo: aca cortar toddo y meter cartel de error con la info de NetworkResponse
+        cartelSubirALaNube();
+        VolleyErrorResponseDialog volleyErrorResponseDialog = new VolleyErrorResponseDialog(volleyError);
+        volleyErrorResponseDialog.show(getSupportFragmentManager(), "noConfigLoaded");
     }
 
     public void cartelFinalizacionTRabajo(){
@@ -471,6 +475,10 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
         finalizacionDeTrabajo.show(getSupportFragmentManager(), "finalizacion fialog");
     }
 
+    @Override
+    public void reconectarYsubirArchivo() {
+        onScannResponse();
+    }
 
 
     private class JobObserver extends JobService.AbstractJobletObserver {
@@ -578,9 +586,7 @@ public class QRandBarCodeActivity extends AppCompatActivity implements Finalizac
     }
 
     private void onScannResponse() {
-        //todo despues de haber impreso
         Log.d(TAG, "onScannResponse: va a subir el archivo");
-
         cartelSubirALaNube();
         subirArchivo(filePath);
     }

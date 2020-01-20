@@ -4,9 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkError;
 import com.android.volley.NoConnectionError;
-import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -15,6 +13,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.demo1.AperturaCuentaMainActivity;
+import com.example.demo1.R;
 import com.example.demo1.UserClass.DemoViewModelSingleton;
 import com.example.demo1.UserClass.MetadataCliente;
 import com.google.gson.Gson;
@@ -63,23 +62,14 @@ public class GetDemoClientMetadata extends AsyncTask<Void, Void, Void> {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "onErrorResponse: call");
                 Log.d(TAG, "onErrorResponse: volleyError " + error.toString());
                 //Api Response NOT HTTP 200(OK)
                 if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                    mContextRef.get().onClientError("TimeOut Error");
-                } else if (error instanceof AuthFailureError) {
-                    mContextRef.get().onClientError("AuthFailureError Error");
+                    mContextRef.get().volleyResponseError(mContextRef.get().getString(R.string.error_conexion));
                 } else if (error instanceof ServerError) {
-                    Log.d(TAG, "status Code: " + error.networkResponse.statusCode);
                     mContextRef.get().volleyResponseError("Usuario no encontrado");
-
-                } else if (error instanceof NetworkError) {
-                    mContextRef.get().onClientError("NetworkError Error");
-                } else if (error instanceof ParseError) {
-                    mContextRef.get().onClientError("ParseError Error");
                 } else {
-                    mContextRef.get().onClientError("Error status code: " + error.networkResponse.statusCode);
+                    mContextRef.get().volleyResponseError("Error inesperado: " + error.networkResponse.statusCode);
                 }
             }
         }){

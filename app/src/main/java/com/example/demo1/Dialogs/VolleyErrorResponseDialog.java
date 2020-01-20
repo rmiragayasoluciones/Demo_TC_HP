@@ -1,6 +1,7 @@
 package com.example.demo1.Dialogs;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,19 +13,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
-import com.example.demo1.AperturaCuentaMainActivity;
 import com.example.demo1.R;
-
-import java.lang.ref.WeakReference;
 
 public class VolleyErrorResponseDialog extends AppCompatDialogFragment {
     private static final String TAG = "VolleyErrorResponseDial";
 
-    private final WeakReference<AperturaCuentaMainActivity> mContext;
+    private IntentarReconectListener listener;
     private final String menssaje;
 
-    public VolleyErrorResponseDialog(AperturaCuentaMainActivity mContext, String menssajeError) {
-        this.mContext = new WeakReference<>(mContext);
+    public VolleyErrorResponseDialog(String menssajeError) {
         this.menssaje = menssajeError;
     }
 
@@ -43,6 +40,7 @@ public class VolleyErrorResponseDialog extends AppCompatDialogFragment {
             @Override
             public void onClick(View v) {
                 dismiss();
+                listener.reconectarYsubirArchivo();
             }
         });
 
@@ -61,5 +59,22 @@ public class VolleyErrorResponseDialog extends AppCompatDialogFragment {
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
 
         return dialog;
+    }
+
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        try {
+            listener = (IntentarReconectListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() +
+                    "must implement IntentarReconectListener");
+        }
+    }
+
+    public interface IntentarReconectListener{
+        void reconectarYsubirArchivo();
     }
 }

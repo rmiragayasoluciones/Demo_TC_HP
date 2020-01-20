@@ -1,12 +1,15 @@
 package com.example.demo1.Task;
 
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.demo1.MainActivity;
@@ -43,10 +46,6 @@ public class GetDemoFromApi extends AsyncTask<Void, Void, Void> {
         Log.d(TAG, "doInBackground: call");
         RequestQueue queue = VolleySingleton.getInstance(mContextRef.get()).getmRequestQueue();
         Log.d(TAG, "tokenCliente= " + this.tokenCliente);
-        /* FOR DEMO HARCODEO 06b39eb6-fba6-477c-a5e1-57d95f8a8b1b */
-//        this.tokenCliente = "tokenexp";
-        /* FOR DEMO HARCODEO 06b39eb6-fba6-477c-a5e1-57d95f8a8b1b */
-//        String url = "http://10.13.0.34:5656/api/Demos/GetDemo/" + this.tokenCliente;
         String url = "http://10.13.0.34:5656/api/Demos/GetDemo/" + this.tokenCliente;
 
         JsonObjectRequest jsonObjectRequestrequest = new JsonObjectRequest(Request.Method.GET, url, null,
@@ -61,6 +60,11 @@ public class GetDemoFromApi extends AsyncTask<Void, Void, Void> {
             public void onErrorResponse(VolleyError error) {
                 //Api Response NOT HTTP 200(OK)
                 Log.d(TAG, "onErrorResponse: " + error.getMessage());
+                if (error instanceof TimeoutError || error instanceof NoConnectionError){
+                    Log.d(TAG, "onErrorResponse: dio timeout");
+                    mContextRef.get().onTokenError(mContextRef.get().getString(R.string.error_conexion));
+                    return;
+                }
                 mContextRef.get().onTokenError(error.getMessage());
             }
         }){

@@ -6,10 +6,14 @@ import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.example.demo1.R;
 import com.example.demo1.UserClass.DemoViewModelSingleton;
 
 import org.json.JSONArray;
@@ -19,7 +23,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
@@ -74,16 +77,15 @@ public class CreateDocument extends AsyncTask<Void, Void, Void> {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "onErrorResponse: call " + error.getMessage() + " " + error.networkResponse.statusCode  + " " + error.networkResponse.allHeaders.toString());
-                Log.d(TAG, "error.getCause() " + error.getCause());
-                try {
-                    Log.d(TAG, "onErrorResponse: " + new String(error.networkResponse.data, "UTF-8"));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
 
-                mListener.onCreateDocumentError(error);
-                // todo, cartel de error al subir archivos a la api
+                //Api Response NOT HTTP 200(OK)
+                if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                    mListener.onCreateDocumentError(mContext.get().getString(R.string.error_conexion));
+                } else if (error instanceof ServerError) {
+                    mListener.onCreateDocumentError("Error de Servidor");
+                } else {
+                    mListener.onCreateDocumentError("Error inesperado: " + error.networkResponse.statusCode);
+                }
             }
         }){
 
@@ -128,7 +130,7 @@ public class CreateDocument extends AsyncTask<Void, Void, Void> {
 
     public interface OnCreateDocumentsListener{
          void onCreateDocumentComplete();
-         void onCreateDocumentError(VolleyError volleyError);
+         void onCreateDocumentError(String volleyError);
     }
 
     private byte[] getByteArrayFromFile(String filepath) {

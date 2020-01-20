@@ -31,12 +31,6 @@ import com.hp.jetadvantage.link.api.scanner.ScannerService;
 import java.util.List;
 import java.util.Map;
 
-/** link json ejemplo
- *
- * https://api.myjson.com/bins/j2xcs
- *
- * */
-
 public class MainActivity extends AppCompatActivity{
     private static final String TAG = "MainActivity";
     private static final int METODOS_COMPLETADOS = 2;
@@ -59,9 +53,6 @@ public class MainActivity extends AppCompatActivity{
         logo = findViewById(R.id.logohp);
         poweredBy = findViewById(R.id.textoPoweredBySoluciones);
 
-//        /** For Debug */
-//        createDemoViewModel();
-//        /** For Debug */
 
         /** for hp */
         scanUserAttriputes = ScanUserAttriputes.getInstance();
@@ -152,20 +143,20 @@ public class MainActivity extends AppCompatActivity{
         Log.d(TAG, "startNextActivity: inicia");
 
         Intent intent = new Intent(this, AppSelectionActivity.class);
-//        Intent intent = new Intent(this, TestActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         finish();
     }
 
     private void notTokenLoaded(String mensajeError){
+        NoConfigDialog noConfigDialog;
         if (mensajeError == null){
-            NoConfigDialog noConfigDialog = new NoConfigDialog(this, null);
-            noConfigDialog.show(getSupportFragmentManager(), "noConfigLoaded");
+            noConfigDialog = new NoConfigDialog(this, null);
         } else {
-            NoConfigDialog noConfigDialog = new NoConfigDialog(this, mensajeError);
-            noConfigDialog.show(getSupportFragmentManager(), "noConfigLoaded");
+            noConfigDialog = new NoConfigDialog(this, mensajeError);
         }
+        noConfigDialog.setCancelable(false);
+        noConfigDialog.show(getSupportFragmentManager(), "noConfigLoaded");
     }
 
     public void onConfigError(){

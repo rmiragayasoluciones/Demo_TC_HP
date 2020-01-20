@@ -19,9 +19,9 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.preference.PreferenceManager;
 
-import com.android.volley.VolleyError;
 import com.example.demo1.Dialogs.DigitalizarDocuFiliatoriosDialog;
 import com.example.demo1.Dialogs.FinalizacionDeTrabajo;
+import com.example.demo1.Dialogs.VolleyErrorResponseDialog;
 import com.example.demo1.Task.CreateDocument;
 import com.example.demo1.Task.InitializationTask;
 import com.example.demo1.Task.JobCompleteReciever;
@@ -46,7 +46,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DocuFiliatoriosActivity extends AppCompatActivity implements FinalizacionDeTrabajo.FinalizacionDeTrabajoListener,
-                                                                    CreateDocument.OnCreateDocumentsListener {
+                                                                    CreateDocument.OnCreateDocumentsListener,
+        VolleyErrorResponseDialog.IntentarReconectListener{
     private static final String TAG = "DocuFiliatoriosActivity";
 
     private ConstraintLayout layout;
@@ -440,8 +441,11 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
     }
 
     @Override
-    public void onCreateDocumentError(VolleyError volleyError) {
+    public void onCreateDocumentError(String volleyError) {
         //todo: aca cortar toddo y meter cartel de error con la info de NetworkResponse
+        cartelSubirALaNube();
+        VolleyErrorResponseDialog volleyErrorResponseDialog = new VolleyErrorResponseDialog(volleyError);
+        volleyErrorResponseDialog.show(getSupportFragmentManager(), "noConfigLoaded");
     }
 
     @Override
@@ -534,6 +538,11 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
 
         return gson.toJson(createDocumentViewModel);
 
+    }
+
+    @Override
+    public void reconectarYsubirArchivo() {
+        //todo saber cual es el que se trabó y seguir por ese
     }
 
     private class JobObserver extends JobService.AbstractJobletObserver {

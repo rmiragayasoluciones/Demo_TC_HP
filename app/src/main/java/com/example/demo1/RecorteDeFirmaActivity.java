@@ -18,9 +18,9 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.preference.PreferenceManager;
 
-import com.android.volley.VolleyError;
 import com.example.demo1.Dialogs.DigitalizarRecorteFirmaDialog;
 import com.example.demo1.Dialogs.FinalizacionDeTrabajo;
+import com.example.demo1.Dialogs.VolleyErrorResponseDialog;
 import com.example.demo1.Task.CreateDocument;
 import com.example.demo1.Task.InitializationTask;
 import com.example.demo1.Task.JobCompleteReciever;
@@ -46,7 +46,8 @@ import java.util.List;
 
 public class RecorteDeFirmaActivity extends AppCompatActivity implements FinalizacionDeTrabajo.FinalizacionDeTrabajoListener,
         CreateDocument.OnCreateDocumentsListener ,
-        DigitalizarRecorteFirmaDialog.RecorteFirmaDialogListener {
+        DigitalizarRecorteFirmaDialog.RecorteFirmaDialogListener,
+VolleyErrorResponseDialog.IntentarReconectListener{
     private static final String TAG = "RecorteDeFirmaActivity";
 
     private TextView tituloActivity;
@@ -481,19 +482,17 @@ public class RecorteDeFirmaActivity extends AppCompatActivity implements Finaliz
     }
 
     @Override
-    public void onCreateDocumentError(VolleyError volleyError) {
-
-        //log for debug
-        Log.d(TAG, "onCreateDocumentError StatusCode: " + volleyError.networkResponse.statusCode);
-        Log.d(TAG, "onCreateDocumentError getMessage: " + volleyError.getMessage());
-        Log.d(TAG, "onCreateDocumentError getCause: " + volleyError.getCause());
-
-        //cierro el cartel de la nube
-        cartelSubirALaNube();
-
-        //mostrar cartel de error con el mensaje
-
+    public void onCreateDocumentError(String volleyError) {
         //todo: aca cortar toddo y meter cartel de error con la info de NetworkResponse
+        cartelSubirALaNube();
+        VolleyErrorResponseDialog volleyErrorResponseDialog = new VolleyErrorResponseDialog(volleyError);
+        volleyErrorResponseDialog.show(getSupportFragmentManager(), "noConfigLoaded");
+
+    }
+
+    @Override
+    public void reconectarYsubirArchivo() {
+        onScannResponse();
     }
 
 

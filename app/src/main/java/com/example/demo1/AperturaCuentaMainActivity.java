@@ -81,7 +81,11 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
         if (logoEnString!= null && !logoEnString.isEmpty()){
             Log.d(TAG, "logoenstring "+ logoEnString);
             ImageView logoImageView = findViewById(R.id.logoHPOEmpresaId);
-            logoImageView.setImageBitmap(resize(loadImage(logoEnString), 70, 70));
+            Bitmap logo = loadImage(logoEnString);
+            if (logo != null){
+                logoImageView.setImageBitmap(resize(logo, 70, 70));
+            }
+
         }
 
         initToolbar();

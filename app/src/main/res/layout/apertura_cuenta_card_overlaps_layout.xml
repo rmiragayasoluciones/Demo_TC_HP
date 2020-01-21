@@ -69,10 +69,10 @@
 
                     <ImageView
                         android:id="@+id/logoHPOEmpresaId"
-                        android:layout_width="70dp"
-                        android:layout_height="70dp"
-                        android:maxHeight="150dp"
-                        android:maxWidth="150dp"
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:maxHeight="130dp"
+                        android:maxWidth="130dp"
                         android:adjustViewBounds="true"
                         app:srcCompat="@drawable/hplogo" />
 

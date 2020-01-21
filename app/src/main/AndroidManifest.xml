@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".RecorteDeFirmaActivity"></activity>
+        <activity android:name=".RecorteDeFirmaActivity" />
         <activity android:name=".QRandBarCodeActivity" />
         <activity android:name=".CodigoBarraYQRActivity" />
         <activity android:name=".TestActivity" />

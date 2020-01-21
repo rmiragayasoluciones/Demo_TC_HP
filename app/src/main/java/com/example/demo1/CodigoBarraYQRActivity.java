@@ -28,16 +28,13 @@ public class CodigoBarraYQRActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_barra_y_qr);
 
-        //todo ver esto de abajo
         if (getIntent().getBooleanExtra("EXIT", false)) {
             finish();
         }
 
-        //todo cargar imagen y nombre ed empresa
         DemoViewModelSingleton demoViewModelSingleton = DemoViewModelSingleton.getInstance();
         String nombreEmpresa = demoViewModelSingleton.getDemoViewModelGuardado().getClient();
         String logoEnString = demoViewModelSingleton.getDemoViewModelGuardado().getLogo();
-//        String logoEnString = getResources().getString(R.string.long_string);
 
         if (nombreEmpresa!=null){
             TextView nombreEmpresaTextView = findViewById(R.id.nombreMarcaEmpresaQRYBarcodeId);
@@ -45,14 +42,16 @@ public class CodigoBarraYQRActivity extends AppCompatActivity {
         }
         if (logoEnString!= null && !logoEnString.isEmpty()){
             ImageView logoImageView = findViewById(R.id.logoMarcaQrYBarcodeId);
-            logoImageView.setImageBitmap(resize(loadImage(logoEnString), 70, 70));
+            Bitmap logo = loadImage(logoEnString);
+            if (logo != null){
+                logoImageView.setImageBitmap(resize(logo, 70, 70));
+            }
         }
 
         qrCardView = findViewById(R.id.qrCardViewId);
         qrCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(v.getContext(), "QR", Toast.LENGTH_SHORT).show();
                 startQRActivity();
             }
         });
@@ -61,7 +60,6 @@ public class CodigoBarraYQRActivity extends AppCompatActivity {
         barCodeCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(v.getContext(), "BARCODE", Toast.LENGTH_SHORT).show();
                 startBarCodeActivity();
             }
         });

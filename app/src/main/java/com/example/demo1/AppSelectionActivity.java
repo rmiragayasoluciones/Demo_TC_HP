@@ -151,12 +151,6 @@ public class AppSelectionActivity extends AppCompatActivity {
                 public void onClick(View v) {
 
                     cargandoDialog();
-//                    /** test */
-//                    Intent intent = new Intent(v.getContext(), AperturaCuentaMainActivity.class);
-//                    startActivity(intent);
-//                    finish();
-//                    /** test */
-
 
                     int current = viewPager.getCurrentItem();
                     Intent intent = new Intent();

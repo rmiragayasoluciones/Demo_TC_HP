@@ -497,6 +497,7 @@ VolleyErrorResponseDialog.IntentarReconectListener,
         //todo: aca cortar toddo y meter cartel de error con la info de NetworkResponse
         cartelSubirALaNube();
         VolleyErrorResponseDialog volleyErrorResponseDialog = new VolleyErrorResponseDialog(volleyError);
+        volleyErrorResponseDialog.setCancelable(false);
         volleyErrorResponseDialog.show(getSupportFragmentManager(), "noConfigLoaded");
     }
 

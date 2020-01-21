@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
@@ -13,7 +14,6 @@ import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
-import com.example.demo1.R;
 import com.example.demo1.UserClass.DemoViewModelSingleton;
 
 import org.json.JSONArray;
@@ -77,14 +77,23 @@ public class CreateDocument extends AsyncTask<Void, Void, Void> {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse: CALL");
+                Log.d(TAG, "getMessage " + error.getMessage());
+                Log.d(TAG, ".getCause() " + error.getCause());
+//                Log.d(TAG, ".statusCode() " + error.networkResponse.statusCode);
 
+                error.printStackTrace();
+                error.getMessage();
                 //Api Response NOT HTTP 200(OK)
                 if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                    mListener.onCreateDocumentError(mContext.get().getString(R.string.error_conexion));
+                    Log.d(TAG, "TimeOut error o No ConnectionError");
+//                    mListener.onCreateDocumentError(mContext.get().getString(R.string.error_conexion));
                 } else if (error instanceof ServerError) {
                     mListener.onCreateDocumentError("Error de Servidor");
+                    Log.d(TAG, "Error de Servidor");
                 } else {
                     mListener.onCreateDocumentError("Error inesperado: " + error.networkResponse.statusCode);
+                    Log.d(TAG, "Error inesperado: + error.networkResponse.statusCode");
                 }
             }
         }){
@@ -122,6 +131,8 @@ public class CreateDocument extends AsyncTask<Void, Void, Void> {
                 return params;
             }
         };
+
+        volleyMultipartRequest.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         queue.add(volleyMultipartRequest);
 

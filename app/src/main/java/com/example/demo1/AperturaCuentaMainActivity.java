@@ -4,9 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +32,7 @@ import com.example.demo1.Dialogs.VolleyErrorResponseDialog;
 import com.example.demo1.Task.GetDemoClientMetadata;
 import com.example.demo1.UserClass.DemoViewModelSingleton;
 import com.example.demo1.UserClass.MetadataCliente;
+import com.example.demo1.Utils.ImagenManipulation;
 import com.example.demo1.Utils.ViewAnimation;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -68,22 +67,21 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
         super.onCreate(savedInstanceState);
         setContentView(R.layout.apertura_cuenta_card_overlaps_layout);
 
-        //todo cargar imagen y nombre ed empresa
+        //carga imagen y nombre de empresa
         DemoViewModelSingleton demoViewModelSingleton = DemoViewModelSingleton.getInstance();
         String nombreEmpresa = demoViewModelSingleton.getDemoViewModelGuardado().getClient();
         String logoEnString = demoViewModelSingleton.getDemoViewModelGuardado().getLogo();
-//        String logoEnString = getResources().getString(R.string.long_string);
 
-        if (nombreEmpresa!=null){
-            TextView nombreEmpresaTextView = findViewById(R.id.tituloEmpresaId);
+        if (nombreEmpresa!=null && !nombreEmpresa.isEmpty()){
+            TextView nombreEmpresaTextView = findViewById(R.id.nombreMarcaEmpresaQRYBarcodeId);
             nombreEmpresaTextView.setText(nombreEmpresa);
         }
         if (logoEnString!= null && !logoEnString.isEmpty()){
             Log.d(TAG, "logoenstring "+ logoEnString);
             ImageView logoImageView = findViewById(R.id.logoHPOEmpresaId);
-            Bitmap logo = loadImage(logoEnString);
+            Bitmap logo = ImagenManipulation.loadImage(logoEnString);
             if (logo != null){
-                logoImageView.setImageBitmap(resize(logo, 70, 70));
+                logoImageView.setImageBitmap(ImagenManipulation.resize(logo, 70, 70));
             }
 
         }
@@ -105,26 +103,26 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
         lyt_call = findViewById(R.id.lyt_call);
     }
 
-    private Bitmap resize(Bitmap image, int maxWidth, int maxHeight) {
-        if (maxHeight > 0 && maxWidth > 0) {
-            int width = image.getWidth();
-            int height = image.getHeight();
-            float ratioBitmap = (float) width / (float) height;
-            float ratioMax = (float) maxWidth / (float) maxHeight;
-
-            int finalWidth = maxWidth;
-            int finalHeight = maxHeight;
-            if (ratioMax > ratioBitmap) {
-                finalWidth = (int) ((float)maxHeight * ratioBitmap);
-            } else {
-                finalHeight = (int) ((float)maxWidth / ratioBitmap);
-            }
-            image = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
-            return image;
-        } else {
-            return image;
-        }
-    }
+//    private Bitmap resize(Bitmap image, int maxWidth, int maxHeight) {
+//        if (maxHeight > 0 && maxWidth > 0) {
+//            int width = image.getWidth();
+//            int height = image.getHeight();
+//            float ratioBitmap = (float) width / (float) height;
+//            float ratioMax = (float) maxWidth / (float) maxHeight;
+//
+//            int finalWidth = maxWidth;
+//            int finalHeight = maxHeight;
+//            if (ratioMax > ratioBitmap) {
+//                finalWidth = (int) ((float)maxHeight * ratioBitmap);
+//            } else {
+//                finalHeight = (int) ((float)maxWidth / ratioBitmap);
+//            }
+//            image = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
+//            return image;
+//        } else {
+//            return image;
+//        }
+//    }
 
     @Override
     protected void onResume() {
@@ -426,18 +424,28 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
 
     }
 
-    private Bitmap loadImage(String logoEnString){
-
-        byte[] decodeString = Base64.decode(logoEnString, Base64.DEFAULT);
-        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodeString, 0 , decodeString.length);
-
-        return  decodedByte;
-    }
+//    private Bitmap loadImage(String logoEnString){
+//
+//        byte[] decodeString = Base64.decode(logoEnString, Base64.DEFAULT);
+//        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodeString, 0 , decodeString.length);
+//
+//        return  decodedByte;
+//    }
 
     @Override
     public void reconectarYsubirArchivo() {
+        //todo volver a la pantalla pincipal
+        menuPrincipal();
         Log.d(TAG, "reconectarYsubirArchivo: acá nada");
     }
+
+    private void menuPrincipal(){
+        Intent intent = new Intent(getApplicationContext(), AppSelectionActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+
 
     //    @Override
 //    public void finish() {

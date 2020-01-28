@@ -59,6 +59,10 @@ public class DigitalizarQroBarcodeDialog extends AppCompatDialogFragment {
         btnSiguiente.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (editText.getText().length() == 0){
+                    editText.setError("Campo requerido");
+                    return;
+                }
                     listener.onDigitalizarQroBarcodeDialog(editText.getText().toString());
                     dismiss();
 
@@ -90,11 +94,11 @@ public class DigitalizarQroBarcodeDialog extends AppCompatDialogFragment {
         void onDigitalizarQroBarcodeDialog(String idCliente);
     }
 
-    private void cambiarLayout(){
-        constraintSet.connect(btnSiguiente.getId(),ConstraintSet.TOP, subtitulo.getId(),ConstraintSet.BOTTOM,16);
-        constraintSet.applyTo(constraintLayout);
-        constraintLayout.removeView(editTextLayout);
-        constraintLayout.removeView(editText);
-        subtitulo.setText("Ingrese la documentacion a escanear y presione siguiente");
-    }
+//    private void cambiarLayout(){
+//        constraintSet.connect(btnSiguiente.getId(),ConstraintSet.TOP, subtitulo.getId(),ConstraintSet.BOTTOM,16);
+//        constraintSet.applyTo(constraintLayout);
+//        constraintLayout.removeView(editTextLayout);
+//        constraintLayout.removeView(editText);
+//        subtitulo.setText("Ingrese la documentacion a escanear y presione siguiente");
+//    }
 }

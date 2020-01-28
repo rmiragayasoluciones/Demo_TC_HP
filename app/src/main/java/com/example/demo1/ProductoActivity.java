@@ -535,7 +535,8 @@ VolleyErrorResponseDialog.IntentarReconectListener,
 
     @Override
     public void reconectarYsubirArchivo() {
-        onScannResponse();
+        //todo volver a la pantalla pincipal
+        menuPrincipal();
     }
 
 
@@ -737,5 +738,11 @@ VolleyErrorResponseDialog.IntentarReconectListener,
             openDialogInicio();
         }
 
+    }
+
+    private void menuPrincipal(){
+        Intent intent = new Intent(getApplicationContext(), AppSelectionActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

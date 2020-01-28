@@ -177,7 +177,6 @@ VolleyErrorResponseDialog.IntentarReconectListener{
 
     }
 
-
     private void openDialogs() {
         DigitalizarQroBarcodeDialog dialog;
         if (qrOBarcode.equalsIgnoreCase("QR")){
@@ -477,7 +476,8 @@ VolleyErrorResponseDialog.IntentarReconectListener{
 
     @Override
     public void reconectarYsubirArchivo() {
-        onScannResponse();
+        //todo volver a la pantalla pincipal
+        menuPrincipal();
     }
 
 
@@ -668,5 +668,11 @@ VolleyErrorResponseDialog.IntentarReconectListener{
         Intent i = getIntent();
         finish();
         startActivity(i);
+    }
+
+    private void menuPrincipal(){
+        Intent intent = new Intent(getApplicationContext(), AppSelectionActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

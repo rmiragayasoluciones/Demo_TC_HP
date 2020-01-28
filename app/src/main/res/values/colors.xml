@@ -12,5 +12,6 @@
     <color name="gris">#5E5E5E</color>
     <color name="overlay_light_80">#CCFFFFFF</color>
     <color name="errorColor">#F44336</color>
+    <color name="amarillo">#E6CB1F</color>
 
 </resources>

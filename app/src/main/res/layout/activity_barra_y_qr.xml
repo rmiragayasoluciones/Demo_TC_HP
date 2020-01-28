@@ -14,7 +14,6 @@
         android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="@+id/view4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.666"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/fondo_tc_chico" />
@@ -174,7 +173,7 @@
     </androidx.cardview.widget.CardView>
 
     <ImageView
-        android:id="@+id/logoMarcaQrYBarcodeId"
+        android:id="@+id/logoHPOEmpresaId"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginTop="24dp"
@@ -191,8 +190,8 @@
         android:text="HP"
         android:textColor="@android:color/white"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/logoMarcaQrYBarcodeId"
-        app:layout_constraintStart_toStartOf="@+id/logoMarcaQrYBarcodeId"
-        app:layout_constraintTop_toBottomOf="@+id/logoMarcaQrYBarcodeId" />
+        app:layout_constraintEnd_toEndOf="@+id/logoHPOEmpresaId"
+        app:layout_constraintStart_toStartOf="@+id/logoHPOEmpresaId"
+        app:layout_constraintTop_toBottomOf="@+id/logoHPOEmpresaId" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

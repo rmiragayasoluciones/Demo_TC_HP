@@ -492,7 +492,8 @@ VolleyErrorResponseDialog.IntentarReconectListener{
 
     @Override
     public void reconectarYsubirArchivo() {
-        onScannResponse();
+        //todo volver a la pantalla pincipal
+        menuPrincipal();
     }
 
 

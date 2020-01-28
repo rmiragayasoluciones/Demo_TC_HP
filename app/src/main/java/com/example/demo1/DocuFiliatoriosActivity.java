@@ -407,7 +407,7 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
                 Log.d(TAG, "path " + i);
             }
             cartelSubirALaNube();
-            subirArchivos(listFilesPath.get(0), listFilesNames.get(0));
+            onCreateDocumentComplete();
 
             return;
         }
@@ -415,34 +415,13 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
     }
 
     private void subirArchivos(String filePath, String filename) {
-
-
         new CreateDocument(this,filePath, filename, convertJsonBojectToString(filename)).execute();
-        /** Async Simula la subida a la web*/
-//        new AsyncTask<Void, Void, Void>(){
-//            @Override
-//            protected void onPostExecute(Void aVoid) {
-//                super.onPostExecute(aVoid);
-//                cartelSubirALaNube();
-//
-//            }
-//
-//            @Override
-//            protected Void doInBackground(Void... voids) {
-//                try {
-//                    Thread.sleep(4000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                return null;
-//            }
-//        }.execute();
-        /** Async Simula la subida a la web*/
     }
 
     @Override
     public void onCreateDocumentError(String volleyError) {
         //todo: aca cortar toddo y meter cartel de error con la info de NetworkResponse
+        scanCount--;
         cartelSubirALaNube();
         VolleyErrorResponseDialog volleyErrorResponseDialog = new VolleyErrorResponseDialog(volleyError);
         volleyErrorResponseDialog.show(getSupportFragmentManager(), "noConfigLoaded");
@@ -450,15 +429,19 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
 
     @Override
     public void onCreateDocumentComplete() {
+
         Log.d(TAG, "onCreateDocumentsFinish: scanCount es: " + scanCount);
         switch (scanCount){
             case 0:
-                subirArchivos(listFilesPath.get(1), listFilesNames.get(1));
+                subirArchivos(listFilesPath.get(0), listFilesNames.get(0));
                 break;
             case 1:
-                subirArchivos(listFilesPath.get(2), listFilesNames.get(2));
+                subirArchivos(listFilesPath.get(1), listFilesNames.get(1));
                 break;
             case 2:
+                subirArchivos(listFilesPath.get(2), listFilesNames.get(2));
+                break;
+            case 3:
                 cartelSubirALaNube();
                 cartelFinalizacionTRabajo();
                 break;
@@ -542,7 +525,8 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
 
     @Override
     public void reconectarYsubirArchivo() {
-        //todo saber cual es el que se trabó y seguir por ese
+        //todo volver a la pantalla pincipal
+        menuPrincipal();
     }
 
     private class JobObserver extends JobService.AbstractJobletObserver {
@@ -685,6 +669,12 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
         }
         Log.d(TAG, "fileOrDirectory " + fileOrDirectory.getAbsolutePath() + " will be delete");
         fileOrDirectory.delete();
+    }
+
+    private void menuPrincipal(){
+        Intent intent = new Intent(getApplicationContext(), AppSelectionActivity.class);
+        startActivity(intent);
+        finish();
     }
 
 

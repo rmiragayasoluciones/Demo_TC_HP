@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,31 +20,54 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.example.demo1.Task.VolleySingleton;
+import com.example.demo1.UserClass.DemoViewModelSingleton;
+import com.example.demo1.UserClass.Documents;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class AppSelectionActivity extends AppCompatActivity {
 
     private static final String TAG = "AppSelectionActivity";
 
-    private static final int MAX_STEP = 3;
+    private static final int MAX_STEP = 4;
     private ViewPager viewPager;
     private MyViewPagerAdapter myViewPagerAdapter;
     private View cargandoProgresBar;
-
+    private List<Documents> documentsList = new ArrayList<>();
 
     private String about_title_array[] = {
             "Apertura de Cuenta",
             "Clasificación de Documentos",
-            "Captura de Firma"
+            "Captura de Firma",
+            "Impresión de Documentos"
     };
     private String about_description_array[] = {
             "Cargue la documentación de sus clientes de forma rápida y sencilla.",
             "Direccione sus documentos de forma dinámica mediante la lectura de códigos de Barra/QR.",
-            "Recorte la firma de sus clientes plasmadas en formularios de manera dinámica."
+            "Recorte la firma de sus clientes plasmadas en formularios de manera dinámica.",
+            "Accede a la cuenta e imprime la documentación"
 
     };
     private String about_images_array[] = {
             "abrir_cuenta.json",
             "qr.json",
+            "firma.json",
             "firma.json"
     };
 
@@ -153,21 +178,29 @@ public class AppSelectionActivity extends AppCompatActivity {
                     cargandoDialog();
 
                     int current = viewPager.getCurrentItem();
-                    Intent intent = new Intent();
+                    Intent intent;
                     switch (current) {
                         case 0:
                             intent = new Intent(v.getContext(), AperturaCuentaMainActivity.class);
+                            startActivity(intent);
+                            finish();
                             break;
                         case 1:
                             intent = new Intent(v.getContext(), CodigoBarraYQRActivity.class);
+                            startActivity(intent);
+                            finish();
                             break;
                         case 2:
                             intent = new Intent(v.getContext(), RecorteDeFirmaActivity.class);
+                            startActivity(intent);
+                            finish();
+                            break;
+                        case 3:
+                            //carga documentos para luego mandarlos a Preview Activity
+                            getListaDocumentos();
                             break;
                     }
 
-                    startActivity(intent);
-                    finish();
                 }
 
             });
@@ -200,6 +233,88 @@ public class AppSelectionActivity extends AppCompatActivity {
         } else {
             cargandoProgresBar.setVisibility(View.GONE);
         }
+    }
+
+    private void getListaDocumentos(){
+        Log.d(TAG, "getListaDocumentos: CALL");
+
+        final String token = DemoViewModelSingleton.getInstance().getDemoViewModelGuardado().getToken();
+
+        RequestQueue queue = VolleySingleton.getInstance(this).getmRequestQueue();
+
+        final JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, "http://10.13.0.34:5656/api/Documents/GetDocuments/" + token, null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.d(TAG, "onResponse: call");
+                        try {
+
+                            for (int i = 0; i< response.length();i++){
+                                JSONObject documento = response.getJSONObject(i);
+
+                                createAndAddToDocumentList(documento.getString("id")
+                                        ,documento.getString("serieName")
+                                        ,documento.getString("demoId")
+                                        ,documento.getString("filePath")
+                                        ,documento.getString("client"));
+
+                            }
+                            documentsList = sortArraylist(documentsList);
+                            startDocumentosActivity(documentsList);
+
+                        } catch (JSONException e){
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse: call");
+                error.printStackTrace();
+            }
+        }){
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("Token", token);
+                return params;
+            }
+        };
+
+        queue.add(request);
+    }
+
+    private void createAndAddToDocumentList(String id, String serieName, String demoId, String filePath, String client){
+        Documents d = new Documents(id,serieName, demoId, filePath, client);
+        documentsList.add(d);
+    }
+
+    private void startDocumentosActivity(List<Documents> documentsList){
+        Log.d(TAG, "startDocumentosActivity: call");
+        Intent intent = new Intent(this, DocumentPreviewActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList("listaDocumentos", (ArrayList<? extends Parcelable>) documentsList);
+        intent.putExtras(bundle);
+        startActivity(intent);
+        finish();
+
+
+    }
+
+    private List<Documents> sortArraylist(List<Documents> arrayList){
+
+        Collections.sort(arrayList, new Comparator<Documents>() {
+            @Override
+            public int compare(Documents o1, Documents o2) {
+                return o1.getId().compareTo(o2.getId());
+            }
+        });
+
+        Collections.sort(arrayList, Collections.<Documents>reverseOrder());
+
+        return arrayList;
     }
 
 }

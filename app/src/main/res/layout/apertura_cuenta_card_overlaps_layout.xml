@@ -69,24 +69,25 @@
 
                     <ImageView
                         android:id="@+id/logoHPOEmpresaId"
-                        android:layout_width="130dp"
-                        android:layout_height="130dp"
-                        android:maxHeight="130dp"
-                        android:maxWidth="130dp"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
                         android:adjustViewBounds="true"
-                        app:srcCompat="@drawable/hplogo" />
+                        android:maxWidth="130dp"
+                        android:maxHeight="130dp"
+                        app:srcCompat="@drawable/logo_hp_white" />
 
                     <View
                         android:layout_width="10dp"
                         android:layout_height="10dp" />
 
                     <TextView
-                        android:id="@+id/tituloEmpresaId"
+                        android:id="@+id/nombreMarcaEmpresaQRYBarcodeId"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="HP"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
-                        android:textColor="@android:color/white" />
+                        android:textColor="@android:color/white"
+                        android:textSize="18sp" />
 
                 </LinearLayout>
 

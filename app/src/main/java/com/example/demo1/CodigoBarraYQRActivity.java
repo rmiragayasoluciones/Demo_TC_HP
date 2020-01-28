@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import com.example.demo1.UserClass.DemoViewModelSingleton;
+import com.example.demo1.Utils.ImagenManipulation;
 
 /**
  * Actividad donde el usuario selecciona si vaa  ser QR o BArcode
@@ -41,10 +42,10 @@ public class CodigoBarraYQRActivity extends AppCompatActivity {
             nombreEmpresaTextView.setText(nombreEmpresa);
         }
         if (logoEnString!= null && !logoEnString.isEmpty()){
-            ImageView logoImageView = findViewById(R.id.logoMarcaQrYBarcodeId);
-            Bitmap logo = loadImage(logoEnString);
+            ImageView logoImageView = findViewById(R.id.logoHPOEmpresaId);
+            Bitmap logo = ImagenManipulation.loadImage(logoEnString);
             if (logo != null){
-                logoImageView.setImageBitmap(resize(logo, 70, 70));
+                logoImageView.setImageBitmap(ImagenManipulation.resize(logo, 70, 70));
             }
         }
 

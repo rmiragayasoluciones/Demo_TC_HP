@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity{
         Log.d(TAG, "startNextActivity: inicia");
 
         Intent intent = new Intent(this, AppSelectionActivity.class);
+//        Intent intent = new Intent(this, PrintFileActivityTest.class);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         finish();

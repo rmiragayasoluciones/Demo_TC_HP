@@ -6,8 +6,8 @@
     android:layout_height="match_parent">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="900dp"
-        android:layout_height="600dp"
+        android:layout_width="960dp"
+        android:layout_height="650dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
@@ -29,17 +29,17 @@
                 android:layout_height="0dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
                 app:layout_constraintBottom_toTopOf="@+id/imprimirBtn"
-                app:layout_constraintEnd_toStartOf="@+id/cardView"
+                app:layout_constraintEnd_toStartOf="@+id/cardViewFiliation"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.github.barteksc.pdfviewer.PDFView
                     android:id="@+id/pdfDetallePreview"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -49,18 +49,327 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardView"
-                android:layout_width="wrap_content"
+                android:id="@+id/cardViewFiliation"
+                android:layout_width="300dp"
                 android:layout_height="0dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginEnd="16dp"
                 android:minWidth="250dp"
                 app:layout_constraintBottom_toBottomOf="@+id/constraintLayout"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/constraintLayout"
                 app:layout_constraintTop_toTopOf="@+id/constraintLayout">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/productsConstraint"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    tools:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/clienteIdp"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="8dp"
+                        android:gravity="center"
+                        android:text="TextView"
+                        android:textColor="@color/colorPrimarymasDark"
+                        android:textSize="18sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <View
+                        android:id="@+id/view3p"
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@color/colorPrimarymasDark"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/bussinesNameIdp" />
+
+                    <View
+                        android:id="@+id/view8p"
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@color/colorPrimarymasDark"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/emailIdp" />
+
+                    <View
+                        android:id="@+id/view9p"
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@color/colorPrimarymasDark"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/sexoIdp" />
+
+                    <View
+                        android:id="@+id/view10p"
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@color/colorPrimarymasDark"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/paisIdp" />
+
+                    <View
+                        android:id="@+id/view11p"
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@color/colorPrimarymasDark"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/nombreDocumentoIdp"
+                        />
+
+                    <View
+                        android:id="@+id/barradeRazonOCodigo"
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@color/colorPrimarymasDark"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/razonIdp"
+                        tools:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/textView16p"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="24dp"
+                        android:text="Nombre:"
+                        android:textColor="@color/colorPrimarymasDark"
+                        android:textSize="18sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/clienteIdp" />
+
+                    <TextView
+                        android:id="@+id/textView19p"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Email:"
+                        android:textColor="@color/colorPrimarymasDark"
+                        android:textSize="18sp"
+                        app:layout_constraintStart_toStartOf="@+id/textView16p"
+                        app:layout_constraintTop_toBottomOf="@+id/view3p" />
+
+                    <TextView
+                        android:id="@+id/textView21p"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Sexo:"
+                        android:textColor="@color/colorPrimarymasDark"
+                        android:textSize="18sp"
+                        app:layout_constraintStart_toStartOf="@+id/textView19p"
+                        app:layout_constraintTop_toBottomOf="@+id/view8p" />
+
+                    <TextView
+                        android:id="@+id/textView24p"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Pais:"
+                        android:textColor="@color/colorPrimarymasDark"
+                        android:textSize="18sp"
+                        app:layout_constraintStart_toStartOf="@+id/textView21p"
+                        app:layout_constraintTop_toBottomOf="@+id/view9p" />
+
+                    <TextView
+                        android:id="@+id/bussinesNameIdp"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:textSize="18sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toEndOf="@+id/textView16p"
+                        app:layout_constraintTop_toTopOf="@+id/textView16p"
+                        tools:text="Nombre Ejemplo" />
+
+                    <TextView
+                        android:id="@+id/emailIdp"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:textSize="18sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toEndOf="@+id/textView19p"
+                        app:layout_constraintTop_toTopOf="@+id/textView19p"
+                        tools:text="emailEjemplo@hoogr.com" />
+
+                    <TextView
+                        android:id="@+id/sexoIdp"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:textSize="18sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/textView21p"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toEndOf="@+id/textView21p"
+                        tools:text="Femenino" />
+
+                    <TextView
+                        android:id="@+id/paisIdp"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:textSize="18sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/textView24p"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toEndOf="@+id/textView24p"
+                        tools:text="Argentina" />
+
+                    <TextView
+                        android:id="@+id/nombreDocumentoIdp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Nombre Documento"
+                        android:textSize="18sp"
+                        app:layout_constraintStart_toEndOf="@+id/textView22p"
+                        app:layout_constraintTop_toTopOf="@+id/textView22p" />
+
+                    <TextView
+                        android:id="@+id/textView22p"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Documento:"
+                        android:textColor="@color/colorPrimarymasDark"
+                        android:textSize="18sp"
+                        app:layout_constraintStart_toStartOf="@+id/textView24p"
+                        app:layout_constraintTop_toBottomOf="@+id/view10p" />
+
+                    <TextView
+                        android:id="@+id/razonTituloIdp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Razón:"
+                        android:textColor="@color/colorPrimarymasDark"
+                        android:textSize="18sp"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toStartOf="@+id/textView22p"
+                        app:layout_constraintTop_toBottomOf="@+id/view11p"
+                        tools:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/razonIdp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Nombre Documento"
+                        android:textSize="18sp"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toEndOf="@+id/razonTituloIdp"
+                        app:layout_constraintTop_toTopOf="@+id/razonTituloIdp"
+                        tools:visibility="visible" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/qrBarcodeConstraint"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/clienteIdq"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="8dp"
+                        android:gravity="center"
+                        android:text="TextView"
+                        android:textColor="@color/colorPrimarymasDark"
+                        android:textSize="18sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/documentNameTituloIdq"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="24dp"
+                        android:text="Documento:"
+                        android:textColor="@color/colorPrimarymasDark"
+                        android:textSize="18sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/clienteIdq" />
+
+                    <TextView
+                        android:id="@+id/documentNameIdq"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:textSize="18sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toEndOf="@+id/documentNameTituloIdq"
+                        app:layout_constraintTop_toTopOf="@+id/documentNameTituloIdq"
+                        tools:text="Nombre Ejemplo" />
+
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/firmaConstraint"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    tools:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/clienteIdf"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="8dp"
+                        android:gravity="center"
+                        android:text="TextView"
+                        android:textColor="@color/colorPrimarymasDark"
+                        android:textSize="18sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/filiationConstraint"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    tools:visibility="gone">
 
                     <TextView
                         android:id="@+id/clienteId"
@@ -81,54 +390,47 @@
                         android:id="@+id/view3"
                         android:layout_width="0dp"
                         android:layout_height="1dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp"
+                        android:layout_marginTop="8dp"
                         android:background="@color/colorPrimarymasDark"
-                        app:layout_constraintBottom_toTopOf="@+id/textView19"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView16" />
+                        app:layout_constraintTop_toBottomOf="@+id/bussinesNameId" />
 
                     <View
                         android:id="@+id/view8"
                         android:layout_width="0dp"
                         android:layout_height="1dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp"
+                        android:layout_marginTop="8dp"
                         android:background="@color/colorPrimarymasDark"
-                        app:layout_constraintBottom_toTopOf="@+id/textView21"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView19" />
+                        app:layout_constraintTop_toBottomOf="@+id/emailId" />
 
                     <View
                         android:id="@+id/view9"
                         android:layout_width="0dp"
                         android:layout_height="1dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp"
+                        android:layout_marginTop="8dp"
                         android:background="@color/colorPrimarymasDark"
-                        app:layout_constraintBottom_toTopOf="@+id/textView24"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView21" />
+                        app:layout_constraintTop_toBottomOf="@+id/sexoId" />
 
                     <View
                         android:id="@+id/view10"
                         android:layout_width="0dp"
                         android:layout_height="1dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp"
+                        android:layout_marginTop="8dp"
                         android:background="@color/colorPrimarymasDark"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView24" />
+                        app:layout_constraintTop_toBottomOf="@+id/paisId" />
 
                     <TextView
                         android:id="@+id/textView16"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
+                        android:layout_marginStart="16dp"
                         android:layout_marginTop="24dp"
                         android:text="Nombre:"
                         android:textColor="@color/colorPrimarymasDark"
@@ -140,72 +442,84 @@
                         android:id="@+id/textView19"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="8dp"
                         android:text="Email:"
                         android:textColor="@color/colorPrimarymasDark"
                         android:textSize="18sp"
                         app:layout_constraintStart_toStartOf="@+id/textView16"
-                        app:layout_constraintTop_toBottomOf="@+id/textView16" />
+                        app:layout_constraintTop_toBottomOf="@+id/view3" />
 
                     <TextView
                         android:id="@+id/textView21"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="8dp"
                         android:text="Sexo:"
                         android:textColor="@color/colorPrimarymasDark"
                         android:textSize="18sp"
                         app:layout_constraintStart_toStartOf="@+id/textView19"
-                        app:layout_constraintTop_toBottomOf="@+id/textView19" />
+                        app:layout_constraintTop_toBottomOf="@+id/view8" />
 
                     <TextView
                         android:id="@+id/textView24"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="8dp"
                         android:text="Pais:"
                         android:textColor="@color/colorPrimarymasDark"
                         android:textSize="18sp"
                         app:layout_constraintStart_toStartOf="@+id/textView21"
-                        app:layout_constraintTop_toBottomOf="@+id/textView21" />
+                        app:layout_constraintTop_toBottomOf="@+id/view9" />
 
                     <TextView
                         android:id="@+id/bussinesNameId"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
                         android:textSize="18sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/textView16"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toEndOf="@+id/textView16"
+                        app:layout_constraintTop_toTopOf="@+id/textView16"
                         tools:text="Nombre Ejemplo" />
 
                     <TextView
                         android:id="@+id/emailId"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
                         android:textSize="18sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/textView19"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toEndOf="@+id/textView19"
+                        app:layout_constraintTop_toTopOf="@+id/textView19"
                         tools:text="emailEjemplo@hoogr.com" />
 
                     <TextView
                         android:id="@+id/sexoId"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
                         android:textSize="18sp"
                         app:layout_constraintBottom_toBottomOf="@+id/textView21"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toEndOf="@+id/textView21"
                         tools:text="Femenino" />
 
                     <TextView
                         android:id="@+id/paisId"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
                         android:textSize="18sp"
                         app:layout_constraintBottom_toBottomOf="@+id/textView24"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toEndOf="@+id/textView24"
                         tools:text="Argentina" />
 
@@ -222,6 +536,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
+
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

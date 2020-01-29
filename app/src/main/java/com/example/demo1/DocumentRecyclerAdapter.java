@@ -19,7 +19,6 @@ public class DocumentRecyclerAdapter extends RecyclerView.Adapter<DocumentRecycl
     private OnItemClickListener mListener;
     private Context context;
 
-
     /* interface for onclick on Documents */
     public interface OnItemClickListener{
         void onItemClick(int position);
@@ -44,9 +43,14 @@ public class DocumentRecyclerAdapter extends RecyclerView.Adapter<DocumentRecycl
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
-        holder.docuid.setText("Id: " + documentosList.get(position).getId());
-        holder.demoId.setText("Demo Id: " + documentosList.get(position).getDemoId());
-        holder.path.setText("Cliente: " + documentosList.get(position).getClient());
+        String id = documentosList.get(position).getId();
+        String serieName = documentosList.get(position).getSerieName();
+        String cliente = documentosList.get(position).getClient();
+        serieName = traducirSerieName(serieName);
+
+        holder.docuid.setText("Id: " + id);
+        holder.demoId.setText("Cliente: " + cliente);
+        holder.path.setText(serieName);
 
     }
 
@@ -76,5 +80,34 @@ public class DocumentRecyclerAdapter extends RecyclerView.Adapter<DocumentRecycl
                 }
             });
         }
+    }
+
+    private String traducirSerieName(String serieName){
+
+        switch (serieName.toLowerCase()){
+            case "filiation":
+                serieName = "Filiatorio";
+                break;
+            case "high":
+                serieName = "Alta Producto";
+                break;
+            case "low":
+                serieName = "Baja Producto";
+                break;
+            case "modification":
+                serieName = "Modificación Producto";
+                break;
+            case "signature":
+                serieName = "Recorte de Firma";
+                break;
+            case "qr":
+                serieName = "QR";
+                break;
+            case "barcode":
+                serieName = "Código de Barra";
+                break;
+        }
+
+        return serieName;
     }
 }

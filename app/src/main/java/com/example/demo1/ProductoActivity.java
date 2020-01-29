@@ -1,8 +1,11 @@
 package com.example.demo1;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -643,16 +646,26 @@ VolleyErrorResponseDialog.IntentarReconectListener,
     }
 
     private void subirArchivo(String filePath) {
-        new CreateDocument(this, filePath, fileName, convertJsonBojectToString()).execute();
-
+        if (isOnline()){
+            Log.d(TAG, "está online todo!");
+            new CreateDocument(this, filePath, fileName, convertJsonBojectToString()).execute();
+        } else {
+            //todo cartel!!
+            Log.d(TAG, "subirArchivo: no esta online");
+        }
     }
 
     private String convertJsonBojectToString() {
 
         DemoViewModelSingleton demoViewModelSingleton = DemoViewModelSingleton.getInstance();
+
+        Log.d(TAG, "la date Guardada es " + demoViewModelSingleton.getMetadataCliente().getFecha().toString());
+
         int demoId = demoViewModelSingleton.getDemoViewModelGuardado().getId();
         String client = demoViewModelSingleton.getDemoViewModelGuardado().getClientNameNew();
-        //todo poner el nombre del documento (un edittext nuevo dentro de el fragment de alta baja o modificacion)
+
+
+
         String newDocumentName = documentName.split("-001")[0];
         Log.d(TAG, "newDocumentName: " + newDocumentName);
         demoViewModelSingleton.getMetadataCliente().setDocumentName(newDocumentName);
@@ -744,5 +757,17 @@ VolleyErrorResponseDialog.IntentarReconectListener,
         Intent intent = new Intent(getApplicationContext(), AppSelectionActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    public boolean isOnline() {
+        Log.d(TAG, "isOnline: call");
+        ConnectivityManager cm =
+                (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+         return isConnected;
     }
 }

@@ -2,16 +2,19 @@ package com.example.demo1;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Base64;
+import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -25,11 +28,16 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.demo1.Dialogs.DetallePdfPreviewDialog;
 import com.example.demo1.Fragments.DocuFiliaFragment;
+import com.example.demo1.Fragments.EjemplosFragment;
 import com.example.demo1.Fragments.ProductosFragment;
 import com.example.demo1.Fragments.QRBarcodeFragment;
 import com.example.demo1.Fragments.RecorteFirmaFragment;
 import com.example.demo1.Fragments.ViewPagerAdapter;
+import com.example.demo1.Task.InitializationPrintTask;
 import com.example.demo1.Task.InputStreamVolleyRequest;
+import com.example.demo1.Task.JobCompleteReciever;
+import com.example.demo1.Task.LoadPrintCapabilitiesTask;
+import com.example.demo1.Task.RequestPrintTask;
 import com.example.demo1.Task.VolleySingleton;
 import com.example.demo1.UserClass.DemoViewModelSingleton;
 import com.example.demo1.UserClass.Documents;
@@ -42,6 +50,12 @@ import com.github.barteksc.pdfviewer.listener.OnPageErrorListener;
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
+import com.hp.jetadvantage.link.api.Result;
+import com.hp.jetadvantage.link.api.job.JobInfo;
+import com.hp.jetadvantage.link.api.job.JobService;
+import com.hp.jetadvantage.link.api.job.JobletAttributes;
+import com.hp.jetadvantage.link.api.printer.PrintAttributesCaps;
+import com.hp.jetadvantage.link.api.printer.PrinterService;
 
 import org.json.JSONObject;
 
@@ -58,28 +72,43 @@ public class DocumentPreviewActivity extends AppCompatActivity implements DocuFi
         ProductosFragment.ProductFragmentListener,
         QRBarcodeFragment.QRBarcodeFragmentListener,
         RecorteFirmaFragment.RecorteFragmentListener,
+        EjemplosFragment.EjemplosFragmentListener,
         OnPageChangeListener, OnLoadCompleteListener,
         OnPageErrorListener,
         DetallePdfPreviewDialog.OnImprimirBtnPressListener {
 
     private static final String TAG = "DocumentPreviewActivity";
 
+    private ConstraintLayout prevPdf;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private PDFView pdfView;
     private String fileName;
     private Documents documentSing;
     private List<Documents> documentsList = new ArrayList<>();
+    private List<Documents> documentsEjemploList = new ArrayList<>();
     private File file;
     final String token = DemoViewModelSingleton.getInstance().getDemoViewModelGuardado().getToken();
+    private int tabSelected = 0;
+
+    /* Background task for JetAdvantageLink API initialization */
+    private InitializationPrintTask mInitializationTask;
+    private PrintAttributesCaps mCapabilities;
+    private JobObserver mJobObserver = null;
+    private String mJobId = null;
+    private String mRid = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_document_preview);
+        prevPdf = findViewById(R.id.cargarPdfPrevId);
         tabLayout = findViewById(R.id.tabDocumentsId);
         viewPager = findViewById(R.id.document_view_pager);
         pdfView = findViewById(R.id.pdfPreview);
+
+        new LoadPrintCapabilitiesTask(this).execute();
 
 
         //carga imagen y nombre de empresa
@@ -103,6 +132,7 @@ public class DocumentPreviewActivity extends AppCompatActivity implements DocuFi
 
         Bundle bundle = getIntent().getExtras();
         documentsList = bundle.getParcelableArrayList("listaDocumentos");
+        documentsEjemploList = bundle.getParcelableArrayList("documentosEjemplo");
 
 
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
@@ -113,10 +143,35 @@ public class DocumentPreviewActivity extends AppCompatActivity implements DocuFi
         viewPagerAdapter.addFragment(new ProductosFragment(documentsList), "Productos");
         viewPagerAdapter.addFragment(new QRBarcodeFragment(documentsList), "QR Y Barcode");
         viewPagerAdapter.addFragment(new RecorteFirmaFragment(documentsList), "Recorte de Firma");
+        viewPagerAdapter.addFragment(new EjemplosFragment(documentsEjemploList), "Ejemplos");
 
         //adapter Setup
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                Log.d(TAG, "onTabSelected: Tab " + tab.getText());
+                Log.d(TAG, "onTabSelected: Position " +  tab.getPosition());
+
+                if (tab.getPosition() != tabSelected){
+                    prevPdf.setVisibility(View.VISIBLE);
+                }
+
+                tabSelected = tab.getPosition();
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
 
         pdfView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,6 +180,7 @@ public class DocumentPreviewActivity extends AppCompatActivity implements DocuFi
                     Log.d(TAG, "onClick: abrir detalle docu " + documentSing.getId());
                     //todo cargando
                     //todo get info del cdocumento
+                    Log.d(TAG, "onclick con la tab " + tabSelected);
                     getDocument(documentSing.getId());
                     //abre dialog con preview del pdf
 //                    openDetallePdf(file);
@@ -132,8 +188,41 @@ public class DocumentPreviewActivity extends AppCompatActivity implements DocuFi
             }
         });
 
+        mJobObserver = new JobObserver(new Handler());
+
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        mJobObserver.register(getApplicationContext());
+
+        mInitializationTask = new InitializationPrintTask(this);
+        mInitializationTask.execute();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // Unregister JobObserver
+        mJobObserver.unregister(getApplicationContext());
+
+        mInitializationTask.cancel(true);
+        mInitializationTask = null;
+    }
+
+
+    /**
+     * Launches Print job
+     */
+    private void executePrint(String filePath) {
+        Toast.makeText(this, "Iniciando Impresión", Toast.LENGTH_SHORT).show();
+        mJobId = null;
+        mRid = null;
+        new RequestPrintTask(this, filePath).execute();
+    }
 
     @Override
     public void onDocuClick(Documents documentSeleccionado) {
@@ -210,15 +299,7 @@ public class DocumentPreviewActivity extends AppCompatActivity implements DocuFi
                         Log.d(TAG, "onResponse: call");
                         Gson gson = new Gson();
                         GetDocumentViewModel documentViewModel = gson.fromJson(response.toString(), GetDocumentViewModel.class);
-//                        Log.d(TAG, "getClient " + documentViewModel.getClient());
-//                        Log.d(TAG, "getDemoId " + documentViewModel.getDemoId());
-//                        Log.d(TAG, "getFilePath " + documentViewModel.getFilePath());
-//                        Log.d(TAG, "getEmail " + documentViewModel.getMetadataViewModel().getEmail());
-//                        Log.d(TAG, "getBusinessName " + documentViewModel.getMetadataViewModel().getBusinessName());
-//                        Log.d(TAG, "getCountry " + documentViewModel.getMetadataViewModel().getCountry());
-//                        Log.d(TAG, "getCode " + documentViewModel.getMetadataViewModel().getCode());
-//                        Log.d(TAG, "getFecha " + documentViewModel.getMetadataViewModel().getFecha());
-//                        Log.d(TAG, "getReason " + documentViewModel.getMetadataViewModel().getReason());
+
 
                         openDetallePdf(file, documentViewModel);
 
@@ -247,7 +328,7 @@ public class DocumentPreviewActivity extends AppCompatActivity implements DocuFi
         if (file ==null){
             return;
         }
-        DetallePdfPreviewDialog dialog = new DetallePdfPreviewDialog(file, documentViewModel);
+        DetallePdfPreviewDialog dialog = new DetallePdfPreviewDialog(file, documentViewModel, tabSelected);
         dialog.setCancelable(true);
         dialog.show(getSupportFragmentManager(), "detalle Pdf");
 
@@ -256,6 +337,7 @@ public class DocumentPreviewActivity extends AppCompatActivity implements DocuFi
     @Override
     public void loadComplete(int nbPages) {
         Log.d(TAG, "loadComplete: call, pages= " + nbPages);
+        prevPdf.setVisibility(View.GONE);
         //todo cortar loading
     }
 
@@ -274,6 +356,8 @@ public class DocumentPreviewActivity extends AppCompatActivity implements DocuFi
     public void onImprimirBtnPress(File pdfFile) {
         Log.d(TAG, "onImprimirBtnPress: IMPRIMIR CALL");
         Log.d(TAG, "pdf " + pdfFile.getName());
+        executePrint(pdfFile.getAbsolutePath());
+
     }
 
     @Override
@@ -315,32 +399,118 @@ public class DocumentPreviewActivity extends AppCompatActivity implements DocuFi
         deleteAllFiles();
     }
 
-    private Bitmap loadImage(String logoEnString){
 
-        byte[] decodeString = Base64.decode(logoEnString, Base64.DEFAULT);
-        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodeString, 0 , decodeString.length);
+    /**
+     * Observer for submitted job
+     */
+    private class JobObserver extends JobService.AbstractJobletObserver {
 
-        return  decodedByte;
-    }
+        public JobObserver(final Handler handler) {
+            super(handler);
+        }
 
-    private Bitmap resize(Bitmap image, int maxWidth, int maxHeight) {
-        if (maxHeight > 0 && maxWidth > 0) {
-            int width = image.getWidth();
-            int height = image.getHeight();
-            float ratioBitmap = (float) width / (float) height;
-            float ratioMax = (float) maxWidth / (float) maxHeight;
+        public void onProgress(final String rid, final JobInfo jobInfo) {
+            Log.i(TAG, "onProgress: Received rid=" + rid);
+            Log.i(TAG, "JobInfo=");
+            if (rid.equals(mRid)) {
+                if (mJobId == null) {
+                    if (jobInfo.getJobId() != null) {
+                        mJobId = jobInfo.getJobId();
 
-            int finalWidth = maxWidth;
-            int finalHeight = maxHeight;
-            if (ratioMax > ratioBitmap) {
-                finalWidth = (int) ((float)maxHeight * ratioBitmap);
-            } else {
-                finalHeight = (int) ((float)maxWidth / ratioBitmap);
+                        Log.i(TAG, "Received jobId=" + mJobId);
+//                        showSnackBar(getString(R.string.job_id, mJobId));
+
+                        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                        // Store Job Id in order to verify it in the Broadcast Receiver
+                        mPrefs.edit().putString("pref_currentJobId", mJobId).apply();
+
+                        final Intent intent = new Intent(getApplicationContext(), JobCompleteReciever.class);
+                        intent.setAction("com.hp.jetadvantage.link.sample.printsample.ACTION_PRINT_COMPLETED");
+                        intent.putExtra(JobCompleteReciever.RID_EXTRA, rid);
+                        intent.putExtra(JobCompleteReciever.JOB_ID_EXTRA, mJobId);
+
+                        final boolean showProgress = true;
+
+                        // Monitor the job completion
+                        final JobletAttributes taskAttributes =
+                                new JobletAttributes.Builder().setShowUi(showProgress).build();
+
+                        final String jrid = JobService.monitorJobInForeground(DocumentPreviewActivity.this, mJobId,
+                                taskAttributes, intent);
+
+                        Log.i(TAG, "MonitorJob request: " + jrid);
+
+                    }
+                }
             }
-            image = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
-            return image;
-        } else {
-            return image;
+        }
+
+        @Override
+        public void onComplete(final String rid, final JobInfo jobInfo) {
+            Log.i(TAG, "onComplete: Received rid=" + rid);
+            Log.i(TAG, "JobInfo=" );
+            if (jobInfo.getJobType() == JobInfo.JobType.PRINT) {
+                Toast.makeText(DocumentPreviewActivity.this, "Impresión Finalizada", Toast.LENGTH_SHORT).show();
+//                showSnackBar(getString(R.string.job_completed, jobInfo.getJobName()));
+            }
+        }
+
+        @Override
+        public void onFail(final String rid, final Result result) {
+            Log.e(TAG, "onFail: Received rid=" + rid);
+//            showResult(getString(R.string.job_failed), result);
+        }
+
+        @Override
+        public void onCancel(final String rid) {
+            Log.i(TAG, "onCancel: Received rid=" + rid);
+//            showSnackBar(getString(R.string.job_cancelled));
         }
     }
+
+    public PrintAttributesCaps requestCaps(final Context context, Result result) {
+        if (result == null) {
+            result = new Result();
+        }
+
+        // cache capabilities for building PrintAttributes
+        mCapabilities = PrinterService.getCapabilities(context, result);
+
+
+        return mCapabilities;
+    }
+
+
+    public void showResult(final String msg) {
+        showResult(msg, null);
+    }
+
+    public void setRid(String rid) {
+        this.mRid = rid;
+    }
+
+
+
+    public void showResult(final String msg, final Result result) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                String resultMsg;
+                resultMsg = msg;
+                if (result == null) {
+                    Log.i(TAG, resultMsg);
+                } else if (result.getCode() == Result.RESULT_OK) {
+                    resultMsg += "\nCode: RESULT_OK";
+                    Log.i(TAG, resultMsg);
+                } else if (result.getCode() == Result.RESULT_FAIL) {
+                    resultMsg += "\nCode: RESULT_FAIL" + "\n"
+                            + "ErrorCode: " + result.getErrorCode() + "\n"
+                            + "Cause: " + result.getCause();
+                    Log.e(TAG, resultMsg);
+                }
+                Toast.makeText(getApplicationContext(), resultMsg, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }

@@ -17,7 +17,6 @@ import com.android.volley.VolleyError;
 import com.example.demo1.R;
 import com.example.demo1.UserClass.DemoViewModelSingleton;
 import com.example.demo1.UserClass.Error500;
-import com.example.demo1.Utils.Tools;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -62,11 +61,6 @@ public class CreateDocument extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... voids) {
         Log.d(TAG, "doInBackground: call");
-
-        if (!Tools.isOnline()){
-            mListener.onCreateDocumentError(mContext.get().getString(R.string.error_conexion));
-            return null;
-        }
 
         final String token = DemoViewModelSingleton.getInstance().getDemoViewModelGuardado().getToken();
         final RequestQueue queue = VolleySingleton.getInstance(mContext.get()).getmRequestQueue();

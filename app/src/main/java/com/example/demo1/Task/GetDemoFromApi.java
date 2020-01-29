@@ -1,6 +1,5 @@
 package com.example.demo1.Task;
 
-import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -52,7 +51,6 @@ public class GetDemoFromApi extends AsyncTask<Void, Void, Void> {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d(TAG, "Response is: "+ response.toString());
                         saveInSingleton(response);
                     }
                 }, new Response.ErrorListener() {
@@ -83,6 +81,7 @@ public class GetDemoFromApi extends AsyncTask<Void, Void, Void> {
 
     /** Crea el DemoViewModel y guarda en un singleton */
     private void saveInSingleton(JSONObject jsonObject){
+        Log.d(TAG, "jsonObject");
 
         Gson gson = new Gson();
         DemoViewModel demoViewModel = gson.fromJson(jsonObject.toString(), DemoViewModel.class);

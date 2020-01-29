@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -14,8 +15,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".DocumentPreviewActivity"
-                  android:noHistory="true"/>
+        <activity android:name=".PrintFileActivityTest"></activity>
+        <activity
+            android:name=".DocumentPreviewActivity"
+            android:noHistory="true" />
         <activity android:name=".RecorteDeFirmaActivity" />
         <activity android:name=".QRandBarCodeActivity" />
         <activity android:name=".CodigoBarraYQRActivity" />

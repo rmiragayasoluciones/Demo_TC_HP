@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.demo1.R;
 import com.example.demo1.UserClass.GetDocumentViewModel;
@@ -35,11 +37,14 @@ public class DetallePdfPreviewDialog extends AppCompatDialogFragment implements 
     private File pdfFile;
     private OnImprimirBtnPressListener mListener;
     private GetDocumentViewModel documentViewModel;
+    private int tabPosition;
+    private ConstraintLayout filiation, procuts, qrBarcode, firma, ejemplos;
 
 
-    public DetallePdfPreviewDialog(File pdfFile, GetDocumentViewModel documentViewModel) {
+    public DetallePdfPreviewDialog(File pdfFile, GetDocumentViewModel documentViewModel, int tabPosition) {
         this.pdfFile = pdfFile;
         this.documentViewModel = documentViewModel;
+        this.tabPosition = tabPosition;
     }
 
     @Override
@@ -57,17 +62,56 @@ public class DetallePdfPreviewDialog extends AppCompatDialogFragment implements 
         View view = inflater.inflate(R.layout.detalle_pdf_dialog, null);
         builder.setView(view);
 
-        TextView cliente = view.findViewById(R.id.clienteId);
-        TextView name = view.findViewById(R.id.bussinesNameId);
-        TextView email = view.findViewById(R.id.emailId);
-        TextView sexo = view.findViewById(R.id.sexoId);
-        TextView pais = view.findViewById(R.id.paisId);
+        filiation = view.findViewById(R.id.filiationConstraint);
+        procuts = view.findViewById(R.id.productsConstraint);
+        qrBarcode = view.findViewById(R.id.qrBarcodeConstraint);
+        firma = view.findViewById(R.id.firmaConstraint);
+//        ejemplos = view.findViewById(R.id.constra);
 
-        cliente.setText(this.documentViewModel.getClient());
-        name.setText(this.documentViewModel.getMetadataViewModel().getBusinessName());
-        email.setText(this.documentViewModel.getMetadataViewModel().getEmail());
-        sexo.setText(this.documentViewModel.getMetadataViewModel().getSex());
-        pais.setText(this.documentViewModel.getMetadataViewModel().getCountry());
+
+
+        switch (tabPosition){
+            case 0:
+                Log.d(TAG, "Filiation");
+                filiation.setVisibility(View.VISIBLE);
+                bindFiliationsViews(view);
+                break;
+            case 1:
+                Log.d(TAG, "Productos");
+                procuts.setVisibility(View.VISIBLE);
+                bindProductosViews(view);
+                break;
+            case 2:
+                Log.d(TAG, "QR/Barcode");
+                qrBarcode.setVisibility(View.VISIBLE);
+                bindQRBarcodeViews(view);
+                break;
+            case 3:
+                Log.d(TAG, "RecorteFirma");
+                firma.setVisibility(View.VISIBLE);
+                bindFirmaViews(view);
+                break;
+            case 4:
+                Log.d(TAG, "Ejemplos");
+                ejemplos.setVisibility(View.VISIBLE);
+                bindProductosViews(view);
+                break;
+        }
+
+
+        //AllCategories
+
+             // Filiacion
+
+                 //producto (+Filiacion)
+
+            // QR/BarCode (solo getClient)
+            //Firma (solo getClient)
+
+
+
+
+
 
 
         Button imprimirBtn = view.findViewById(R.id.imprimirBtn);
@@ -75,6 +119,7 @@ public class DetallePdfPreviewDialog extends AppCompatDialogFragment implements 
             @Override
             public void onClick(View v) {
                 mListener.onImprimirBtnPress(pdfFile);
+                dismiss();
             }
         });
         PDFView pdfView = view.findViewById(R.id.pdfDetallePreview);
@@ -134,5 +179,87 @@ public class DetallePdfPreviewDialog extends AppCompatDialogFragment implements 
             throw new RuntimeException(context.toString()
                     + " must implements OnImprimirBtnPressListener");
         }
+    }
+
+    private void bindFiliationsViews(View view){
+
+        TextView cliente = view.findViewById(R.id.clienteId);
+        cliente.setText(this.documentViewModel.getClient());
+
+
+        TextView name = view.findViewById(R.id.bussinesNameId);
+        TextView email = view.findViewById(R.id.emailId);
+        TextView sexo = view.findViewById(R.id.sexoId);
+        TextView pais = view.findViewById(R.id.paisId);
+
+        name.setText(this.documentViewModel.getMetadataViewModel().getBusinessName());
+        email.setText(this.documentViewModel.getMetadataViewModel().getEmail());
+        sexo.setText(this.documentViewModel.getMetadataViewModel().getSex());
+        pais.setText(this.documentViewModel.getMetadataViewModel().getCountry());
+
+    }
+
+    private void bindProductosViews(View view){
+
+        TextView cliente = view.findViewById(R.id.clienteIdp);
+        cliente.setText(this.documentViewModel.getClient());
+
+
+        TextView name = view.findViewById(R.id.bussinesNameIdp);
+        TextView email = view.findViewById(R.id.emailIdp);
+        TextView sexo = view.findViewById(R.id.sexoIdp);
+        TextView pais = view.findViewById(R.id.paisIdp);
+        TextView documentoNombre = view.findViewById(R.id.nombreDocumentoIdp);
+
+
+        name.setText(this.documentViewModel.getMetadataViewModel().getBusinessName());
+        email.setText(this.documentViewModel.getMetadataViewModel().getEmail());
+        sexo.setText(this.documentViewModel.getMetadataViewModel().getSex());
+        pais.setText(this.documentViewModel.getMetadataViewModel().getCountry());
+        documentoNombre.setText(this.documentViewModel.getMetadataViewModel().getDocumentName());
+
+
+
+        if (this.documentViewModel.getMetadataViewModel().getReason() != null){
+            //baja
+            View barra = view.findViewById(R.id.barradeRazonOCodigo);
+            barra.setVisibility(View.VISIBLE);
+            TextView razonIpoCodigo = view.findViewById(R.id.razonIdp);
+            TextView razooCodigoTituloIp = view.findViewById(R.id.razonTituloIdp);
+            razonIpoCodigo.setVisibility(View.VISIBLE);
+            razooCodigoTituloIp.setVisibility(View.VISIBLE);
+            razooCodigoTituloIp.setText("Razón");
+            razonIpoCodigo.setText(this.documentViewModel.getMetadataViewModel().getReason());
+
+
+        }
+
+        if (this.documentViewModel.getMetadataViewModel().getCode() != null){
+            //alta
+            View barra = view.findViewById(R.id.barradeRazonOCodigo);
+            barra.setVisibility(View.VISIBLE);
+            TextView razonIpoCodigo = view.findViewById(R.id.razonIdp);
+            TextView razooCodigoTituloIp = view.findViewById(R.id.razonTituloIdp);
+            razonIpoCodigo.setVisibility(View.VISIBLE);
+            razooCodigoTituloIp.setVisibility(View.VISIBLE);
+            razooCodigoTituloIp.setText("Código");
+            razonIpoCodigo.setText(this.documentViewModel.getMetadataViewModel().getCode());
+        }
+
+    }
+
+    private void bindQRBarcodeViews(View view){
+
+        TextView cliente = view.findViewById(R.id.clienteIdq);
+        cliente.setText(this.documentViewModel.getClient());
+
+        TextView documentName = view.findViewById(R.id.documentNameIdq);
+        documentName.setText(this.documentViewModel.getMetadataViewModel().getDocumentName());
+    }
+
+    private void bindFirmaViews(View view){
+        TextView cliente = view.findViewById(R.id.clienteIdf);
+        cliente.setText(this.documentViewModel.getClient());
+
     }
 }

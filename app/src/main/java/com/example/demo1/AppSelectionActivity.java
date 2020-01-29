@@ -21,11 +21,15 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.example.demo1.Dialogs.VolleyErrorResponseDialog;
 import com.example.demo1.Task.VolleySingleton;
 import com.example.demo1.UserClass.DemoViewModelSingleton;
 import com.example.demo1.UserClass.Documents;
@@ -41,7 +45,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AppSelectionActivity extends AppCompatActivity {
+public class AppSelectionActivity extends AppCompatActivity implements VolleyErrorResponseDialog.IntentarReconectListener {
 
     private static final String TAG = "AppSelectionActivity";
 
@@ -50,6 +54,7 @@ public class AppSelectionActivity extends AppCompatActivity {
     private MyViewPagerAdapter myViewPagerAdapter;
     private View cargandoProgresBar;
     private List<Documents> documentsList = new ArrayList<>();
+    private List<Documents> documentsEjemplosList = new ArrayList<>();
 
     private String about_title_array[] = {
             "Apertura de Cuenta",
@@ -82,16 +87,6 @@ public class AppSelectionActivity extends AppCompatActivity {
             finish();
         }
 
-
-//        Intent intent = getIntent();
-//        if (intent.hasExtra("logo")){
-//            Log.d(TAG, "Intent Has Extra!!!");
-//            logo = intent.getParcelableExtra("logo");
-//        }
-//        if (intent.hasExtra("nombre")){
-//            Log.d(TAG, "Intent Has Nombre!!!");
-//            clientName = intent.getStringExtra("nombre");
-//        }
 
         cargandoProgresBar = findViewById(R.id.selectAppProgressDialog);
 
@@ -144,6 +139,12 @@ public class AppSelectionActivity extends AppCompatActivity {
         public void onPageScrollStateChanged(int arg0) {
         }
     };
+
+    @Override
+    public void reconectarYsubirArchivo() {
+        // es necesario hacer algo mas?
+        Log.d(TAG, "reconectarYsubirArchivo: call");
+    }
 
     /**
      * View pager adapter
@@ -240,7 +241,7 @@ public class AppSelectionActivity extends AppCompatActivity {
 
         final String token = DemoViewModelSingleton.getInstance().getDemoViewModelGuardado().getToken();
 
-        RequestQueue queue = VolleySingleton.getInstance(this).getmRequestQueue();
+        final RequestQueue queue = VolleySingleton.getInstance(this).getmRequestQueue();
 
         final JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, "http://10.13.0.34:5656/api/Documents/GetDocuments/" + token, null,
                 new Response.Listener<JSONArray>() {
@@ -260,7 +261,10 @@ public class AppSelectionActivity extends AppCompatActivity {
 
                             }
                             documentsList = sortArraylist(documentsList);
-                            startDocumentosActivity(documentsList);
+
+                            //guarda la lista de documentos
+                            //TODO MANDAR A DESCARGAR LOS DOCUMENTOS DE EJEMPLO Y DESPUES LLAMAR STARTDOCUMENTS  startDocumentosActivity();
+                            getDocumentosEjemplo();
 
                         } catch (JSONException e){
                             e.printStackTrace();
@@ -271,6 +275,12 @@ public class AppSelectionActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "onErrorResponse: call");
+
+                if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                    Log.d(TAG, "TimeOut error o No ConnectionError");
+                    errorVolley(getString(R.string.error_conexion));
+                    return;
+                }
                 error.printStackTrace();
             }
         }){
@@ -283,7 +293,17 @@ public class AppSelectionActivity extends AppCompatActivity {
             }
         };
 
+        //setea el timeout y los retry
+        request.setRetryPolicy(new DefaultRetryPolicy(
+                5000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(request);
+    }
+
+    private void getDocumentosEjemplo(){
+        //todo cuando este el metodo, aca bajar los archivos ejemplo y cargarlos a "documentsEjemplosList" y después llamar:
+        startDocumentosActivity();
     }
 
     private void createAndAddToDocumentList(String id, String serieName, String demoId, String filePath, String client){
@@ -291,11 +311,12 @@ public class AppSelectionActivity extends AppCompatActivity {
         documentsList.add(d);
     }
 
-    private void startDocumentosActivity(List<Documents> documentsList){
+    private void startDocumentosActivity(){
         Log.d(TAG, "startDocumentosActivity: call");
         Intent intent = new Intent(this, DocumentPreviewActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList("listaDocumentos", (ArrayList<? extends Parcelable>) documentsList);
+        bundle.putParcelableArrayList("listaDocumentos", (ArrayList<? extends Parcelable>) this.documentsList);
+        bundle.putParcelableArrayList("documentosEjemplo", (ArrayList<? extends Parcelable>) this.documentsEjemplosList);
         intent.putExtras(bundle);
         startActivity(intent);
         finish();
@@ -308,13 +329,24 @@ public class AppSelectionActivity extends AppCompatActivity {
         Collections.sort(arrayList, new Comparator<Documents>() {
             @Override
             public int compare(Documents o1, Documents o2) {
-                return o1.getId().compareTo(o2.getId());
+                return extractInt(o1.getDemoId()) - extractInt(o2.getDemoId());
             }
         });
 
-        Collections.sort(arrayList, Collections.<Documents>reverseOrder());
+        Collections.reverse(arrayList);
 
         return arrayList;
+    }
+
+    private int extractInt(String s){
+        return s.isEmpty() ? 0 : Integer.parseInt(s);
+    }
+
+    private void errorVolley(String volleyError){
+        cargandoDialog();
+        VolleyErrorResponseDialog volleyErrorResponseDialog = new VolleyErrorResponseDialog(volleyError);
+        volleyErrorResponseDialog.setCancelable(false);
+        volleyErrorResponseDialog.show(getSupportFragmentManager(), "noConfigLoaded");
     }
 
 }

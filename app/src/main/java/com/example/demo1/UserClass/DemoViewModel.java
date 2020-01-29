@@ -97,6 +97,14 @@ public class DemoViewModel {
         this.tokenExpirationTime = tokenExpirationTime;
     }
 
+    public String getCreationTime() {
+        return creationTime;
+    }
+
+    public void setCreationTime(String creationTime) {
+        this.creationTime = creationTime;
+    }
+
     public String getClient() {
         return clientName;
     }
@@ -121,13 +129,6 @@ public class DemoViewModel {
         isActive = active;
     }
 
-    public String getCreationTime() {
-        return creationTime;
-    }
-
-    public void setCreationTime(String creationTime) {
-        this.creationTime = creationTime;
-    }
 
     public String getUpdateTime() {
         return updateTime;

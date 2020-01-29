@@ -40,6 +40,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class AperturaCuentaMainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener,
         BuscarIdDialog.BuscarIdDialogListener,
@@ -60,6 +61,8 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
 
     private View cargandoProgresBar;
     private Button calendar;
+
+    private Date dateGuardada;
 
 
     @Override
@@ -230,8 +233,9 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
         paisItemArrayList.add(new PaisItem("Brasil", R.drawable.bandera_brasil));
         paisItemArrayList.add(new PaisItem("Chile", R.drawable.bandera_chile));
         paisItemArrayList.add(new PaisItem("Colombia", R.drawable.bandera_colombia));
-        paisItemArrayList.add(new PaisItem("Uruguay", R.drawable.bandera_uruguay));
+        paisItemArrayList.add(new PaisItem("México", R.drawable.bandera_mexico));
         paisItemArrayList.add(new PaisItem("Peru", R.drawable.bandera_peru));
+        paisItemArrayList.add(new PaisItem("Uruguay", R.drawable.bandera_uruguay));
         paisItemArrayList.add(new PaisItem("Venezuela", R.drawable.bandera_venezuela));
     }
 
@@ -338,6 +342,7 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
         String fecha = calendar.getText().toString();
 
         MetadataCliente metadataCliente = new MetadataCliente(razonSocialIngresad,mailIngresado,sexoIngresado, paisSeleccionado,null, null, null, fecha);
+        metadataCliente.setFecha(dateGuardada);
         DemoViewModelSingleton.getInstance().setMetadataCliente(metadataCliente);
         //todo guardar RazonSocialIngresada como client en DocumentViewModel
         DemoViewModelSingleton.getInstance().getDemoViewModelGuardado().setClientNameNew(razonSocialIngresad);
@@ -364,6 +369,7 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
     private void selectActualDate() {
         Calendar c = Calendar.getInstance();
         String fecha = DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime());
+        dateGuardada = c.getTime();
         calendar.setText(fecha);
     }
 
@@ -374,6 +380,7 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
         c.set(Calendar.MONTH, month);
         c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         String fecha = DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime());
+        dateGuardada = c.getTime();
         calendar.setText(fecha);
     }
 

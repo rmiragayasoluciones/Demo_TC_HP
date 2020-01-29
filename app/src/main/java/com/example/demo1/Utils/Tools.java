@@ -1,22 +1,52 @@
 package com.example.demo1.Utils;
 
-import java.io.IOException;
+import com.example.demo1.UserClass.Documents;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class Tools {
+
+
+
+
+    public static List<Documents> sortArraylist(List<Documents> arrayList){
+
+        Collections.sort(arrayList, new Comparator<Documents>() {
+            @Override
+            public int compare(Documents o1, Documents o2) {
+                return o1.getId().compareTo(o2.getId());
+            }
+        });
+
+        Collections.reverse(arrayList);
+
+        return arrayList;
+    }
+
+
     private static final String TAG = "Tools";
     // TCP/HTTP/DNS (depending on the port, 53=DNS, 80=HTTP, etc.)
-    public static boolean isOnline() {
-        Runtime runtime = Runtime.getRuntime();
-        try {
-            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
-            int     exitValue = ipProcess.waitFor();
-            return (exitValue == 0);
-        }
-        catch (IOException e)          { e.printStackTrace(); }
-        catch (InterruptedException e) { e.printStackTrace(); }
+//    public static boolean isOnline() {
+//        Runtime runtime = Runtime.getRuntime();
+//        try {
+//            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+//            int     exitValue = ipProcess.waitFor();
+//            return (exitValue == 0);
+//        }
+//        catch (IOException e)          {
+//            e.printStackTrace();
+//            return false;
+//        }
+//        catch (InterruptedException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//
+//    }
 
-        return false;
-    }
+
 
 //    public static void setSystemBarColor(Activity act) {
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

@@ -1,6 +1,13 @@
 package com.example.demo1.UserClass;
 
+import android.util.Log;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class MetadataCliente {
+    private static final String TAG = "MetadataCliente";
     private String businessName;
     private String email;
     private String sex;
@@ -8,7 +15,7 @@ public class MetadataCliente {
     private String documentName;
     private String code;
     private String reason;
-    private String fecha;
+    private Date fecha;
 
     public MetadataCliente(String businessName, String mail, String sex, String country,String documentName, String codigoDe, String razonDe ,String fecha) {
         this.businessName = businessName;
@@ -18,7 +25,7 @@ public class MetadataCliente {
         this.documentName = documentName;
         this.code = codigoDe;
         this.reason = razonDe;
-        this.fecha = fecha;
+        this.fecha = convertStringToDate(fecha);
     }
 
     public MetadataCliente() {
@@ -56,11 +63,11 @@ public class MetadataCliente {
         this.country = country;
     }
 
-    public String getFecha() {
+    public Date getFecha() {
         return fecha;
     }
 
-    public void setFecha(String fecha) {
+    public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
 
@@ -87,4 +94,21 @@ public class MetadataCliente {
     public void setReason(String reason) {
         this.reason = reason;
     }
+
+    public Date convertStringToDate(String fechaString){
+        Log.d(TAG, "convertStringToDate: convertir fecha " + fechaString);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss aa");
+        Date convertedDate = new Date();
+        try {
+            convertedDate = dateFormat.parse(fechaString);
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return convertedDate;
+
+    }
 }
+
+

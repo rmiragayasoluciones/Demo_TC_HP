@@ -20,19 +20,20 @@ import com.example.demo1.UserClass.Documents;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecorteFirmaFragment extends Fragment implements DocumentRecyclerAdapter.OnItemClickListener {
-    private static final String TAG = "RecorteFirmaFragment";
+public class EjemplosFragment extends Fragment implements DocumentRecyclerAdapter.OnItemClickListener {
+    private static final String TAG = "EjemplosFragment";
 
     private RecyclerView recyclerView;
     private DocumentRecyclerAdapter adapter;
     private List<Documents> documentsList;
-    private RecorteFragmentListener mListener;
+    private EjemplosFragmentListener mListener;
 
-    public interface RecorteFragmentListener{
+
+    public interface EjemplosFragmentListener{
         void onDocuClick(Documents documentSeleccionado);
     }
 
-    public RecorteFirmaFragment(List<Documents> documentsList) {
+    public EjemplosFragment(List<Documents> documentsList) {
         this.documentsList = separarCategorias(documentsList);
     }
 
@@ -70,11 +71,11 @@ public class RecorteFirmaFragment extends Fragment implements DocumentRecyclerAd
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof RecorteFragmentListener){
-            mListener = (RecorteFragmentListener) context;
+        if (context instanceof EjemplosFragmentListener){
+            mListener = (EjemplosFragmentListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implements RecorteFragmentListener");
+                    + " must implements EjemplosFragmentListener");
         }
     }
 }

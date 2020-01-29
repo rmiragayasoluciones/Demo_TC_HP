@@ -1,5 +1,6 @@
 package com.example.demo1.UserClass;
 
+import com.hp.jetadvantage.link.api.printer.PrintAttributesCaps;
 import com.hp.jetadvantage.link.api.scanner.FileOptionsAttributesCaps;
 import com.hp.jetadvantage.link.api.scanner.ScanAttributes;
 import com.hp.jetadvantage.link.api.scanner.ScanAttributesCaps;
@@ -12,6 +13,7 @@ public class ScanUserAttriputes {
     private ScanAttributesCaps caps;
     private ScanAttributes defaultCaps;
     private FileOptionsAttributesCaps mFileOptionsAttributesCaps = null;
+    private PrintAttributesCaps printCaps;
 
 
     private ScanUserAttriputes(){
@@ -46,5 +48,13 @@ public class ScanUserAttriputes {
 
     public void setmFileOptionsAttributesCaps(FileOptionsAttributesCaps mFileOptionsAttributesCaps) {
         this.mFileOptionsAttributesCaps = mFileOptionsAttributesCaps;
+    }
+
+    public PrintAttributesCaps getPrintCaps() {
+        return printCaps;
+    }
+
+    public void setPrintCaps(PrintAttributesCaps printCaps) {
+        this.printCaps = printCaps;
     }
 }

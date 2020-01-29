@@ -94,7 +94,50 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tabDocumentsId" />
+        app:layout_constraintTop_toBottomOf="@+id/tabDocumentsId" >
+
+    </com.github.barteksc.pdfviewer.PDFView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cargarPdfPrevId"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/white"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="@+id/pdfPreview"
+        app:layout_constraintEnd_toEndOf="@+id/pdfPreview"
+        app:layout_constraintStart_toStartOf="@+id/pdfPreview"
+        app:layout_constraintTop_toTopOf="@+id/pdfPreview">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="32dp"
+            android:src="@drawable/fileplaceholder100x100"
+            android:tint="#DDE0E0E0"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:gravity="center"
+            android:text="Seleccione el archivo para previsualizar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

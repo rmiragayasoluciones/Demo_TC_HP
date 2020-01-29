@@ -33,7 +33,8 @@ public class DocuFiliaFragment extends Fragment implements DocumentRecyclerAdapt
     }
 
     public DocuFiliaFragment(List<Documents> documentsList) {
-        this.documentsList = separarCategorias(documentsList);
+
+        this.documentsList = separarCategorias(documentsList) ;
     }
 
     @Nullable

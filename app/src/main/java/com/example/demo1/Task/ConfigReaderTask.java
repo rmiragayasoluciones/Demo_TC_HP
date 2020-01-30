@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.example.demo1.MainActivity;
 import com.example.demo1.UserClass.TokenCliente;
+import com.example.demo1.Utils.Tools;
 import com.google.gson.Gson;
 import com.hp.jetadvantage.link.api.Result;
 import com.hp.jetadvantage.link.api.config.ConfigService;
@@ -51,6 +52,14 @@ public class ConfigReaderTask extends AsyncTask<Void, Void, JSONObject> {
             Gson gson = new Gson();
             TokenCliente tokenCliente = gson.fromJson(jsonObject.toString(), TokenCliente.class);
             Log.d(TAG, "onPostExecute token=" + tokenCliente.getTokenCliente() );
+            //todo guardar este url
+
+            /** guarda url */
+            Tools.saveUrlonSharedPreference(mContextRef.get(), tokenCliente.getUrl());
+            /** guarda url */
+
+
+            Log.d(TAG, "onPostExecute url=" + tokenCliente.getUrl());
 
             /** For Debug */
 //            tokenCliente.setTokenCliente("j2xcs");

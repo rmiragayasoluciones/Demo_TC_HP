@@ -15,14 +15,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".PrintFileActivityTest"></activity>
+        <activity android:name=".PrintFileActivityTest" />
         <activity
             android:name=".DocumentPreviewActivity"
             android:noHistory="true" />
         <activity android:name=".RecorteDeFirmaActivity" />
         <activity android:name=".QRandBarCodeActivity" />
         <activity android:name=".CodigoBarraYQRActivity" />
-        <activity android:name=".TestActivity" />
         <activity android:name=".DocuFiliatoriosActivity" />
         <activity android:name=".ProductoActivity" />
         <activity android:name=".SeleccionSerieDocumentalActivity" />

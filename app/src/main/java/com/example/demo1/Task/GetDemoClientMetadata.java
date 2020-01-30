@@ -17,6 +17,7 @@ import com.example.demo1.AperturaCuentaMainActivity;
 import com.example.demo1.R;
 import com.example.demo1.UserClass.DemoViewModelSingleton;
 import com.example.demo1.UserClass.MetadataCliente;
+import com.example.demo1.Utils.Tools;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -50,7 +51,8 @@ public class GetDemoClientMetadata extends AsyncTask<Void, Void, Void> {
          * */
         Log.d(TAG, "idCliente= " + this.clientId);
         final String token = DemoViewModelSingleton.getInstance().getDemoViewModelGuardado().getToken();
-        String url = "http://10.13.0.34:5656/api/Demos/GetDemoClientMetadata/" + token + "&" + this.clientId;
+        String preUrl = Tools.getUrlFromConfirg(mContextRef.get());
+        String url = preUrl + "/Demos/GetDemoClientMetadata/" + token + "&" + this.clientId;
         /** FOR DEMO*/
 
         final JsonObjectRequest jsonObjectRequestrequest = new JsonObjectRequest(Request.Method.GET, url, null,

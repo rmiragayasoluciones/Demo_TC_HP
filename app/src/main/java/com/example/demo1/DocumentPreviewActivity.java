@@ -43,6 +43,7 @@ import com.example.demo1.UserClass.DemoViewModelSingleton;
 import com.example.demo1.UserClass.Documents;
 import com.example.demo1.UserClass.GetDocumentViewModel;
 import com.example.demo1.Utils.ImagenManipulation;
+import com.example.demo1.Utils.Tools;
 import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
@@ -234,7 +235,9 @@ public class DocumentPreviewActivity extends AppCompatActivity implements DocuFi
 
     public void getDocumentFile(final String id){
         Log.d(TAG, "getDocumentFile: call");
-        String mUrl = "http://10.13.0.34:5656/api/Documents/GetDocumentFile/" + id;
+        String preUrl = Tools.getUrlFromConfirg(this);
+
+        String mUrl = preUrl + "/Documents/GetDocumentFile/" + id;
         InputStreamVolleyRequest request = new InputStreamVolleyRequest(Request.Method.GET, mUrl, new Response.Listener<byte[]>() {
             @Override
             public void onResponse(byte[] response) {
@@ -292,7 +295,9 @@ public class DocumentPreviewActivity extends AppCompatActivity implements DocuFi
 
         RequestQueue queue = VolleySingleton.getInstance(this).getmRequestQueue();
 
-        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, "http://10.13.0.34:5656/api/Documents/GetDocument/" + idDocument, null,
+        String preUrl = Tools.getUrlFromConfirg(this);
+
+        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, preUrl + "/Documents/GetDocument/" + idDocument, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {

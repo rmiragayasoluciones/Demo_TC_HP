@@ -17,6 +17,7 @@ import com.android.volley.VolleyError;
 import com.example.demo1.R;
 import com.example.demo1.UserClass.DemoViewModelSingleton;
 import com.example.demo1.UserClass.Error500;
+import com.example.demo1.Utils.Tools;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -33,7 +34,7 @@ import java.util.Map;
 
 public class CreateDocument extends AsyncTask<Void, Void, Void> {
     private static final String TAG = "CreateDocument";
-    private static final String URL = "http://10.13.0.34:5656/api/Documents/Create";
+    private static final String URL = "/Documents/Create";
 
     private OnCreateDocumentsListener mListener;
 
@@ -65,7 +66,16 @@ public class CreateDocument extends AsyncTask<Void, Void, Void> {
         final String token = DemoViewModelSingleton.getInstance().getDemoViewModelGuardado().getToken();
         final RequestQueue queue = VolleySingleton.getInstance(mContext.get()).getmRequestQueue();
 
-        final VolleyMultipartRequest volleyMultipartRequest = new VolleyMultipartRequest(Request.Method.POST, URL,
+////        SharedPreferences sharedPreferences = mContext.get().getSharedPreferences(MainActivity.SHAREDPREF,Context.MODE_PRIVATE);
+//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext.get().getApplicationContext());
+//        String preUrl = sharedPreferences.getString(MainActivity.URL, "http://10.13.0.34:5656");
+
+        String preUrl = Tools.getUrlFromConfirg(mContext.get());
+
+        Log.d(TAG, "preUrl: " + preUrl);
+        Log.d(TAG, "preUrl + url: " + preUrl + URL);
+
+        final VolleyMultipartRequest volleyMultipartRequest = new VolleyMultipartRequest(Request.Method.POST, preUrl + URL,
                 new Response.Listener<NetworkResponse>() {
                     @Override
                     public void onResponse(NetworkResponse response) {

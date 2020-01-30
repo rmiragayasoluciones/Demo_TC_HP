@@ -15,6 +15,7 @@ import com.example.demo1.MainActivity;
 import com.example.demo1.R;
 import com.example.demo1.UserClass.DemoViewModel;
 import com.example.demo1.UserClass.DemoViewModelSingleton;
+import com.example.demo1.Utils.Tools;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -45,7 +46,8 @@ public class GetDemoFromApi extends AsyncTask<Void, Void, Void> {
         Log.d(TAG, "doInBackground: call");
         RequestQueue queue = VolleySingleton.getInstance(mContextRef.get()).getmRequestQueue();
         Log.d(TAG, "tokenCliente= " + this.tokenCliente);
-        String url = "http://10.13.0.34:5656/api/Demos/GetDemo/" + this.tokenCliente;
+        String preUrl = Tools.getUrlFromConfirg(mContextRef.get());
+        String url = preUrl + "/Demos/GetDemo/" + this.tokenCliente;
 
         JsonObjectRequest jsonObjectRequestrequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {

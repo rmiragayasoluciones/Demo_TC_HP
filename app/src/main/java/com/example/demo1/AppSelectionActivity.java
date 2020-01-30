@@ -33,6 +33,7 @@ import com.example.demo1.Dialogs.VolleyErrorResponseDialog;
 import com.example.demo1.Task.VolleySingleton;
 import com.example.demo1.UserClass.DemoViewModelSingleton;
 import com.example.demo1.UserClass.Documents;
+import com.example.demo1.Utils.Tools;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -242,8 +243,9 @@ public class AppSelectionActivity extends AppCompatActivity implements VolleyErr
         final String token = DemoViewModelSingleton.getInstance().getDemoViewModelGuardado().getToken();
 
         final RequestQueue queue = VolleySingleton.getInstance(this).getmRequestQueue();
+        String preUrl = Tools.getUrlFromConfirg(this);
 
-        final JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, "http://10.13.0.34:5656/api/Documents/GetDocuments/" + token, null,
+        final JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, preUrl + "/Documents/GetDocuments/" + token, null,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {

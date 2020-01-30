@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity{
     private static final String TAG = "MainActivity";
     private static final int METODOS_COMPLETADOS = 2;
 
+
     private ImageView logo;
     private TextView poweredBy;
     private int metodos = 0;
@@ -50,8 +51,11 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         logo = findViewById(R.id.logohp);
         poweredBy = findViewById(R.id.textoPoweredBySoluciones);
+
+
 
 
         /** for hp */
@@ -60,10 +64,11 @@ public class MainActivity extends AppCompatActivity{
         splashAnimation();
     }
 
+
+
     @Override
     protected void onResume() {
         super.onResume();
-
 
         mInitializationTask = new InitializationTask(this);
         mInitializationTask.execute();
@@ -143,7 +148,6 @@ public class MainActivity extends AppCompatActivity{
         Log.d(TAG, "startNextActivity: inicia");
 
         Intent intent = new Intent(this, AppSelectionActivity.class);
-//        Intent intent = new Intent(this, PrintFileActivityTest.class);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         finish();

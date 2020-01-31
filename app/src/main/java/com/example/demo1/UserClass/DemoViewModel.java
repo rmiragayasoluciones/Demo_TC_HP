@@ -13,10 +13,10 @@ public class DemoViewModel {
     private String description;
     private String logo;
     private String token;
-    private String tokenExpirationTime;
+    private Date tokenExpirationTime;
     private boolean isExpired;
     private boolean isActive;
-    private String creationTime;
+    private Date creationTime;
     private String updateTime;
     private String url;
     private String workPathConfig;
@@ -31,10 +31,10 @@ public class DemoViewModel {
         this.description = description;
         this.logo = logo.toString();
         this.token = token;
-        this.tokenExpirationTime = tokenExpirationTime.toString();
+        this.tokenExpirationTime = tokenExpirationTime;
         this.isExpired = isExpired;
         this.isActive = isActive;
-        this.creationTime = creationTime.toString();
+        this.creationTime = creationTime;
         this.updateTime = updateTime.toString();
         this.url = url;
         this.workPathConfig = workPathConfig;
@@ -89,19 +89,19 @@ public class DemoViewModel {
         this.token = token;
     }
 
-    public String getTokenExpirationTime() {
+    public Date getTokenExpirationTime() {
         return tokenExpirationTime;
     }
 
-    public void setTokenExpirationTime(String tokenExpirationTime) {
+    public void setTokenExpirationTime(Date tokenExpirationTime) {
         this.tokenExpirationTime = tokenExpirationTime;
     }
 
-    public String getCreationTime() {
+    public Date getCreationTime() {
         return creationTime;
     }
 
-    public void setCreationTime(String creationTime) {
+    public void setCreationTime(Date creationTime) {
         this.creationTime = creationTime;
     }
 

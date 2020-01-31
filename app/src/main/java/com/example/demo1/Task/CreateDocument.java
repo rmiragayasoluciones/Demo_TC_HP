@@ -66,10 +66,6 @@ public class CreateDocument extends AsyncTask<Void, Void, Void> {
         final String token = DemoViewModelSingleton.getInstance().getDemoViewModelGuardado().getToken();
         final RequestQueue queue = VolleySingleton.getInstance(mContext.get()).getmRequestQueue();
 
-////        SharedPreferences sharedPreferences = mContext.get().getSharedPreferences(MainActivity.SHAREDPREF,Context.MODE_PRIVATE);
-//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext.get().getApplicationContext());
-//        String preUrl = sharedPreferences.getString(MainActivity.URL, "http://10.13.0.34:5656");
-
         String preUrl = Tools.getUrlFromConfirg(mContext.get());
 
         Log.d(TAG, "preUrl: " + preUrl);

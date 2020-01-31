@@ -32,6 +32,7 @@ import com.example.demo1.UserClass.ScanOptionsSelected;
 import com.example.demo1.UserClass.ScanUserAttriputes;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.hp.jetadvantage.link.api.Result;
 import com.hp.jetadvantage.link.api.job.JobInfo;
 import com.hp.jetadvantage.link.api.job.JobService;
@@ -517,7 +518,9 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
         demoViewModelSingleton.getMetadataCliente().setDocumentName(newDocumentName);
         CreateDocumentViewModel createDocumentViewModel = new CreateDocumentViewModel(serieName, demoId, client, demoViewModelSingleton.getMetadataCliente());
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd")
+                .create();
 
         return gson.toJson(createDocumentViewModel);
 
@@ -584,7 +587,6 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
             if (images != null && images.size() > 0) {
                 Log.d(TAG, "Images: " + Arrays.toString(images.toArray()));
             }
-
 
             /** NUEVO*/
             String ruta = scanJobData.getFileNames().get(0);

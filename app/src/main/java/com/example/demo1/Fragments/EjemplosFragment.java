@@ -30,11 +30,14 @@ public class EjemplosFragment extends Fragment implements DocumentRecyclerAdapte
 
 
     public interface EjemplosFragmentListener{
-        void onDocuClick(Documents documentSeleccionado);
+        void onEjemploDocuClick(String ejemploDocuIc);
     }
 
-    public EjemplosFragment(List<Documents> documentsList) {
-        this.documentsList = separarCategorias(documentsList);
+    public EjemplosFragment() {
+        this.documentsList = new ArrayList<>();
+        this.documentsList.add(new Documents("1","QR", "demo id", null, null));
+        this.documentsList.add(new Documents("2","Barcode", "demo id", null, null));
+        this.documentsList.add(new Documents("3","Recorte de Firma", "demo id", null, null));
     }
 
     @Nullable
@@ -54,19 +57,19 @@ public class EjemplosFragment extends Fragment implements DocumentRecyclerAdapte
     @Override
     public void onItemClick(int position) {
         Toast.makeText(getActivity(), "Click en " + documentsList.get(position).getId(), Toast.LENGTH_SHORT).show();
-        mListener.onDocuClick(documentsList.get(position));
+        mListener.onEjemploDocuClick(documentsList.get(position).getId());
         //abrir el Fragment con el Archivo PDF
     }
 
-    private List<Documents> separarCategorias(List<Documents> documentsList){
-        List<Documents> documentsSeparados = new ArrayList<>();
-        for (Documents d : documentsList){
-            if (d.getSerieName().toLowerCase().equalsIgnoreCase("signature")){
-                documentsSeparados.add(d);
-            }
-        }
-        return documentsSeparados;
-    }
+//    private List<Documents> separarCategorias(List<Documents> documentsList){
+//        List<Documents> documentsSeparados = new ArrayList<>();
+//        for (Documents d : documentsList){
+//            if (d.getSerieName().toLowerCase().equalsIgnoreCase("signature")){
+//                documentsSeparados.add(d);
+//            }
+//        }
+//        return documentsSeparados;
+//    }
 
     @Override
     public void onAttach(@NonNull Context context) {

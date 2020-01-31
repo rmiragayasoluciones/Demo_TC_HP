@@ -18,6 +18,7 @@ import com.example.demo1.UserClass.DemoViewModelSingleton;
 import com.example.demo1.Utils.Tools;
 import com.google.gson.Gson;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
@@ -84,6 +85,17 @@ public class GetDemoFromApi extends AsyncTask<Void, Void, Void> {
     /** Crea el DemoViewModel y guarda en un singleton */
     private void saveInSingleton(JSONObject jsonObject){
         Log.d(TAG, "jsonObject");
+
+        String tokenExp = null;
+        try {
+            tokenExp = jsonObject.get("tokenExpirationTime").toString();
+            Log.d(TAG, "tokenExpirationTime: " + tokenExp);
+            jsonObject.put("tokenExpirationTime", Tools.convertDateTimeInDateString(jsonObject.get("tokenExpirationTime").toString()));
+            jsonObject.put("creationTime", Tools.convertDateTimeInDateString(jsonObject.get("creationTime").toString()));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         Gson gson = new Gson();
         DemoViewModel demoViewModel = gson.fromJson(jsonObject.toString(), DemoViewModel.class);

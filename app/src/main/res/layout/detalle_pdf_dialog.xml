@@ -295,7 +295,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="gone"
-                    tools:visibility="visible">
+                    tools:visibility="gone">
 
                     <TextView
                         android:id="@+id/clienteIdq"
@@ -336,7 +336,6 @@
                         app:layout_constraintStart_toEndOf="@+id/documentNameTituloIdq"
                         app:layout_constraintTop_toTopOf="@+id/documentNameTituloIdq"
                         tools:text="Nombre Ejemplo" />
-
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -524,6 +523,28 @@
                         tools:text="Argentina" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/ejemplosConsrtaint"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    tools:visibility="invisible">
+
+
+                    <TextView
+                        android:id="@+id/textView17"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:text="Caratulas Ejemplo"
+                        android:textColor="@color/colorPrimarymasDark"
+                        android:textSize="18sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
             </androidx.cardview.widget.CardView>
 
             <Button

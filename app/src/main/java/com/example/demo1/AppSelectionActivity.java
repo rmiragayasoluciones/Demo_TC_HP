@@ -74,7 +74,7 @@ public class AppSelectionActivity extends AppCompatActivity implements VolleyErr
             "abrir_cuenta.json",
             "qr.json",
             "firma.json",
-            "firma.json"
+            "print.json"
     };
 
 
@@ -337,7 +337,23 @@ public class AppSelectionActivity extends AppCompatActivity implements VolleyErr
 
         Collections.reverse(arrayList);
 
+        if (arrayList.size()>100){
+            Log.d(TAG, "Array mayor a 100, tiene " + arrayList.size() + " documentos");
+            arrayList = limitarLista(arrayList);
+        }
+
+
         return arrayList;
+    }
+
+    private List<Documents> limitarLista(List<Documents> arrayList) {
+        ArrayList<Documents> solo100 = new ArrayList();
+
+        for (int i = 0 ; i < 100; i++ ){
+            solo100.add(arrayList.get(i));
+        }
+
+        return solo100;
     }
 
     private int extractInt(String s){

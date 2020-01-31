@@ -134,6 +134,7 @@ public class DocumentPreviewActivity extends AppCompatActivity implements DocuFi
         Bundle bundle = getIntent().getExtras();
         documentsList = bundle.getParcelableArrayList("listaDocumentos");
         documentsEjemploList = bundle.getParcelableArrayList("documentosEjemplo");
+        Log.d(TAG, "onCreate: documentListTene " + documentsList.size() + " documentos");
 
 
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
@@ -144,7 +145,7 @@ public class DocumentPreviewActivity extends AppCompatActivity implements DocuFi
         viewPagerAdapter.addFragment(new ProductosFragment(documentsList), "Productos");
         viewPagerAdapter.addFragment(new QRBarcodeFragment(documentsList), "QR Y Barcode");
         viewPagerAdapter.addFragment(new RecorteFirmaFragment(documentsList), "Recorte de Firma");
-        viewPagerAdapter.addFragment(new EjemplosFragment(documentsEjemploList), "Ejemplos");
+        viewPagerAdapter.addFragment(new EjemplosFragment(), "Ejemplos");
 
         //adapter Setup
         viewPager.setAdapter(viewPagerAdapter);
@@ -229,15 +230,16 @@ public class DocumentPreviewActivity extends AppCompatActivity implements DocuFi
     public void onDocuClick(Documents documentSeleccionado) {
         Log.d(TAG, "descargar y mostrar el : " + documentSeleccionado.getId());
         documentSing = documentSeleccionado;
-        getDocumentFile(documentSeleccionado.getId());
+        deleteAllFiles();
+        getDocumentFile(documentSeleccionado.getId(),"/Documents/GetDocumentFile/");
         //todo iniciar loading
     }
 
-    public void getDocumentFile(final String id){
+    public void getDocumentFile(final String id, String urlGetDocument){
         Log.d(TAG, "getDocumentFile: call");
         String preUrl = Tools.getUrlFromConfirg(this);
 
-        String mUrl = preUrl + "/Documents/GetDocumentFile/" + id;
+        String mUrl = preUrl + urlGetDocument + id;
         InputStreamVolleyRequest request = new InputStreamVolleyRequest(Request.Method.GET, mUrl, new Response.Listener<byte[]>() {
             @Override
             public void onResponse(byte[] response) {
@@ -331,6 +333,7 @@ public class DocumentPreviewActivity extends AppCompatActivity implements DocuFi
 
     private void openDetallePdf(File file, GetDocumentViewModel documentViewModel){
         if (file ==null){
+            Log.d(TAG, "openDetallePdf: file es null");
             return;
         }
         DetallePdfPreviewDialog dialog = new DetallePdfPreviewDialog(file, documentViewModel, tabSelected);
@@ -402,6 +405,13 @@ public class DocumentPreviewActivity extends AppCompatActivity implements DocuFi
     protected void onDestroy() {
         super.onDestroy();
         deleteAllFiles();
+    }
+
+    @Override
+    public void onEjemploDocuClick(String ejemploDocuIc) {
+        deleteAllFiles();
+        documentSing = new Documents("id", null, null, null, null);
+        getDocumentFile(ejemploDocuIc, "/Documents/GetCoverFile/");
     }
 
 

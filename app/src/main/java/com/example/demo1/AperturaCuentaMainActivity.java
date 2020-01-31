@@ -33,6 +33,7 @@ import com.example.demo1.Task.GetDemoClientMetadata;
 import com.example.demo1.UserClass.DemoViewModelSingleton;
 import com.example.demo1.UserClass.MetadataCliente;
 import com.example.demo1.Utils.ImagenManipulation;
+import com.example.demo1.Utils.Tools;
 import com.example.demo1.Utils.ViewAnimation;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -339,10 +340,11 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
         String sexoIngresado = getRadioBtnSelected();
         PaisItem paisSeleccionadoObj = (PaisItem) spinner.getSelectedItem();
         String paisSeleccionado = paisSeleccionadoObj.getmPaisNombre();
-        String fecha = calendar.getText().toString();
+        Log.d(TAG, "dateGuardada.toString(): " + dateGuardada.toString());
+        String fecha = Tools.convertDateStringInDateTime(dateGuardada.getTime());
+        Log.d(TAG, "fecha: " + fecha);
 
         MetadataCliente metadataCliente = new MetadataCliente(razonSocialIngresad,mailIngresado,sexoIngresado, paisSeleccionado,null, null, null, fecha);
-        metadataCliente.setFecha(dateGuardada);
         DemoViewModelSingleton.getInstance().setMetadataCliente(metadataCliente);
         //todo guardar RazonSocialIngresada como client en DocumentViewModel
         DemoViewModelSingleton.getInstance().getDemoViewModelGuardado().setClientNameNew(razonSocialIngresad);

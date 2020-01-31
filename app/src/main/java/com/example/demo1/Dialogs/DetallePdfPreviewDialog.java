@@ -66,6 +66,7 @@ public class DetallePdfPreviewDialog extends AppCompatDialogFragment implements 
         procuts = view.findViewById(R.id.productsConstraint);
         qrBarcode = view.findViewById(R.id.qrBarcodeConstraint);
         firma = view.findViewById(R.id.firmaConstraint);
+        ejemplos = view.findViewById(R.id.ejemplosConsrtaint);
 //        ejemplos = view.findViewById(R.id.constra);
 
 
@@ -94,7 +95,7 @@ public class DetallePdfPreviewDialog extends AppCompatDialogFragment implements 
             case 4:
                 Log.d(TAG, "Ejemplos");
                 ejemplos.setVisibility(View.VISIBLE);
-                bindProductosViews(view);
+//                bindEjemplosViews(view);
                 break;
         }
 

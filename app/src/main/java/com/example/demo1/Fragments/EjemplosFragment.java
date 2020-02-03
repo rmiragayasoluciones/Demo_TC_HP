@@ -35,9 +35,9 @@ public class EjemplosFragment extends Fragment implements DocumentRecyclerAdapte
 
     public EjemplosFragment() {
         this.documentsList = new ArrayList<>();
-        this.documentsList.add(new Documents("1","QR", "demo id", null, null));
-        this.documentsList.add(new Documents("2","Barcode", "demo id", null, null));
-        this.documentsList.add(new Documents("3","Recorte de Firma", "demo id", null, null));
+        this.documentsList.add(new Documents("1","QR", "demo id", null, "Carátula"));
+        this.documentsList.add(new Documents("2","Barcode", "demo id", null, "Carátula"));
+        this.documentsList.add(new Documents("3","Recorte de Firma", "demo id", null, "Carátula"));
     }
 
     @Nullable

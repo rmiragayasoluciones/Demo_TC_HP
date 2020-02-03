@@ -140,7 +140,7 @@ public class DocumentPreviewActivity extends AppCompatActivity implements DocuFi
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
 
 
-        // todo le agregamos las listas de Documentos
+        // adding lists to tabs
         viewPagerAdapter.addFragment(new DocuFiliaFragment(documentsList), "Filiatorios");
         viewPagerAdapter.addFragment(new ProductosFragment(documentsList), "Productos");
         viewPagerAdapter.addFragment(new QRBarcodeFragment(documentsList), "QR Y Barcode");
@@ -178,6 +178,12 @@ public class DocumentPreviewActivity extends AppCompatActivity implements DocuFi
         pdfView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (tabSelected == 4){
+                    //todo abrir dialog con ejemplo
+                    openDetallePdf(file, null);
+
+                    return;
+                }
                 if (documentSing != null){
                     Log.d(TAG, "onClick: abrir detalle docu " + documentSing.getId());
                     //todo cargando
@@ -233,6 +239,14 @@ public class DocumentPreviewActivity extends AppCompatActivity implements DocuFi
         deleteAllFiles();
         getDocumentFile(documentSeleccionado.getId(),"/Documents/GetDocumentFile/");
         //todo iniciar loading
+    }
+
+    @Override
+    public void onEjemploDocuClick(String ejemploDocuIc) {
+        Log.d(TAG, "onEjemploDocuClick: call, Ejemplo Docu " + ejemploDocuIc);
+        deleteAllFiles();
+        documentSing = new Documents("id", null, null, null, null);
+        getDocumentFile(ejemploDocuIc, "/Documents/GetCoverFile/");
     }
 
     public void getDocumentFile(final String id, String urlGetDocument){
@@ -407,12 +421,7 @@ public class DocumentPreviewActivity extends AppCompatActivity implements DocuFi
         deleteAllFiles();
     }
 
-    @Override
-    public void onEjemploDocuClick(String ejemploDocuIc) {
-        deleteAllFiles();
-        documentSing = new Documents("id", null, null, null, null);
-        getDocumentFile(ejemploDocuIc, "/Documents/GetCoverFile/");
-    }
+
 
 
     /**

@@ -1,0 +1,16 @@
+{"id": 0,
+  "serieId": 0,
+  "demoId": 0,
+  "serieName": "string",
+  "filePath": "string",
+  "metadataViewModel": {
+    "client": "string",
+    "businessName": "string",
+    "email": "string",
+    "sex": "string",
+    "country": "string",
+    "date": "2019-12-23T19:11:22.154Z",
+    "code": "string",
+    "reason": "string"
+  }
+}

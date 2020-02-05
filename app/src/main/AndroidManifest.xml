@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.demo1">
+    package="com.soluciones.demoKit">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -15,20 +15,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".PrintFileActivityTest" />
+        <activity android:name="com.soluciones.demoKit.PrintFileActivityTest" />
         <activity
-            android:name=".DocumentPreviewActivity"
+            android:name="com.soluciones.demoKit.DocumentPreviewActivity"
             android:noHistory="true" />
-        <activity android:name=".RecorteDeFirmaActivity" />
-        <activity android:name=".QRandBarCodeActivity" />
-        <activity android:name=".CodigoBarraYQRActivity" />
-        <activity android:name=".DocuFiliatoriosActivity" />
-        <activity android:name=".ProductoActivity" />
-        <activity android:name=".SeleccionSerieDocumentalActivity" />
-        <activity android:name=".AperturaCuentaMainActivity" />
-        <activity android:name=".AppSelectionActivity" />
+        <activity android:name="com.soluciones.demoKit.RecorteDeFirmaActivity" />
+        <activity android:name="com.soluciones.demoKit.QRandBarCodeActivity" />
+        <activity android:name="com.soluciones.demoKit.CodigoBarraYQRActivity" />
+        <activity android:name="com.soluciones.demoKit.DocuFiliatoriosActivity" />
+        <activity android:name="com.soluciones.demoKit.ProductoActivity" />
+        <activity android:name="com.soluciones.demoKit.SeleccionSerieDocumentalActivity" />
+        <activity android:name="com.soluciones.demoKit.AperturaCuentaMainActivity" />
+        <activity android:name="com.soluciones.demoKit.AppSelectionActivity" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.soluciones.demoKit.MainActivity"
             android:noHistory="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>

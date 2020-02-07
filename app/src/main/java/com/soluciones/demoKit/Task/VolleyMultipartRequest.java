@@ -146,6 +146,7 @@ public class VolleyMultipartRequest extends Request<NetworkResponse> {
      * @throws IOException
      */
     private void buildTextPart(DataOutputStream dataOutputStream, String parameterName, String parameterValue) throws IOException {
+
         byte[] s1 = (twoHyphens + boundary + lineEnd).getBytes("UTF-8");
         dataOutputStream.write(s1,0,s1.length);
         byte[] s2 = ("Content-Disposition: form-data; name=\"" + parameterName + "\"" + lineEnd).getBytes("UTF-8");

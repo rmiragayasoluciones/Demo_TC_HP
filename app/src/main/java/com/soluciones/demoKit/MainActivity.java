@@ -55,12 +55,8 @@ public class MainActivity extends AppCompatActivity{
         //save position 0 when app start
         Tools.saveViewPagerPosition(this, 0);
 
-
         logo = findViewById(R.id.logohp);
         poweredBy = findViewById(R.id.textoPoweredBySoluciones);
-
-
-
 
         /** for hp */
         scanUserAttriputes = ScanUserAttriputes.getInstance();

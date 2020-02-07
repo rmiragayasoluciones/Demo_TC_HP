@@ -94,7 +94,7 @@ public class GetDemoClientMetadata extends AsyncTask<Void, Void, Void> {
         Gson gson = new Gson();
         MetadataCliente metadataCliente = gson.fromJson(jsonObject.toString(), MetadataCliente.class);
         Log.d(TAG, metadataCliente.toString());
-        mContextRef.get().onClientCorrect(metadataCliente);
+        mContextRef.get().onClientCorrect(metadataCliente, clientId);
         return;
     }
 }

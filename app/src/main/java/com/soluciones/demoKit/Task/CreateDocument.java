@@ -14,11 +14,11 @@ import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.google.gson.Gson;
 import com.soluciones.demoKit.R;
 import com.soluciones.demoKit.UserClass.DemoViewModelSingleton;
 import com.soluciones.demoKit.UserClass.Error500;
 import com.soluciones.demoKit.Utils.Tools;
-import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -158,6 +158,7 @@ public class CreateDocument extends AsyncTask<Void, Void, Void> {
             protected Map<String, DataPart> getByteData() throws AuthFailureError {
                 Map<String, DataPart> params = new HashMap<>();
                 Log.d(TAG, "imagen a subir: " + fileName );
+
                 params.put("File", new DataPart(fileName , getByteArrayFromFile(pathFiles)));
                 return params;
             }

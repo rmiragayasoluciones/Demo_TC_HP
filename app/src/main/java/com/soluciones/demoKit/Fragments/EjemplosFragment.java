@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -56,7 +55,6 @@ public class EjemplosFragment extends Fragment implements DocumentRecyclerAdapte
 
     @Override
     public void onItemClick(int position) {
-        Toast.makeText(getActivity(), "Click en " + documentsList.get(position).getId(), Toast.LENGTH_SHORT).show();
         mListener.onEjemploDocuClick(documentsList.get(position).getId());
         //abrir el Fragment con el Archivo PDF
     }

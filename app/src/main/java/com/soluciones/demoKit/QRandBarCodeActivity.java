@@ -38,6 +38,7 @@ import com.hp.jetadvantage.link.api.job.JobletAttributes;
 import com.hp.jetadvantage.link.api.job.ScanJobData;
 import com.hp.jetadvantage.link.api.scanner.ScanAttributes;
 import com.hp.jetadvantage.link.api.scanner.ScanAttributesCaps;
+import com.soluciones.demoKit.Utils.Tools;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -161,6 +162,7 @@ VolleyErrorResponseDialog.IntentarReconectListener{
                 }else {
                     saveOptionsSelected();
                     scanToDestination("qr-bardoce");
+                    Tools.showSnackbar(coverView);
                 }
 
 
@@ -175,6 +177,8 @@ VolleyErrorResponseDialog.IntentarReconectListener{
             }
         });
 
+        //test this
+        paperSizeCardV.setVisibility(View.GONE);
     }
 
     private void openDialogs() {

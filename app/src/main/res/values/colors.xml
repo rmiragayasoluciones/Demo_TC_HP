@@ -14,4 +14,7 @@
     <color name="errorColor">#F44336</color>
     <color name="amarillo">#E6CB1F</color>
 
+    <color name="grisparaimagen">#59000000</color>
+
+    <color name="grey_60">#666666</color>
 </resources>

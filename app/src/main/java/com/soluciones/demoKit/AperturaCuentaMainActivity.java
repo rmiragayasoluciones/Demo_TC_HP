@@ -65,6 +65,8 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
 
     private Date dateGuardada;
 
+    private String idClienteBuscado = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -275,14 +277,15 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
 
     @Override
     public void buscarId(String idCliente) {
-        //todo GUARDAR ESTE IDCLIENTE
         //aca llama al Async
         closeKeyboard();
         new GetDemoClientMetadata(this, idCliente).execute();
         cargandoDialog();
     }
 
-    public void onClientCorrect(MetadataCliente demoCliente) {
+    public void onClientCorrect(MetadataCliente demoCliente, String clientId) {
+        //todo
+        idClienteBuscado = clientId;
         ConstraintLayout maxLayout =findViewById(R.id.maxLayout);
 
         Snackbar snackbar = Snackbar.make(maxLayout,"Ususario " + demoCliente.getBusinessName() + " encontrado", Snackbar.LENGTH_SHORT);
@@ -300,39 +303,39 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
         if (demoCliente.getEmail() != null) {
             mail.setText(demoCliente.getEmail());
         }
-        if (demoCliente.getCountry() != null) {
-            checkPaisSpinerSelection(demoCliente.getCountry());
-        }
-        if (demoCliente.getSex() != null) {
-            checkSexoRadiobtn(demoCliente.getSex());
-        } else {
-            noEspecifica.setChecked(true);
-        }
+//        if (demoCliente.getCountry() != null) {
+//            checkPaisSpinerSelection(demoCliente.getCountry());
+//        }
+//        if (demoCliente.getSex() != null) {
+//            checkSexoRadiobtn(demoCliente.getSex());
+//        } else {
+//            noEspecifica.setChecked(true);
+//        }
     }
 
-    private void checkPaisSpinerSelection(String pais) {
-
-        for (int i = 0; i < paisItemArrayList.size(); i++) {
-            if (paisItemArrayList.get(i).getmPaisNombre().equalsIgnoreCase(pais)) {
-                spinner.setSelection(i);
-                return;
-            }
-        }
-    }
-
-    private void checkSexoRadiobtn(String sexoCliente) {
-        switch (sexoCliente.toLowerCase()) {
-            case "femenino":
-                femenino.setChecked(true);
-                break;
-            case "masculino":
-                masculino.setChecked(true);
-                break;
-            default:
-                noEspecifica.setChecked(true);
-                break;
-        }
-    }
+//    private void checkPaisSpinerSelection(String pais) {
+//
+//        for (int i = 0; i < paisItemArrayList.size(); i++) {
+//            if (paisItemArrayList.get(i).getmPaisNombre().equalsIgnoreCase(pais)) {
+//                spinner.setSelection(i);
+//                return;
+//            }
+//        }
+//    }
+//
+//    private void checkSexoRadiobtn(String sexoCliente) {
+//        switch (sexoCliente.toLowerCase()) {
+//            case "femenino":
+//                femenino.setChecked(true);
+//                break;
+//            case "masculino":
+//                masculino.setChecked(true);
+//                break;
+//            default:
+//                noEspecifica.setChecked(true);
+//                break;
+//        }
+//    }
 
     private void guardarInputs() {
         String razonSocialIngresad = razonSocial.getText().toString();
@@ -346,8 +349,14 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
 
         MetadataCliente metadataCliente = new MetadataCliente(razonSocialIngresad,mailIngresado,sexoIngresado, paisSeleccionado,null, null, null, fecha);
         DemoViewModelSingleton.getInstance().setMetadataCliente(metadataCliente);
-        //todo guardar RazonSocialIngresada como client en DocumentViewModel
-        DemoViewModelSingleton.getInstance().getDemoViewModelGuardado().setClientNameNew(razonSocialIngresad);
+
+        //si se buscó un id y fue encontrado, se lo pone como ClientName, sino se pone el nombre como Client Name
+        if (!idClienteBuscado.isEmpty()){
+            DemoViewModelSingleton.getInstance().getDemoViewModelGuardado().setClientNameNew(idClienteBuscado);
+        } else {
+            DemoViewModelSingleton.getInstance().getDemoViewModelGuardado().setClientNameNew(razonSocialIngresad);
+        }
+
 
 
         Log.d(TAG, " RazonSocial " + razonSocialIngresad +

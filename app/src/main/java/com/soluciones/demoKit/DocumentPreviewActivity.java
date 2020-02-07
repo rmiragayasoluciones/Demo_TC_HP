@@ -235,6 +235,7 @@ public class DocumentPreviewActivity extends AppCompatActivity implements DocuFi
     @Override
     public void onDocuClick(Documents documentSeleccionado) {
         Log.d(TAG, "descargar y mostrar el : " + documentSeleccionado.getId());
+        file = null;
         documentSing = documentSeleccionado;
         deleteAllFiles();
         getDocumentFile(documentSeleccionado.getId(),"/Documents/GetDocumentFile/");

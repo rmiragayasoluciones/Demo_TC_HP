@@ -183,7 +183,6 @@ public class ScanToDestinationTask extends AsyncTask<Void, Void, String> {
         final ScanAttributes.DocumentFormat df = ScanAttributes.DocumentFormat.MTIFF;
         Log.d(TAG, "Selected Doc Format:" + df);
 
-        //todo Blanco y negro es igual a Gris?
         final ScanAttributes.ColorMode cm = ScanAttributes.ColorMode.MONO;
         Log.d(TAG, "Selected Color Mode:" + cm.name());
 

@@ -57,6 +57,7 @@ public class AppSelectionActivity extends BaseActivity implements VolleyErrorRes
     private List<Documents> documentsList = new ArrayList<>();
     private List<Documents> documentsEjemplosList = new ArrayList<>();
 
+
     private String about_title_array[] = {
             "Apertura de Cuenta",
             "Clasificación de Documentos",
@@ -67,7 +68,7 @@ public class AppSelectionActivity extends BaseActivity implements VolleyErrorRes
             "Cargue la documentación de sus clientes de forma rápida y sencilla.",
             "Direccione sus documentos de forma dinámica mediante la lectura de códigos de Barra/QR.",
             "Recorte la firma de sus clientes plasmadas en formularios de manera dinámica.",
-            "Accede a la cuenta e imprime la documentación"
+            "Accede a la cuenta e imprime la documentación previamente ingresada"
 
     };
     private String about_images_array[] = {
@@ -99,12 +100,8 @@ public class AppSelectionActivity extends BaseActivity implements VolleyErrorRes
         viewPager.setAdapter(myViewPagerAdapter);
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
         viewPager.setCurrentItem(Tools.getViewPagerPosition(this));
-
-//        //test
-//        int a=1/0;
-//        Log.d(TAG, "onCreate: a" + a);
-
     }
+
 
 
     private void bottomProgressDots(int current_index) {
@@ -237,7 +234,7 @@ public class AppSelectionActivity extends BaseActivity implements VolleyErrorRes
         }
     }
 
-    private void cargandoDialog(){
+    private void cargandoDialog() {
         if (cargandoProgresBar.getVisibility() == View.GONE) {
             cargandoProgresBar.setVisibility(View.VISIBLE);
         } else {
@@ -245,7 +242,7 @@ public class AppSelectionActivity extends BaseActivity implements VolleyErrorRes
         }
     }
 
-    private void getListaDocumentos(){
+    private void getListaDocumentos() {
         Log.d(TAG, "getListaDocumentos: CALL");
 
         final String token = DemoViewModelSingleton.getInstance().getDemoViewModelGuardado().getToken();
@@ -260,14 +257,14 @@ public class AppSelectionActivity extends BaseActivity implements VolleyErrorRes
                         Log.d(TAG, "onResponse: call");
                         try {
 
-                            for (int i = 0; i< response.length();i++){
+                            for (int i = 0; i < response.length(); i++) {
                                 JSONObject documento = response.getJSONObject(i);
 
                                 createAndAddToDocumentList(documento.getString("id")
-                                        ,documento.getString("serieName")
-                                        ,documento.getString("demoId")
-                                        ,documento.getString("filePath")
-                                        ,documento.getString("client"));
+                                        , documento.getString("serieName")
+                                        , documento.getString("demoId")
+                                        , documento.getString("filePath")
+                                        , documento.getString("client"));
 
                             }
                             documentsList = sortArraylist(documentsList);
@@ -276,7 +273,7 @@ public class AppSelectionActivity extends BaseActivity implements VolleyErrorRes
                             //TODO MANDAR A DESCARGAR LOS DOCUMENTOS DE EJEMPLO Y DESPUES LLAMAR STARTDOCUMENTS  startDocumentosActivity();
                             getDocumentosEjemplo();
 
-                        } catch (JSONException e){
+                        } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
@@ -293,7 +290,7 @@ public class AppSelectionActivity extends BaseActivity implements VolleyErrorRes
                 }
                 error.printStackTrace();
             }
-        }){
+        }) {
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
@@ -311,17 +308,17 @@ public class AppSelectionActivity extends BaseActivity implements VolleyErrorRes
         queue.add(request);
     }
 
-    private void getDocumentosEjemplo(){
+    private void getDocumentosEjemplo() {
         //todo cuando este el metodo, aca bajar los archivos ejemplo y cargarlos a "documentsEjemplosList" y después llamar:
         startDocumentosActivity();
     }
 
-    private void createAndAddToDocumentList(String id, String serieName, String demoId, String filePath, String client){
-        Documents d = new Documents(id,serieName, demoId, filePath, client);
+    private void createAndAddToDocumentList(String id, String serieName, String demoId, String filePath, String client) {
+        Documents d = new Documents(id, serieName, demoId, filePath, client);
         documentsList.add(d);
     }
 
-    private void startDocumentosActivity(){
+    private void startDocumentosActivity() {
         Log.d(TAG, "startDocumentosActivity: call");
         Intent intent = new Intent(this, DocumentPreviewActivity.class);
         Bundle bundle = new Bundle();
@@ -334,7 +331,7 @@ public class AppSelectionActivity extends BaseActivity implements VolleyErrorRes
 
     }
 
-    private List<Documents> sortArraylist(List<Documents> arrayList){
+    private List<Documents> sortArraylist(List<Documents> arrayList) {
 
         Collections.sort(arrayList, new Comparator<Documents>() {
             @Override
@@ -345,7 +342,7 @@ public class AppSelectionActivity extends BaseActivity implements VolleyErrorRes
 
         Collections.reverse(arrayList);
 
-        if (arrayList.size()>100){
+        if (arrayList.size() > 100) {
             Log.d(TAG, "Array mayor a 100, tiene " + arrayList.size() + " documentos");
             arrayList = limitarLista(arrayList);
         }
@@ -357,22 +354,23 @@ public class AppSelectionActivity extends BaseActivity implements VolleyErrorRes
     private List<Documents> limitarLista(List<Documents> arrayList) {
         ArrayList<Documents> solo100 = new ArrayList();
 
-        for (int i = 0 ; i < 100; i++ ){
+        for (int i = 0; i < 100; i++) {
             solo100.add(arrayList.get(i));
         }
 
         return solo100;
     }
 
-    private int extractInt(String s){
+    private int extractInt(String s) {
         return s.isEmpty() ? 0 : Integer.parseInt(s);
     }
 
-    private void errorVolley(String volleyError){
+    private void errorVolley(String volleyError) {
         cargandoDialog();
         VolleyErrorResponseDialog volleyErrorResponseDialog = new VolleyErrorResponseDialog(volleyError);
         volleyErrorResponseDialog.setCancelable(false);
         volleyErrorResponseDialog.show(getSupportFragmentManager(), "noConfigLoaded");
     }
+
 
 }

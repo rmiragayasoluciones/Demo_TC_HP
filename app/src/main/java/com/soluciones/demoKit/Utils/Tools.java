@@ -4,8 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.View;
 
 import androidx.preference.PreferenceManager;
+
+import com.google.android.material.snackbar.Snackbar;
+import com.soluciones.demoKit.R;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -89,6 +93,12 @@ public class Tools {
         Log.d(TAG, "sdf.format(calendar.getTime(): " + sdf.format(calendar.getTime()));
         return sdf.format(calendar.getTime());
 
+    }
+
+    public static void showSnackbar(View layout){
+        Log.d(TAG, "showSnackbar: call");
+        Snackbar snackbar = Snackbar.make(layout, layout.getContext().getString(R.string.scan20hojas), Snackbar.LENGTH_LONG);
+        snackbar.show();
     }
 
 

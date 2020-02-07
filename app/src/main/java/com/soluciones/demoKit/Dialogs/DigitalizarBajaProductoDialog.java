@@ -66,9 +66,9 @@ public class DigitalizarBajaProductoDialog extends AppCompatDialogFragment {
                 if (validarCampos()){
                     if (editTextLayout.getVisibility() == View.VISIBLE){
                         Log.d(TAG, "Layout Visible, envia el edittext: " + editText.getText().toString());
-                        listener.onDigitalizacionBajaDialogRespons (nombreDocumento.getText().toString().toLowerCase().trim(),radioButton.getText().toString().toLowerCase().trim() ,editText.getText().toString());
+                        listener.onDigitalizacionBajaDialogRespons (nombreDocumento.getText().toString().toLowerCase().trim(),radioButton.getText().toString().trim() ,editText.getText().toString());
                     } else {
-                        listener.onDigitalizacionBajaDialogRespons (nombreDocumento.getText().toString().toLowerCase().trim(),radioButton.getText().toString().toLowerCase().trim() ,"");
+                        listener.onDigitalizacionBajaDialogRespons (nombreDocumento.getText().toString().toLowerCase().trim(),radioButton.getText().toString().trim() ,"");
                     }
 
                     dismiss();

@@ -17,16 +17,25 @@
     <string name="token_expirado">El token se encuentra expirado. Por favor contactarse con la mesa de ayuda.</string>
     <string name="error_conexion">Error de conexión. Verifique la red y configuración</string>
 
-    <string-array name="paises">
-        <item>Argentina</item>
-        <item>Chile</item>
-        <item>Bolivia</item>
-        <item>Brasil</item>
-        <item>Uruguay</item>
-        <item>Colombia</item>
-        <item>Peru</item>
-        <item>Venezuela</item>
-    </string-array>
+    <string name="model_name">Model</string>
+    <string name="host_name">Hostname</string>
+    <string name="network_address">Network address</string>
+    <string name="features">Features</string>
+    <string name="firmware_version">Firmware version</string>
+    <string name="device_id">Device ID</string>
+    <string name="serial_number">Serial Number</string>
+    <string name="system_language">System Language</string>
+    <string name="system_language_capability">System Language Capability</string>
+
+
+    <string name="model_value">%1$s (Vendor: %2$s)</string>
+    <string name="address_value">%1$s (MAC: %2$s)</string>
+    <string name="device_id_value">%1$s (Product Number: %2$s)</string>
+    <string name="serial_number_value">%1$s (Formatter S/N: %2$s)</string>
+    <string name="na">N/A</string>
+    <string name="supported">Supported</string>
+    <string name="notsupported">Not supported</string>
+
 
     <string name="defaultString">Default</string>
 
@@ -34,4 +43,14 @@
         <item>DEFAULT</item>
     </string-array>
     <string name="title_activity_document_preview">DocumentPreviewActivity</string>
+    <string name="envioReporteErrores">Se enviará un reporte de errores para poder solucionarlo.\n
+                                        El reporte será anónimo y confidencial</string>
+    <string name="error_inesperado">Se ha producido un error inesperado</string>
+    <string name="mision">Misión</string>
+    <string name="vision">Visión</string>
+    <string name="valores">Valores</string>
+    <string name="mision_soluciones">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris viverra eu dui rutrum congue. Duis vitae dictum mi. Praesent fringilla eros eu risus dapibus, eget pharetra diam egestas. In hac habitasse platea dictumst. Donec posuere ante ac sem placerat aliquam. Aliquam erat volutpat. Donec ultrices metus luctus risus dignissim commodo.</string>
+    <string name="vision_soluciones">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris viverra eu dui rutrum congue. Duis vitae dictum mi. Praesent fringilla eros eu risus dapibus, eget pharetra diam egestas. In hac habitasse platea dictumst. Donec posuere ante ac sem placerat aliquam. Aliquam erat volutpat. Donec ultrices metus luctus risus dignissim commodo.</string>
+    <string name="valores_soluciones">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris viverra eu dui rutrum congue. Duis vitae dictum mi. Praesent fringilla eros eu risus dapibus, eget pharetra diam egestas. In hac habitasse platea dictumst. Donec posuere ante ac sem placerat aliquam. Aliquam erat volutpat. Donec ultrices metus luctus risus dignissim commodo.</string>
+    <string name="scan20hojas">Se digitalizarán un máximo de 20 páginas</string>
 </resources>

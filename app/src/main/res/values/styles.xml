@@ -53,4 +53,12 @@
     <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+
+    <style name="TitulosAzules" parent="TextAppearance.MaterialComponents.Headline2">
+        <item name="fontFamily">@font/hp_simplified_265</item>
+        <item name="android:textColor">@color/azulHp</item>
+        <item name="android:textSize">30sp</item>
+
+    </style>
+
 </resources>

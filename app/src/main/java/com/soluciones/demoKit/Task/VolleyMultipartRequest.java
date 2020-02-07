@@ -165,7 +165,7 @@ public class VolleyMultipartRequest extends Request<NetworkResponse> {
             dataOutputStream.writeBytes("Content-Type: " + dataFile.getType() + lineEnd);
         }
         dataOutputStream.writeBytes(lineEnd);
-
+        //todo foreach stream a disco
         ByteArrayInputStream fileInputStream = new ByteArrayInputStream(dataFile.getContent());
         int bytesAvailable = fileInputStream.available();
 

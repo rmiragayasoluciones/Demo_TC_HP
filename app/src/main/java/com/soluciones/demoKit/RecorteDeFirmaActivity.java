@@ -38,6 +38,7 @@ import com.hp.jetadvantage.link.api.job.JobletAttributes;
 import com.hp.jetadvantage.link.api.job.ScanJobData;
 import com.hp.jetadvantage.link.api.scanner.ScanAttributes;
 import com.hp.jetadvantage.link.api.scanner.ScanAttributesCaps;
+import com.soluciones.demoKit.Utils.Tools;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -205,7 +206,8 @@ VolleyErrorResponseDialog.IntentarReconectListener{
         mRid = null;
         desButton();
         new ScanToDestinationTask(this, filename).execute();
-        Toast.makeText(this, "Iniciando escaneo", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Iniciando escaneo", Toast.LENGTH_SHORT).show();
+        Tools.showSnackbar(coverView);
     }
 
     private void cargarOpcionesaBotones() {

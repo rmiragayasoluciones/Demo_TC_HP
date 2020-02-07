@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -32,7 +33,6 @@ import com.soluciones.demoKit.Dialogs.VolleyErrorResponseDialog;
 import com.soluciones.demoKit.Task.VolleySingleton;
 import com.soluciones.demoKit.UserClass.DemoViewModelSingleton;
 import com.soluciones.demoKit.UserClass.Documents;
-import com.soluciones.demoKit.Utils.BaseActivity;
 import com.soluciones.demoKit.Utils.Tools;
 
 import org.json.JSONArray;
@@ -46,7 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AppSelectionActivity extends BaseActivity implements VolleyErrorResponseDialog.IntentarReconectListener {
+public class AppSelectionActivity extends AppCompatActivity implements VolleyErrorResponseDialog.IntentarReconectListener {
 
     private static final String TAG = "AppSelectionActivity";
 

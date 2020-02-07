@@ -40,8 +40,11 @@ public class VolleyMultipartRequest extends Request<NetworkResponse> {
     }
 
     @Override
+//    public String getBodyContentType() {
+//        return "multipart/form-data;boundary=" + boundary;
+//    }
     public String getBodyContentType() {
-        return "multipart/form-data;boundary=" + boundary;
+        return "multipart/form-data;charset=UTF-8;boundary=" + boundary;
     }
 
     @Override
@@ -143,10 +146,14 @@ public class VolleyMultipartRequest extends Request<NetworkResponse> {
      * @throws IOException
      */
     private void buildTextPart(DataOutputStream dataOutputStream, String parameterName, String parameterValue) throws IOException {
-        dataOutputStream.writeBytes(twoHyphens + boundary + lineEnd);
-        dataOutputStream.writeBytes("Content-Disposition: form-data; name=\"" + parameterName + "\"" + lineEnd);
-        dataOutputStream.writeBytes(lineEnd);
-        dataOutputStream.writeBytes(parameterValue + lineEnd);
+        byte[] s1 = (twoHyphens + boundary + lineEnd).getBytes("UTF-8");
+        dataOutputStream.write(s1,0,s1.length);
+        byte[] s2 = ("Content-Disposition: form-data; name=\"" + parameterName + "\"" + lineEnd).getBytes("UTF-8");
+        dataOutputStream.write(s2,0,s2.length);
+        byte[] s3 = (lineEnd).getBytes("UTF-8");
+        dataOutputStream.write(s3,0,s3.length);
+        byte[] s4 = (parameterValue + lineEnd).getBytes("UTF-8");
+        dataOutputStream.write(s4,0,s4.length);
     }
 
     /**

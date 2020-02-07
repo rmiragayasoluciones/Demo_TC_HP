@@ -101,5 +101,18 @@ public class Tools {
         snackbar.show();
     }
 
+    public static String replaceSpecialCharacters(String json){
+
+            json = json.replaceAll("á", "\u00E1");
+            json = json.replaceAll("é", "\u00E9");
+            json = json.replaceAll("í", "\u00ED");
+            json = json.replaceAll("ó", "\u00F3");
+            json = json.replaceAll("ú", "\u00FA");
+            json = json.replaceAll("ñ", "\u00F1");
+
+
+        return json;
+
+    }
 
 }

@@ -176,6 +176,9 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
                         Toast.makeText(AperturaCuentaMainActivity.this, "El mail no es valido", Toast.LENGTH_SHORT).show();
                     }
                 } else {
+                    //todo poner error en los editText
+                    razonSocial.setError("Campo Obligatorio");
+                    mail.setError("Campo Obligatorio");
                     Toast.makeText(AperturaCuentaMainActivity.this, "Llene todos los campos para continuar", Toast.LENGTH_SHORT).show();
                 }
 

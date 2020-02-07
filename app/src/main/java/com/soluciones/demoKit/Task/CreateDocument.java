@@ -55,6 +55,8 @@ public class CreateDocument extends AsyncTask<Void, Void, Void> {
         this.fileName = fileName;
         this.mListener = (OnCreateDocumentsListener) context;
         this.createDocumentVMAsString = createDocumentVMAsString;
+//        this.createDocumentVMAsString = Tools.replaceSpecialCharacters(createDocumentVMAsString);
+//        Log.d(TAG, "CreateDocument: " + this.createDocumentVMAsString);
 
     }
 
@@ -134,6 +136,7 @@ public class CreateDocument extends AsyncTask<Void, Void, Void> {
                 Map<String, String> params = new HashMap<>();
                 Log.d(TAG, "Headers Agrego Token: " + token);
                 params.put("Token", token);
+                params.put("Source", "workpath");
                 return params;
             }
 
@@ -169,6 +172,8 @@ public class CreateDocument extends AsyncTask<Void, Void, Void> {
                 10000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+
         queue.add(volleyMultipartRequest);
 
         return null;

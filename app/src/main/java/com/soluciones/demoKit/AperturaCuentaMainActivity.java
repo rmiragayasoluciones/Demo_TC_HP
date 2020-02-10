@@ -173,7 +173,7 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
                         guardarInputs();
                         startSerieDocuActivity();
                     }else {
-                        Toast.makeText(AperturaCuentaMainActivity.this, "El mail no es valido", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AperturaCuentaMainActivity.this, "El mail no es válido", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     //todo poner error en los editText
@@ -240,7 +240,7 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
         paisItemArrayList.add(new PaisItem("Chile", R.drawable.bandera_chile));
         paisItemArrayList.add(new PaisItem("Colombia", R.drawable.bandera_colombia));
         paisItemArrayList.add(new PaisItem("México", R.drawable.bandera_mexico));
-        paisItemArrayList.add(new PaisItem("Peru", R.drawable.bandera_peru));
+        paisItemArrayList.add(new PaisItem("Perú", R.drawable.bandera_peru));
         paisItemArrayList.add(new PaisItem("Uruguay", R.drawable.bandera_uruguay));
         paisItemArrayList.add(new PaisItem("Venezuela", R.drawable.bandera_venezuela));
     }

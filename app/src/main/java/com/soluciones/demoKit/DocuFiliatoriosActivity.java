@@ -52,7 +52,6 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
         VolleyErrorResponseDialog.IntentarReconectListener{
     private static final String TAG = "DocuFiliatoriosActivity";
 
-    private ConstraintLayout layout;
     CardView jobBuilderCardV, scanPrevieweCardV, paperSizeCardV, removeBlankPagesCardV, duplexCardView;
     private ArrayList<String> blackImageRemovalEntries = new ArrayList<>();
     private ArrayList<String> paperSize = new ArrayList<>();
@@ -117,8 +116,6 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
 
         /* JobObserver */
         mJobObserver = new JobObserver(new Handler());
-
-        layout = findViewById(R.id.layoutforSnack);
 
         paperSizeCardV = findViewById(R.id.paperSize);
         jobBuilderCardV = findViewById(R.id.jobBuilder);
@@ -530,7 +527,6 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
 
     @Override
     public void reconectarYsubirArchivo() {
-        //todo volver a la pantalla pincipal
         menuPrincipal();
     }
 

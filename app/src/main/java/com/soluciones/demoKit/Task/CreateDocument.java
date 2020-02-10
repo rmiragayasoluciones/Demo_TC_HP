@@ -55,8 +55,6 @@ public class CreateDocument extends AsyncTask<Void, Void, Void> {
         this.fileName = fileName;
         this.mListener = (OnCreateDocumentsListener) context;
         this.createDocumentVMAsString = createDocumentVMAsString;
-//        this.createDocumentVMAsString = Tools.replaceSpecialCharacters(createDocumentVMAsString);
-//        Log.d(TAG, "CreateDocument: " + this.createDocumentVMAsString);
 
     }
 

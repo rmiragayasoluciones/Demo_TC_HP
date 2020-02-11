@@ -65,6 +65,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -133,6 +134,9 @@ public class DocumentPreviewActivity extends AppCompatActivity implements DocuFi
 
         Bundle bundle = getIntent().getExtras();
         documentsList = bundle.getParcelableArrayList("listaDocumentos");
+        if (documentsList!= null){
+            Collections.reverse(documentsList);
+        }
         documentsEjemploList = bundle.getParcelableArrayList("documentosEjemplo");
         Log.d(TAG, "onCreate: documentListTene " + documentsList.size() + " documentos");
 

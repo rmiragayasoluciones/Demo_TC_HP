@@ -99,6 +99,7 @@ public class DocuFiliatoriosActivity extends AppCompatActivity implements Finali
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_docu_filiatorios2);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
 
         demoViewModelSingleton = DemoViewModelSingleton.getInstance();
         demoId = demoViewModelSingleton.getDemoViewModelGuardado().getId();

@@ -112,7 +112,6 @@ public class DocumentPreviewActivity extends AppCompatActivity implements DocuFi
 
         new LoadPrintCapabilitiesTask(this).execute();
 
-
         //carga imagen y nombre de empresa
         DemoViewModelSingleton demoViewModelSingleton = DemoViewModelSingleton.getInstance();
         String nombreEmpresa = demoViewModelSingleton.getDemoViewModelGuardado().getClient();

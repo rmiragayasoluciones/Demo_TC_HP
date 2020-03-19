@@ -65,13 +65,14 @@ public class AppSelectionActivity extends AppCompatActivity implements VolleyErr
             "Captura de Firma",
             "Impresión de Documentos"
     };
+
     private String about_description_array[] = {
             "Cargue la documentación de sus clientes de forma rápida y sencilla.",
             "Direccione sus documentos de forma dinámica mediante la lectura de códigos de Barra/QR.",
             "Recorte la firma de sus clientes plasmadas en formularios de manera dinámica.",
             "Accede a la cuenta e imprime la documentación previamente ingresada"
-
     };
+
     private String about_images_array[] = {
             "abrir_cuenta.json",
             "qr.json",
@@ -332,6 +333,12 @@ public class AppSelectionActivity extends AppCompatActivity implements VolleyErr
 
     }
 
+    /**
+     * separa en categoria los archivos y
+     * limita a 100 la lista de resultados
+     * @param arrayList
+     * @return
+     */
     private List<Documents> sortArraylist(List<Documents> arrayList) {
 
         Collections.sort(arrayList, new Comparator<Documents>() {

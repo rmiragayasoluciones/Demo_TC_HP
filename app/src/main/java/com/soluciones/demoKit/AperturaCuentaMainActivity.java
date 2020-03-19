@@ -91,7 +91,6 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
             if (logo != null){
                 logoImageView.setImageBitmap(ImagenManipulation.resize(logo, 70, 70));
             }
-
         }
 
         initToolbar();
@@ -110,27 +109,6 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
         lyt_mic = findViewById(R.id.lyt_mic);
         lyt_call = findViewById(R.id.lyt_call);
     }
-
-//    private Bitmap resize(Bitmap image, int maxWidth, int maxHeight) {
-//        if (maxHeight > 0 && maxWidth > 0) {
-//            int width = image.getWidth();
-//            int height = image.getHeight();
-//            float ratioBitmap = (float) width / (float) height;
-//            float ratioMax = (float) maxWidth / (float) maxHeight;
-//
-//            int finalWidth = maxWidth;
-//            int finalHeight = maxHeight;
-//            if (ratioMax > ratioBitmap) {
-//                finalWidth = (int) ((float)maxHeight * ratioBitmap);
-//            } else {
-//                finalHeight = (int) ((float)maxWidth / ratioBitmap);
-//            }
-//            image = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
-//            return image;
-//        } else {
-//            return image;
-//        }
-//    }
 
     @Override
     protected void onResume() {
@@ -178,7 +156,6 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
                         Toast.makeText(AperturaCuentaMainActivity.this, "El mail no es válido", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    //todo poner error en los editText
                     razonSocial.setError("Campo Obligatorio");
                     mail.setError("Campo Obligatorio");
                     Toast.makeText(AperturaCuentaMainActivity.this, "Llene todos los campos para continuar", Toast.LENGTH_SHORT).show();
@@ -289,7 +266,6 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
     }
 
     public void onClientCorrect(MetadataCliente demoCliente, String clientId) {
-        //todo
         idClienteBuscado = clientId;
         ConstraintLayout maxLayout =findViewById(R.id.maxLayout);
 
@@ -361,7 +337,6 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
         } else {
             DemoViewModelSingleton.getInstance().getDemoViewModelGuardado().setClientNameNew(razonSocialIngresad);
         }
-
 
 
         Log.d(TAG, " RazonSocial " + razonSocialIngresad +
@@ -444,7 +419,6 @@ public class AperturaCuentaMainActivity extends AppCompatActivity implements Ada
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         finish();
-
     }
 
     @Override

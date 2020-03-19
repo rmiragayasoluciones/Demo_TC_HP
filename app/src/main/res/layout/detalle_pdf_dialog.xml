@@ -130,8 +130,7 @@
                         android:background="@color/colorPrimarymasDark"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/nombreDocumentoIdp"
-                        />
+                        app:layout_constraintTop_toBottomOf="@+id/nombreDocumentoIdp" />
 
                     <View
                         android:id="@+id/barradeRazonOCodigo"
@@ -557,7 +556,6 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
-
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

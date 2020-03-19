@@ -52,7 +52,6 @@ public class DocuFiliaFragment extends Fragment implements DocumentRecyclerAdapt
     @Override
     public void onItemClick(int position) {
         mListener.onDocuClick(documentsList.get(position));
-        //abrir el Fragment con el Archivo PDF
     }
 
     private List<Documents> separarCategorias(List<Documents> documentsList){

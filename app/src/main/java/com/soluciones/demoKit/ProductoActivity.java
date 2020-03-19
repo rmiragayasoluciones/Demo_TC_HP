@@ -668,8 +668,6 @@ VolleyErrorResponseDialog.IntentarReconectListener,
         int demoId = demoViewModelSingleton.getDemoViewModelGuardado().getId();
         String client = demoViewModelSingleton.getDemoViewModelGuardado().getClientNameNew();
 
-
-
         String newDocumentName = documentName.split("-001")[0];
         Log.d(TAG, "newDocumentName: " + newDocumentName);
         demoViewModelSingleton.getMetadataCliente().setDocumentName(newDocumentName);
